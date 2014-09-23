@@ -72,9 +72,9 @@ var WeatherRecord = function(record) {
     throw "Malformed record:" + record;
   }
   this.timestamp = new Date();
-  this.temperature = parseFloat(elements[19]);
+  this.temperature = parseFloat(elements[19].replace(/[,]/g,'.'));
   this.humidity = parseInt(elements[20]);
-  this.wind = parseFloat(elements[21]);
+  this.wind = parseFloat(elements[21].replace(/[,]/g,'.'));
   this.rain = parseInt(elements[22]);  // 1 tick is approx 295 ml/m2
   this.isRaining = (elements[23] == "1");
 }
@@ -114,7 +114,7 @@ var startSimTimer = function() {
         if (windRnd > 0.7) {
           wind = Math.round(windRnd * 15) / 10;
         }
-        var recString = '$1;1;;;;;;;;;;;;;;;;;;' + temp.toString() + ';' + humidity.toString() + ';' + wind.toString() + ';' + rain.toString() + ';0;0';
+        var recString = '$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g,',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g,',') + ';' + rain.toString() + ';0;0';
         addNewRecord(recString);
       },
       simTimerDelay);
