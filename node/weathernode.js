@@ -9,7 +9,7 @@ var weather = require("./weatherrecord.js");
 // Configure the comport as required by your system
 var serialComPort = "COM4";         // Windows
 var serialComPort = "/dev/ttyUSB0"  // Linux
-
+var simulator = false; // set to true when simulating
 /***********************************************************************************/
 // Webserver part
 var http = require("http");
@@ -28,12 +28,11 @@ http.createServer(function (request, response) {
   var jsPattern = /.js/;
   var getCurrentRecordPattern = /ajax\/current.html/;
 
-
   fs.exists(filename, function (exists) {
     if (!exists) {
       if (getCurrentRecordPattern.test(uri)) {
         response.writeHead(200);
-        response.write(weather.getCurrentRecord());
+        response.write(weather.getAllRecords());
         console.log("Record taken!")
       }
       else {
@@ -80,6 +79,11 @@ console.log("Weather server is running at http://localhost:" + port + "/\nCTRL +
 /***********************************************************************************/
 var serialport = require("./node_modules/serialport/serialport.js");
 var SerialPort = serialport.SerialPort; // localize object constructor
+
+if (simulator) {
+  weather.startSimulator();
+}
+
 
 var sp = new SerialPort(serialComPort, {
   baudrate: 9600,

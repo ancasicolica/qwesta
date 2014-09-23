@@ -25,13 +25,22 @@
   <title>Wetterstation</title>
 </head>
 <body>
-Hello!
+
 <section ng-controller="WeatherCtrl as ctrl">
-  <p>{{ctrl.currentRecord.timestamp}}</p>
-  <p>{{ctrl.currentRecord.temperature}}°</p>
-  <p>{{ctrl.currentRecord.humitity}}%</p>
-  {{ctrl.test}}
-  {{ctrl.initAjax()}}
+  <table>
+    <tr>
+      <td colspan="2">{{ctrl.currentRecord.timestamp}}</td>
+    </tr>
+    <tr>
+      <td>{{ctrl.currentRecord.temperature}}°</td>
+      <td><img ng-src="{{ctrl.temperatureTrendImage}}"></td>
+    </tr>
+    <tr>
+      <td>{{ctrl.currentRecord.humidity}}%</td>
+      <td><img ng-src="{{ctrl.humidityTrendImage}}"></td>
+    </tr>
+  </table>
+
 </section>
 </body>
 </html>
