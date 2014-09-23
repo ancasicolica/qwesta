@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html ng-app="weatherApp">
+<head lang="de">
+  <meta charset="UTF-8">
+  <script type="text/javascript"
+          src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.min.js"></script>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <!-- Weather control -->
+  <script src="js/weathercontrol.js?v=1"></script>
+
+  <!-- See http://getbootstrap.com/examples/theme/# -->
+  <meta http-equiv="cache-control" content="no-cache">
+  <title>Wetterstation</title>
+</head>
+<body>
+Hello!
+<section ng-controller="WeatherCtrl as ctrl">
+  <p>{{ctrl.currentRecord.timestamp}}</p>
+  <p>{{ctrl.currentRecord.temperature}}°</p>
+  <p>{{ctrl.currentRecord.humitity}}%</p>
+  {{ctrl.test}}
+  {{ctrl.initAjax()}}
+</section>
+</body>
+</html>
