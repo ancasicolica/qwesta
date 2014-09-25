@@ -1,0 +1,15 @@
+{
+  "author": {
+    "name": "Christian Kuster",
+    "url": "http://www.kusti.ch"
+  },
+  "name": "qwesta",
+  "description": "Kustis Weatherstation application",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "4.x",
+    "serialport": "1.x",
+    "mime": "1.2.x"
+  }
+}
