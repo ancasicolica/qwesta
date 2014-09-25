@@ -55,6 +55,11 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
   this.temperatureTrendImage = "img/no_data.png";
   this.humidityTrendImage = "img/no_data.png";
 
+  this.getCurrentRecordTime = function() {
+    var d = new Date(this.currentRecord.timestamp);
+    var s = d.toLocaleTimeString();
+    return s;
+  }
   /**
    * The interval timer retrieving the data
    */

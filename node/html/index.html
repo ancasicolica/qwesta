@@ -11,6 +11,9 @@
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
+  <!-- Qwesta CSS -->
+  <link rel="stylesheet" href="css/qwesta.css">
+
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
@@ -28,16 +31,17 @@
 
 <section ng-controller="WeatherCtrl as ctrl">
   <table>
+
     <tr>
-      <td colspan="2">{{ctrl.currentRecord.timestamp}}</td>
-    </tr>
-    <tr>
-      <td>{{ctrl.currentRecord.temperature}}°</td>
+      <td><div class="temperature">{{ctrl.currentRecord.temperature}}°</div></td>
       <td><img ng-src="{{ctrl.temperatureTrendImage}}"></td>
     </tr>
     <tr>
       <td>{{ctrl.currentRecord.humidity}}%</td>
       <td><img ng-src="{{ctrl.humidityTrendImage}}"></td>
+    </tr>
+    <tr>
+      <td colspan="2">{{ctrl.getCurrentRecordTime()}}</td>
     </tr>
   </table>
 
