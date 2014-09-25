@@ -1,10 +1,41 @@
 /***********************************************************************************/
-/**
- * Created by Christian on 22.09.2014.
+/*
+ File:    weathernode.js
+ Purpose: Main node file for the weather station qwesta
+ Author:  Christian Kuster, CH-8342 Wernetshausen, www.kusti.ch, 22.9.14
+ Github:  https://github.com/ancasicolica/qwesta
+
+ ----------------------------------------------------------------------------------
+
+ This is free and unencumbered software released into the public domain.
+
+ Anyone is free to copy, modify, publish, use, compile, sell, or
+ distribute this software, either in source code form or as a compiled
+ binary, for any purpose, commercial or non-commercial, and by any
+ means.
+
+ In jurisdictions that recognize copyright laws, the author or authors
+ of this software dedicate any and all copyright interest in the
+ software to the public domain. We make this dedication for the benefit
+ of the public at large and to the detriment of our heirs and
+ successors. We intend this dedication to be an overt act of
+ relinquishment in perpetuity of all present and future rights to this
+ software under copyright law.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+
+ For more information, please refer to <http://unlicense.org/>
+
  */
 /***********************************************************************************/
 
-var weather = require('./weatherrecord.js');
+
 
 // Configure the comport as required by your system
 var serialComPort = 'COM4';         // Windows
@@ -18,6 +49,7 @@ var http = require('http');
 var url = require('url');
 var path = require('path');
 var fs = require('fs');
+var weather = require('./weatherrecord.js');
 
 var express = require('express');
 var mime = require('mime');
@@ -28,7 +60,7 @@ var app = express();
  * Get the file /ajax/current.html
  * This file contains the current records and is generated
  */
-app.get('/ajax/current.html', function(request, response) {
+app.get('/ajax/current.html', function (request, response) {
   response.writeHead(200, {"Content-Type": "text/plain"});
   response.end(weather.getAllRecords());
 });
@@ -36,7 +68,7 @@ app.get('/ajax/current.html', function(request, response) {
 /**
  * Get every other file (available on the filesystem)
  */
-app.get('*', function(request, response) {
+app.get('*', function (request, response) {
 
   var uri = url.parse(request.url).pathname;
   var filename = path.join(process.cwd() + '/html', uri);
@@ -86,7 +118,10 @@ if (simulator) {
   weather.startSimulator();
 }
 
-
+/**
+ * Serialport object for the USB-WDE1-2
+ * @type {SerialPort} Baudrate is 9600 bps, line parser is essential!
+ */
 var sp = new SerialPort(serialComPort, {
   baudrate: 9600,
   parser  : serialport.parsers.readline('\n')
