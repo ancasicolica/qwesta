@@ -30,21 +30,47 @@
 <body>
 
 <section ng-controller="WeatherCtrl as ctrl">
-  <table>
 
-    <tr>
-      <td><div class="temperature">{{ctrl.currentRecord.temperature}}°</div></td>
+  <div class="infobox">
+    <div class="stationname">{{ctrl.stationName}}</div>
+    <table>
+      <tr>
+        <td class="icon"><img src="img/icon32/thermometer31.png"></td>
+        <td><div class="temperature">{{ctrl.currentRecord.temperature}}°</div></td>
       <td><img ng-src="{{ctrl.temperatureTrendImage}}"></td>
     </tr>
     <tr>
-      <td>{{ctrl.currentRecord.humidity}}%</td>
+      <td class="icon"><img src="img/icon32/humidity.png"></td>
+      <td>
+        <div class="humidity">{{ctrl.currentRecord.humidity}}%</div>
+      </td>
       <td><img ng-src="{{ctrl.humidityTrendImage}}"></td>
     </tr>
     <tr>
-      <td colspan="2">{{ctrl.getCurrentRecordTime()}}</td>
+      <td class="icon"><img src="img/icon32/winds4.png"></td>
+      <td>
+        <div class="humidity">{{ctrl.currentRecord.wind}} km/h</div>
+      </td>
+      <td></td>
     </tr>
-  </table>
-
+      <tr>
+        <td class="icon"><img src="img/icon32/water35.png"></td>
+        <td>
+          <div class="humidity">{{ctrl.currentRecord.rainDifference}} l/m2/h</div>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="3">{{ctrl.getCurrentRecordTime()}}</td>
+      </tr>
+    </table>
+  </div>
 </section>
+<p class="credits">Icons made by Catalin Fertu from <a href="http://www.flaticon.com
+" title="Flaticon">www.flaticon.com</a> is licensed by <a
+        href="http://creativecommons.org/licenses/by/3.0/"
+        title="Creative Commons BY 3.0">CC BY 3.0</a></p>
+
+<p class="credits">Powered by node.js Weatherstation qwesta</p>
 </body>
 </html>

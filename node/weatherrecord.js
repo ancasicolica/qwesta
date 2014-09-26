@@ -50,8 +50,8 @@ module.exports = {
    * @returns {*}
    */
   getCurrentRecordAsJson: function () {
-    if (measurements.length > 0) {
-      return JSON.stringify(measurements[measurements.length - 1]);
+    if (measurementList.length > 0) {
+      return JSON.stringify(measurementList[measurementList.length - 1]);
     }
     return JSON.stringify(null);
   },
@@ -60,7 +60,7 @@ module.exports = {
    * @returns {*}
    */
   getAllRecordsAsJson   : function () {
-    return JSON.stringify(measurements);
+    return JSON.stringify(measurementList);
   },
   /**
    * Starts the simulator
@@ -76,8 +76,8 @@ module.exports = {
   }
 };
 
-var measurements = new Array();
-var maxNbOfMeasurements = 10;
+var measurementList = new Array();  // List with the measurementList
+var maxNbOfMeasurements = 10;    // Max number of measurementList in the list
 /***********************************************************************************/
 /**
  * Adds a new record to the measurement list
@@ -90,17 +90,18 @@ var addNewRecord = function(record) {
     var wr = new WeatherRecord(rec);
     console.log("New record!");
 
-    if (measurements.length > 0) {
-      wr.rainDifference = wr.rain - measurements[measurements.length - 1].rain;
+    if (measurementList.length > 0) {
+      wr.rainDifference = 1.0 * (wr.rain - measurementList[measurementList.length - 1].rain);
+      wr.rainDifference = Math.floor((wr.rainDifference * 0.295) * 24 * 10) / 10;
     }
     else {
       wr.rainDifference = 0;
     }
 
-    // our measurements list has max maxNbOfMeasurements entries
-    measurements.push(wr);
-    if (measurements.length > maxNbOfMeasurements) {
-      measurements.shift();
+    // our measurementList list has max maxNbOfMeasurements entries
+    measurementList.push(wr);
+    if (measurementList.length > maxNbOfMeasurements) {
+      measurementList.shift();
     }
     return wr;
   }
@@ -128,7 +129,8 @@ var WeatherRecord = function(record) {
   this.wind = parseFloat(elements[21].replace(/[,]/g,'.'));
   this.rain = parseInt(elements[22]);  // 1 tick is approx 295 ml/m2
   this.isRaining = (elements[23] == "1");
-  this.rainDifference = 0; // Difference since the last measurement
+  this.rainDifference = 0; // Difference since the last measurement, l per m2 per h
+
 }
 /**
  * toString override
@@ -162,9 +164,19 @@ var startSimTimer = function() {
         var humidityRnd = Math.random() - 0.5;
         var rainRnd = Math.random();
         var windRnd = Math.random();
-        var currentRecord = measurements[measurements.length - 1];
+        var currentRecord = measurementList[measurementList.length - 1];
         var temp = Math.round((currentRecord.temperature + (temperatureRnd / 3)) * 10) / 10;
+        if (temp < -10) {
+          temp = -10;
+        } else if (temp > 45) {
+          temp = 45;
+        }
         var humidity = Math.round(currentRecord.humidity + (humidityRnd * 2));
+        if (humidity < 30) {
+          humidity = 30;
+        } else if (humidity > 99) {
+          humidity = 99;
+        }
         var rain = currentRecord.rain + Math.round(rainRnd *.8);
         var wind = 0.0;
         if (windRnd > 0.7) {

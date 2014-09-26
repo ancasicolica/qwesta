@@ -40,6 +40,8 @@ var weatherApp = angular.module('weatherApp', []);
 
 weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($scope, $http, $interval) {
 
+  this.stationName = "Wetterstation";
+  this.iconFolder = "./img/icon32/";
   // This entry contains the current record
   this.currentRecord = {
     humidity: 0,
@@ -47,13 +49,14 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
     rain: 0,
     temperature: 0.0,
     timestamp: "2000-01-01T00:00:00.000Z",
-    wind: 0.0
+    wind          : 0.0,
+    rainDifference: 0.0
   };
 
   this.records;
 
-  this.temperatureTrendImage = "img/no_data.png";
-  this.humidityTrendImage = "img/no_data.png";
+  this.temperatureTrendImage = this.iconFolder + "arrow456.png";
+  this.humidityTrendImage = this.iconFolder + "arrow456.png";
 
   this.getCurrentRecordTime = function() {
     var d = new Date(this.currentRecord.timestamp);
@@ -92,23 +95,23 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
       console.log("avg temp: " + temperatureAvg);
       console.log("cur temp: " + cr.temperature);
       if (cr.temperature > temperatureAvg) {
-        $scope.parent.temperatureTrendImage = "img/arrow_right_up.png";
+        $scope.parent.temperatureTrendImage = $scope.parent.iconFolder + "arrow448.png";
       }
       else if (cr.temperature < temperatureAvg) {
-        $scope.parent.temperatureTrendImage = "img/arrow_right_down.png";
+        $scope.parent.temperatureTrendImage = $scope.parent.iconFolder + "arrow453.png";
       }
       else {
-        $scope.parent.temperatureTrendImage = "img/arrow_right.png";
+        $scope.parent.temperatureTrendImage = $scope.parent.iconFolder + "arrow456.png";
       }
 
       if (cr.humidity > temperatureAvg) {
-        $scope.parent.humidityTrendImage = "img/arrow_right_up.png";
+        $scope.parent.humidityTrendImage = $scope.parent.iconFolder + "arrow448.png";
       }
       else if (cr.humidity < temperatureAvg) {
-        $scope.parent.humidityTrendImage = "img/arrow_right_down.png";
+        $scope.parent.humidityTrendImage = $scope.parent.iconFolder + "arrow453.png";
       }
       else {
-        $scope.parent.humidityTrendImage = "img/arrow_right.png";
+        $scope.parent.humidityTrendImage = $scope.parent.iconFolder + "arrow456.png";
       }
     }
   };
