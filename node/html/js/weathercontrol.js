@@ -81,15 +81,35 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
     $scope.parent.currentRecord = cr;
 
     // Analysis
-    if (data.length > 1) {
+    if (data.length > 3) {
+      // Evaluate average of temperature and humidity while removing the highest
+      // and lowest value
       var temperatureAvg = 0.0;
       var humidityAvg = 0.0;
+      var humidityMax = 0.0;
+      var humidityMin = 99.9;
+      var temperatureMax = -50.0;
+      var temperatureMin = 99.0;
+
       for (var i = 0; i < data.length; i++) {
         temperatureAvg += data[i].temperature;
         humidityAvg += data[i].humidity;
+        if (humidityMax < data[i].humidity) {
+          humidityMax = data[i].humidity;
+        }
+        if (humidityMin > data[i].humidity) {
+          humidityMin = data[i].humidity;
+        }
+        if (temperatureMax < data[i].temperature) {
+          temperatureMax = data[i].temperature;
+        }
+        if (temperatureMin > data[i].temperature) {
+          temperatureMin = data[i].temperature;
+        }
+
       }
-      temperatureAvg /= data.length;
-      humidityAvg /= data.length;
+      temperatureAvg = (temperatureAvg - temperatureMax - temperatureMin) / (data.length - 2);
+      humidityAvg = (humidityAvg - humidityMax - humidityMin) / (data.length - 2);
 
       // TODO: better algorithm, is to exact now
       console.log("avg temp: " + temperatureAvg);
@@ -117,9 +137,14 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
   };
 
   $scope.SuccessCallback = this.setData;
-
   $scope.parent = this;
   $scope.data = {};
+  /**
+   * Gets the current data from the webserver over an ajax call
+   * @param item
+   * @param event
+   * @returns {boolean}
+   */
   $scope.data.getCurrentData = function(item, event) {
 
     var responsePromise = $http.get("ajax/current.html", null);
