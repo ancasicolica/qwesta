@@ -46,39 +46,60 @@ module.exports = {
     return addNewRecord(record);
   },
   /**
-   * Returns the current record as JSON string
+   * Returns the most recent record as JSON string
    * @returns {*}
    */
-  getCurrentRecord: function() {
-    return JSON.stringify(currentRecord);
+  getCurrentRecordAsJson: function () {
+    if (measurements.length > 0) {
+      return JSON.stringify(measurements[measurements.length - 1]);
+    }
+    return JSON.stringify(null);
   },
-  getAllRecords: function() {
+  /**
+   * Returns all records as JSON string
+   * @returns {*}
+   */
+  getAllRecordsAsJson   : function () {
     return JSON.stringify(measurements);
   },
+  /**
+   * Starts the simulator
+   */
   startSimulator: function() {
     startSimTimer();
   },
+  /**
+   * Stopps the simulator
+   */
   stopSimulator: function() {
     stopSimTimer();
   }
 };
 
 var measurements = new Array();
+var maxNbOfMeasurements = 10;
 /***********************************************************************************/
 /**
  * Adds a new record to the measurement list
- * @param record
- * @returns {*}
+ * @param record as read from the serial interface
+ * @returns {*} the new WeatherRecord
  */
 var addNewRecord = function(record) {
   try {
     var rec = record.toString();
     var wr = new WeatherRecord(rec);
     console.log("New record!");
-    currentRecord = wr;
-    // our measurements list has max 5 entries
+
+    if (measurements.length > 0) {
+      wr.rainDifference = wr.rain - measurements[measurements.length - 1].rain;
+    }
+    else {
+      wr.rainDifference = 0;
+    }
+
+    // our measurements list has max maxNbOfMeasurements entries
     measurements.push(wr);
-    if (measurements.length > 4) {
+    if (measurements.length > maxNbOfMeasurements) {
       measurements.shift();
     }
     return wr;
@@ -88,8 +109,6 @@ var addNewRecord = function(record) {
     return null;
   }
 }
-
-var currentRecord = null;
 
 
 /***********************************************************************************/
@@ -109,6 +128,7 @@ var WeatherRecord = function(record) {
   this.wind = parseFloat(elements[21].replace(/[,]/g,'.'));
   this.rain = parseInt(elements[22]);  // 1 tick is approx 295 ml/m2
   this.isRaining = (elements[23] == "1");
+  this.rainDifference = 0; // Difference since the last measurement
 }
 /**
  * toString override
@@ -124,6 +144,7 @@ WeatherRecord.prototype.toString = function () {
  */
 
 /***********************************************************************************/
+/* Simulation part, not needed for productive system                               */
 var simTimer = null;
 var simTimerDelay = 4000; // Delay in ms
 /**
@@ -131,6 +152,9 @@ var simTimerDelay = 4000; // Delay in ms
  */
 var startSimTimer = function() {
   if (simTimer == null) {
+    // add a first record
+    var we3 = addNewRecord('$1;1;;;;;;;;;;;;;;;;;;18,5;50;0,0;10;0;0');
+
     console.info("Simulation timer started");
     simTimer = setInterval(function () {
         // Create (quite) random event
@@ -138,7 +162,7 @@ var startSimTimer = function() {
         var humidityRnd = Math.random() - 0.5;
         var rainRnd = Math.random();
         var windRnd = Math.random();
-
+        var currentRecord = measurements[measurements.length - 1];
         var temp = Math.round((currentRecord.temperature + (temperatureRnd / 3)) * 10) / 10;
         var humidity = Math.round(currentRecord.humidity + (humidityRnd * 2));
         var rain = currentRecord.rain + Math.round(rainRnd *.8);

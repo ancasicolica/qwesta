@@ -62,7 +62,7 @@ var app = express();
  */
 app.get('/ajax/current.html', function (request, response) {
   response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end(weather.getAllRecords());
+  response.end(weather.getAllRecordsAsJson());
 });
 
 /**
@@ -132,10 +132,6 @@ var sp = new SerialPort(serialComPort, {
  */
 sp.open(function () {
   console.log('Serialport opened');
-
-  // this is just a test record
-  var we3 = weather.newRecord('$1;1;;;;;;;;;;;;;;;;;;21,1;50;0,0;10;0;0');
-  console.log("E:" + we3.toString());
 
   // handles the incoming data, creates a new weather record
   sp.on('data', function (data) {
