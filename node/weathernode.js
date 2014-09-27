@@ -40,8 +40,17 @@
 // Configure the comport as required by your system
 var serialComPort = 'COM4';         // Windows
 var serialComPort = '/dev/ttyUSB0'  // Linux
-var simulator = true; // set to true when simulating
+var simulator = false; // set to true when simulating
 var port = 8888; // set to your port
+var htmlRootPath = '/home/kc/sd/qwesta/html'; // set to the place where your html is
+
+// Set NODE_ENV environment variable to development when playing around
+if (process.env.NODE_ENV === 'development') {
+  console.info("DEVELOPMENT environment active");
+  htmlRootPath = process.cwd() + '/html';
+  var simulator = true;
+}
+
 /***********************************************************************************/
 
 
@@ -55,7 +64,6 @@ var express = require('express');
 var mime = require('mime');
 
 var app = express();
-
 /**
  * Get the file /ajax/current.html
  * This file contains the current records and is generated
@@ -71,12 +79,13 @@ app.get('/ajax/current.html', function (request, response) {
 app.get('*', function (request, response) {
 
   var uri = url.parse(request.url).pathname;
-  var filename = path.join(process.cwd() + '/html', uri);
+  var filename = path.join(htmlRootPath, uri);
 
   fs.exists(filename, function (exists) {
     if (!exists) {
       // File does not exist. Generated files were handled before.
       response.writeHead(404, {'Content-Type': 'text/plain'});
+      response.write("Server root: " + process.cwd() + "\n");
       response.write("404 Not Found\n");
       response.end();
       return;
@@ -104,6 +113,9 @@ app.get('*', function (request, response) {
 });
 
 http.createServer(app).listen(port);
+
+// Set an initial record
+weather.newRecord('$1;1;;;;;;;;;;;;;;;;;;0;0;0,0;0;0;0');
 
 console.log('Weather server is running at http://localhost:' + port + '/\nCTRL + C to shutdown');
 

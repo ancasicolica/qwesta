@@ -42,7 +42,7 @@ module.exports = {
    * @param record as read from the serial interface
    * @returns {*}
    */
-  newRecord: function(record) {
+  newRecord             : function (record) {
     return addNewRecord(record);
   },
   /**
@@ -65,13 +65,13 @@ module.exports = {
   /**
    * Starts the simulator
    */
-  startSimulator: function() {
+  startSimulator        : function () {
     startSimTimer();
   },
   /**
    * Stopps the simulator
    */
-  stopSimulator: function() {
+  stopSimulator         : function () {
     stopSimTimer();
   }
 };
@@ -84,7 +84,7 @@ var maxNbOfMeasurements = 10;    // Max number of measurementList in the list
  * @param record as read from the serial interface
  * @returns {*} the new WeatherRecord
  */
-var addNewRecord = function(record) {
+var addNewRecord = function (record) {
   try {
     var rec = record.toString();
     var wr = new WeatherRecord(rec);
@@ -118,15 +118,15 @@ var addNewRecord = function(record) {
  * @param record as read from the serial interface
  * @constructor
  */
-var WeatherRecord = function(record) {
+var WeatherRecord = function (record) {
   var elements = record.split(";");
   if ((elements[0] != "$1") || (elements.length != 25)) {
     throw "Malformed record:" + record;
   }
   this.timestamp = new Date();
-  this.temperature = parseFloat(elements[19].replace(/[,]/g,'.'));
+  this.temperature = parseFloat(elements[19].replace(/[,]/g, '.'));
   this.humidity = parseInt(elements[20]);
-  this.wind = parseFloat(elements[21].replace(/[,]/g,'.'));
+  this.wind = parseFloat(elements[21].replace(/[,]/g, '.'));
   this.rain = parseInt(elements[22]);  // 1 tick is approx 295 ml/m2
   this.isRaining = (elements[23] == "1");
   this.rainDifference = 0; // Difference since the last measurement, l per m2 per h
@@ -152,10 +152,9 @@ var simTimerDelay = 4000; // Delay in ms
 /**
  * Starts the simulation timer. Every interval, a new random record is added
  */
-var startSimTimer = function() {
+var startSimTimer = function () {
   if (simTimer == null) {
     // add a first record
-    var we3 = addNewRecord('$1;1;;;;;;;;;;;;;;;;;;18,5;50;0,0;10;0;0');
 
     console.info("Simulation timer started");
     simTimer = setInterval(function () {
@@ -177,12 +176,12 @@ var startSimTimer = function() {
         } else if (humidity > 99) {
           humidity = 99;
         }
-        var rain = currentRecord.rain + Math.round(rainRnd *.8);
+        var rain = currentRecord.rain + Math.round(rainRnd * .8);
         var wind = 0.0;
         if (windRnd > 0.7) {
           wind = Math.round(windRnd * 15) / 10;
         }
-        var recString = '$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g,',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g,',') + ';' + rain.toString() + ';0;0';
+        var recString = '$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g, ',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g, ',') + ';' + rain.toString() + ';0;0';
         addNewRecord(recString);
       },
       simTimerDelay);
@@ -191,7 +190,7 @@ var startSimTimer = function() {
 /**
  * Stops the simulation timer
  */
-var stopSimTimer = function() {
+var stopSimTimer = function () {
   if (simTimer != null) {
     console.info("Simulation timer stopped");
     clearInterval(simTimer);
