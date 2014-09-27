@@ -70,7 +70,7 @@ var app = express();
  */
 app.get('/ajax/current.html', function (request, response) {
   response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end(weather.getAllRecordsAsJson());
+  response.end(weather.getNewestRecords());
 });
 
 /**
@@ -82,6 +82,14 @@ app.get('/ajax/temperature.html', function (request, response) {
   response.end(weather.getTemperatureDataAsJson());
 });
 
+/**
+ * Get the file /ajax/humidity.html
+ * This file contains the available temperature data and is generated
+ */
+app.get('/ajax/humidity.html', function (request, response) {
+  response.writeHead(200, {"Content-Type": "text/plain"});
+  response.end(weather.getHumidityDataAsJson());
+});
 
 /**
  * Get every other file (available on the filesystem)

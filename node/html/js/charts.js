@@ -69,3 +69,40 @@ var drawTemperatureChart = function (data) {
     })
   }
 };
+
+/**
+ * Draws a humidity chart
+ * @param data temperature data
+ */
+var drawHumidityChart = function (data) {
+  if (google) {
+    // keep the data in the scope
+    var humidityData = data;
+
+    // load google module asynchronously, otherwise the screen will be blank!
+    google.load('visualization', '1.0', {
+      packages: ['corechart'],
+      callback: function () {
+        var chartData = new google.visualization.DataTable();
+        // The colums of the chart
+        chartData.addColumn('datetime', 'Zeit');
+        chartData.addColumn('number', 'Luftfeuchtigkeit');
+
+        // transform received data to chart format
+        for (var i = 0; i < humidityData.length; i++) {
+          chartData.addRow([new Date(humidityData[i].timestamp), humidityData[i].humidity]);
+        }
+
+        var options = {
+          curveType: 'function',
+          legend   : { position: 'bottom' },
+          chartArea: {backgroundColor: 'transparent'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart'));
+
+        chart.draw(chartData, options);
+      }
+    })
+  }
+};

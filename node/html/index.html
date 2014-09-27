@@ -47,7 +47,9 @@
       <td><img ng-src="{{ctrl.temperatureTrendImage}}"></td>
     </tr>
     <tr>
-      <td class="icon"><img src="img/icon32/humidity.png"></td>
+      <td
+              class="icon"><a ng-click="ctrl.loadHumidityChart()"><img
+              src="img/icon32/humidity.png"></a></td>
       <td>
         <div class="humidity">{{ctrl.currentRecord.humidity}}%</div>
       </td>

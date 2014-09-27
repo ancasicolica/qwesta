@@ -55,12 +55,43 @@ module.exports = {
     }
     return JSON.stringify(null);
   },
-
-  getTemperatureDataAsJson: function () {
+  /**
+   * Returns the newest records (maxNbOfMeasurementsForCurrent)
+   * @returns {*}
+   */
+  getNewestRecords        : function () {
     if (measurementList.length > maxNbOfMeasurementsForCurrent) {
-      return JSON.stringify(measurementList.slice(measurementList - maxNbOfMeasurementsForCurrent));
+      return JSON.stringify(measurementList.slice(measurementList.length - maxNbOfMeasurementsForCurrent));
     }
     return JSON.stringify(measurementList);
+  },
+  /**
+   * Returns the records for the temperature chart
+   * @returns {*}
+   */
+  getTemperatureDataAsJson: function () {
+    if (measurementList.length > maxNbOfMeasurementsForCurrent) {
+      var data = [];
+      for (var i = 0; i < measurementList.length; i++) {
+        data.push({'timestamp': measurementList[i].timestamp, 'temperature': measurementList[i].temperature});
+      }
+      return JSON.stringify(data);
+    }
+    return JSON.stringify(null);
+  },
+  /**
+   * Returns the records for the humidity chart
+   * @returns {*}
+   */
+  getHumidityDataAsJson   : function () {
+    if (measurementList.length > maxNbOfMeasurementsForCurrent) {
+      var data = [];
+      for (var i = 0; i < measurementList.length; i++) {
+        data.push({'timestamp': measurementList[i].timestamp, 'humidity': measurementList[i].humidity});
+      }
+      return JSON.stringify(data);
+    }
+    return JSON.stringify(null);
   },
   /**
    * Returns all records as JSON string

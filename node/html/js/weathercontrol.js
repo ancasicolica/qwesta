@@ -135,17 +135,37 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
       }
     }
   };
-
+  /**
+   * Start the ajax call to load the temperature data
+   */
   this.loadTemperatureChart = function () {
     $scope.data.getCurrentData('ajax/temperature.html', $scope.temperatureDataCallback);
-  }
+  };
+  /**
+   * Draw the temperature chart
+   * @param data loaded temperature data
+   */
   this.drawTemperatureChart = function (data) {
     console.log(data);
     drawTemperatureChart(data);
   };
-
+  /**
+   * Start the ajax call to load the humidity data
+   */
+  this.loadHumidityChart = function () {
+    $scope.data.getCurrentData('ajax/humidity.html', $scope.humidityDataCallback);
+  };
+  /**
+   * Draw the humidity chart
+   * @param data loaded temperature data
+   */
+  this.drawHumidityChart = function (data) {
+    console.log(data);
+    drawHumidityChart(data);
+  };
   $scope.currentDataCallback = this.setData;
   $scope.temperatureDataCallback = this.drawTemperatureChart;
+  $scope.humidityDataCallback = this.drawHumidityChart;
   $scope.parent = this;
   $scope.data = {};
   /**
