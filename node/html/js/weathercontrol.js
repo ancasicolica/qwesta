@@ -67,7 +67,7 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
    * The interval timer retrieving the data
    */
   var timer = $interval(function() {
-    $scope.data.getCurrentData(null, null);
+    $scope.data.getCurrentData('ajax/current.html', $scope.currentDataCallback);
   }, 10000);
 
 
@@ -136,30 +136,38 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
     }
   };
 
-  $scope.SuccessCallback = this.setData;
+  this.loadTemperatureChart = function () {
+    $scope.data.getCurrentData('ajax/temperature.html', $scope.temperatureDataCallback);
+  }
+  this.drawTemperatureChart = function (data) {
+    console.log(data);
+    drawTemperatureChart(data);
+  };
+
+  $scope.currentDataCallback = this.setData;
+  $scope.temperatureDataCallback = this.drawTemperatureChart;
   $scope.parent = this;
   $scope.data = {};
   /**
    * Gets the current data from the webserver over an ajax call
-   * @param item
-   * @param event
+   * @param url the url to retrieve
+   * @param callback will be called afterwards
    * @returns {boolean}
    */
-  $scope.data.getCurrentData = function(item, event) {
+  $scope.data.getCurrentData = function (url, callback) {
 
-    var responsePromise = $http.get("ajax/current.html", null);
+    var responsePromise = $http.get(url, null);
     // Success handling
     responsePromise.success(function(data, status, headers, config) {
       $scope.data.fromServer = "Text: " + data + "<br>status:" + status;
-      $scope.SuccessCallback(data);
-      $scope.tab = 5;
+      callback(data);
     });
     // Error handling
     responsePromise.error(function(data, status, headers, config) {
       //alert("AJAX failed!");
     });
     return true;
-  }
+  };
   // immediately request current data
-  $scope.data.getCurrentData(null, null);
+  $scope.data.getCurrentData('ajax/current.html', $scope.currentDataCallback);
 }]);
