@@ -14,12 +14,17 @@
   <!-- Qwesta CSS -->
   <link rel="stylesheet" href="css/qwesta.css">
 
+  <!-- Charts -->
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
+
+  <script type="text/javascript" src="js/charts.js"></script>
   <!-- Weather control -->
   <script src="js/weathercontrol.js?v=1"></script>
 
@@ -33,9 +38,11 @@
 
   <div class="infobox">
     <div class="stationname">{{ctrl.stationName}}</div>
-    <table>
+    <div class="column1">
+      <table>
       <tr>
-        <td class="icon"><img src="img/icon32/thermometer31.png"></td>
+        <td class="icon"><a ng-click="ctrl.loadTemperatureChart()">
+          <img src="img/icon32/thermometer31.png"></a></td>
         <td><div class="temperature">{{ctrl.currentRecord.temperature}}°</div></td>
       <td><img ng-src="{{ctrl.temperatureTrendImage}}"></td>
     </tr>
@@ -64,6 +71,11 @@
         <td colspan="3">{{ctrl.getCurrentRecordTime()}}</td>
       </tr>
     </table>
+    </div>
+    <div class="column2" id="chart">
+    </div>
+
+
   </div>
 </section>
 <p class="credits">Icons made by Catalin Fertu from <a href="http://www.flaticon.com

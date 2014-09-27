@@ -55,6 +55,13 @@ module.exports = {
     }
     return JSON.stringify(null);
   },
+
+  getTemperatureDataAsJson: function () {
+    if (measurementList.length > maxNbOfMeasurementsForCurrent) {
+      return JSON.stringify(measurementList.slice(measurementList - maxNbOfMeasurementsForCurrent));
+    }
+    return JSON.stringify(measurementList);
+  },
   /**
    * Returns all records as JSON string
    * @returns {*}
@@ -77,7 +84,9 @@ module.exports = {
 };
 
 var measurementList = new Array();  // List with the measurementList
-var maxNbOfMeasurements = 10;    // Max number of measurementList in the list
+var maxNbOfMeasurements = 100;    // Max number of measurementList in the list
+var maxNbOfMeasurementsForCurrent = 10; // max number for current list
+
 /***********************************************************************************/
 /**
  * Adds a new record to the measurement list
@@ -148,7 +157,7 @@ WeatherRecord.prototype.toString = function () {
 /***********************************************************************************/
 /* Simulation part, not needed for productive system                               */
 var simTimer = null;
-var simTimerDelay = 4000; // Delay in ms
+var simTimerDelay = 500; // Delay in ms
 /**
  * Starts the simulation timer. Every interval, a new random record is added
  */
@@ -158,35 +167,11 @@ var startSimTimer = function () {
 
     console.info("Simulation timer started");
     simTimer = setInterval(function () {
-        // Create (quite) random event
-        var temperatureRnd = Math.random() - 0.5;
-        var humidityRnd = Math.random() - 0.5;
-        var rainRnd = Math.random();
-        var windRnd = Math.random();
-        var currentRecord = measurementList[measurementList.length - 1];
-        var temp = Math.round((currentRecord.temperature + (temperatureRnd / 3)) * 10) / 10;
-        if (temp < -10) {
-          temp = -10;
-        } else if (temp > 45) {
-          temp = 45;
-        }
-        var humidity = Math.round(currentRecord.humidity + (humidityRnd * 2));
-        if (humidity < 30) {
-          humidity = 30;
-        } else if (humidity > 99) {
-          humidity = 99;
-        }
-        var rain = currentRecord.rain + Math.round(rainRnd * .8);
-        var wind = 0.0;
-        if (windRnd > 0.7) {
-          wind = Math.round(windRnd * 15) / 10;
-        }
-        var recString = '$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g, ',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g, ',') + ';' + rain.toString() + ';0;0';
-        addNewRecord(recString);
+        addNewRecord(createRandomEvent());
       },
       simTimerDelay);
   }
-}
+};
 /**
  * Stops the simulation timer
  */
@@ -196,4 +181,35 @@ var stopSimTimer = function () {
     clearInterval(simTimer);
   }
   simTimer = null;
-}
+};
+/**
+ * Create a random Event
+ * @returns {string} Random Event
+ */
+var createRandomEvent = function () {
+// Create (quite) random event
+  var temperatureRnd = Math.random() - 0.5;
+  var humidityRnd = Math.random() - 0.5;
+  var rainRnd = Math.random();
+  var windRnd = Math.random();
+  var currentRecord = measurementList[measurementList.length - 1];
+  var temp = Math.round((currentRecord.temperature + (temperatureRnd / 3)) * 10) / 10;
+  if (temp < -10) {
+    temp = -10;
+  } else if (temp > 45) {
+    temp = 45;
+  }
+  var humidity = Math.round(currentRecord.humidity + (humidityRnd * 2));
+  if (humidity < 30) {
+    humidity = 30;
+  } else if (humidity > 99) {
+    humidity = 99;
+  }
+  var rain = currentRecord.rain + Math.round(rainRnd * .8);
+  var wind = 0.0;
+  if (windRnd > 0.7) {
+    wind = Math.round(windRnd * 15) / 10;
+  }
+  var recString = '$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g, ',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g, ',') + ';' + rain.toString() + ';0;0';
+  return recString;
+};

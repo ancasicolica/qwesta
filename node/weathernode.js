@@ -74,6 +74,16 @@ app.get('/ajax/current.html', function (request, response) {
 });
 
 /**
+ * Get the file /ajax/temperature.html
+ * This file contains the available temperature data and is generated
+ */
+app.get('/ajax/temperature.html', function (request, response) {
+  response.writeHead(200, {"Content-Type": "text/plain"});
+  response.end(weather.getTemperatureDataAsJson());
+});
+
+
+/**
  * Get every other file (available on the filesystem)
  */
 app.get('*', function (request, response) {
@@ -115,7 +125,7 @@ app.get('*', function (request, response) {
 http.createServer(app).listen(port);
 
 // Set an initial record
-weather.newRecord('$1;1;;;;;;;;;;;;;;;;;;0;0;0,0;0;0;0');
+weather.newRecord('$1;1;;;;;;;;;;;;;;;;;;15,0;0;0,0;0;0;0');
 
 console.log('Weather server is running at http://localhost:' + port + '/\nCTRL + C to shutdown');
 
