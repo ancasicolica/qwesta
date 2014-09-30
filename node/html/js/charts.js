@@ -59,7 +59,7 @@ var drawTemperatureChart = function (data) {
         var options = {
           curveType: 'function',
           legend   : { position: 'bottom' },
-          chartArea: {backgroundColor: 'transparent'}
+          backgroundColor: {fill: 'transparent'} // undocumented google feature...
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart'));
