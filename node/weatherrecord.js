@@ -122,7 +122,6 @@ var addNewRecord = function (record) {
   try {
     var rec = record.toString();
     var wr = new WeatherRecord(rec);
-    console.log("New record!");
 
     if (measurementList.length > 0) {
       wr.rainDifference = 1.0 * (wr.rain - measurementList[measurementList.length - 1].rain);
@@ -137,6 +136,7 @@ var addNewRecord = function (record) {
     if (measurementList.length > maxNbOfMeasurements) {
       measurementList.shift();
     }
+    sendDataToServer(wr);
     return wr;
   }
   catch (e) {
@@ -179,10 +179,49 @@ WeatherRecord.prototype.toString = function () {
  console.log(d.toString());
  */
 
+
+var http = require('http');
+/**
+ * Sends data to your webserver.
+ * A GET request is used as some webservers (like mine...) refuse POST requests
+ * due to security reasons.
+ * @param record
+ */
+var sendDataToServer = function (record) {
+
+  var query = "q=" + new Buffer(JSON.stringify(record)).toString('base64');
+
+  var options = {
+    hostname: 'www.kusti.ch',
+    port    : 80,
+    path    : '/qwesta/push.php?' + query,
+    method  : 'GET'
+  };
+
+  var req = http.request(options, function (res) {
+    console.log('STATUS: ' + res.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(res.headers));
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
+    });
+  });
+
+  req.on('error', function (e) {
+    console.log('problem with request: ' + e.message);
+  });
+
+// write data to request body
+  req.write(JSON.stringify(record));
+  req.end();
+
+};
+
+
 /***********************************************************************************/
 /* Simulation part, not needed for productive system                               */
 var simTimer = null;
-var simTimerDelay = 500; // Delay in ms
+var simTimerDelay = 5000; // Delay in ms
 /**
  * Starts the simulation timer. Every interval, a new random record is added
  */
