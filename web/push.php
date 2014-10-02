@@ -34,7 +34,10 @@
 
  */
 /***********************************************************************************/
+error_reporting(E_ALL);
+ini_set('error_reporting', E_ALL);
 
+require_once("configuration.php");
 // Read params
 extract($_REQUEST);
 $arr = get_defined_vars();
@@ -42,9 +45,23 @@ $params = new stdClass(); // avoids PHP warning
 if(is_array($arr)) {
   foreach($arr as $pkey => $post) {
     $params->$pkey = $post;
-    echo $pkey.": ".$post."\n";
   }
 }
-echo "body:\n";
-echo base64_decode($params->q);
+
+$config = Configuration::get();
+
+// Verify hash
+$hash = sha1($config->communicationHashSeed.$params->q);
+$result = new stdClass();
+if (strcmp($hash, $params->h) != 0) {
+  $result->status = "error";
+  $result->message = "Hash error";
+  die(json_encode($result));
+}
+
+$record = json_decode(base64_decode($params->q), true);
+var_dump($record);
+$result->status = "ok";
+$result->timestamp = $record["timestamp"];
+echo json_encode($result);
 ?>

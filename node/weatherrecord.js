@@ -181,6 +181,9 @@ WeatherRecord.prototype.toString = function () {
 
 
 var http = require('http');
+var config = require('./configuration.js');
+var crypto = require('crypto');
+
 /**
  * Sends data to your webserver.
  * A GET request is used as some webservers (like mine...) refuse POST requests
@@ -189,12 +192,19 @@ var http = require('http');
  */
 var sendDataToServer = function (record) {
 
-  var query = "q=" + new Buffer(JSON.stringify(record)).toString('base64');
+  var weatherData = new Buffer(JSON.stringify(record)).toString('base64');
+  var shasum = crypto.createHash('sha1');
+  var hashVal = config.communicationHashSeed + weatherData;
+  console.log(hashVal);
+  shasum.update(hashVal);
+  var signature = shasum.digest('hex');
+
+  var query = "?q=" + weatherData + "&h=" + signature;
 
   var options = {
-    hostname: 'www.kusti.ch',
+    hostname: config.webserverHostname,
     port    : 80,
-    path    : '/qwesta/push.php?' + query,
+    path    : config.webserverUrl + query,
     method  : 'GET'
   };
 
@@ -211,8 +221,8 @@ var sendDataToServer = function (record) {
     console.log('problem with request: ' + e.message);
   });
 
-// write data to request body
-  req.write(JSON.stringify(record));
+
+  // Transfer request
   req.end();
 
 };

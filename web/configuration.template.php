@@ -51,6 +51,10 @@ class Configuration {
         $config->mysqlDb                  = "theDbTouse";
         $config->mysqlTableWeather        = "qwesta";
 
+        // This is the same hash seed as in the node part. The scripts
+        // on the webserver only accepts data signed with the same seed.
+        $config->communicationHashSeed    =
+        "2b3623d31f0e5b6018124bafec1a5b8cdac854a4";
         return $config;
     	}
 }
