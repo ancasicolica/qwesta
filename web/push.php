@@ -34,9 +34,6 @@
 
  */
 /***********************************************************************************/
-error_reporting(E_ALL);
-ini_set('error_reporting', E_ALL);
-
 require_once("configuration.php");
 // Read params
 extract($_REQUEST);
@@ -60,8 +57,45 @@ if (strcmp($hash, $params->h) != 0) {
 }
 
 $record = json_decode(base64_decode($params->q), true);
-var_dump($record);
 $result->status = "ok";
-$result->timestamp = $record["timestamp"];
+
+$mysqli = new mysqli($config->mysqlServer, $config->mysqlUser,
+$config->mysqlPass, $config->mysqlDb);
+
+if ($mysqli->connect_errno) {
+  $result->status = "error";
+  $result->message = "Connect failed: ".$mysqli->connect_error;
+  die(json_encode($result));
+}
+
+$sql = sprintf("INSERT INTO $config->mysqlTableWeather
+                ( ts,
+                  temperature,
+                  humidity,
+                  wind,
+                  rain,
+                  israining)
+                VALUES
+                ( '%s',
+                  %f,
+                  %u,
+                  %f,
+                  %u,
+                  %u)",
+                $record['timestamp'],
+                $record['temperature'],
+                $record['humidity'],
+                $record['wind'],
+                $record['rain'],
+                $record['isRaining']);
+
+if (!$mysqli->query($sql)) {
+  $result->status = "error";
+  $result->message = "Query Error:".$mysqli->error;
+  $result->query = $sql;
+  die(json_encode($result));
+}
+
+$mysqli->close();
 echo json_encode($result);
 ?>

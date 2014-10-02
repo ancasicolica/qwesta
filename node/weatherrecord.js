@@ -192,6 +192,11 @@ var crypto = require('crypto');
  */
 var sendDataToServer = function (record) {
 
+  // If the simulation is running, set the sim flag to true
+  if (simTimer != null) {
+    record.simulation = true;
+  }
+
   var weatherData = new Buffer(JSON.stringify(record)).toString('base64');
   var shasum = crypto.createHash('sha1');
   var hashVal = config.communicationHashSeed + weatherData;
@@ -209,11 +214,11 @@ var sendDataToServer = function (record) {
   };
 
   var req = http.request(options, function (res) {
-    console.log('STATUS: ' + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
+    // console.log('STATUS: ' + res.statusCode);
+    // console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-      console.log('BODY: ' + chunk);
+      // console.log('BODY: ' + chunk);
     });
   });
 
