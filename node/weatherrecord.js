@@ -199,7 +199,7 @@ var sendDataToServer = function (record) {
   var weatherData = new Buffer(JSON.stringify(record)).toString('base64');
   var shasum = crypto.createHash('sha1');
   var hashVal = config.communicationHashSeed + weatherData;
-  console.log(hashVal);
+
   shasum.update(hashVal);
   var signature = shasum.digest('hex');
 
@@ -213,16 +213,12 @@ var sendDataToServer = function (record) {
   };
 
   var req = http.request(options, function (res) {
-
-    // console.log('STATUS: ' + res.statusCode);
-    // console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
       if (simTimer != null) {
         // Do not spam the log on the weather station, show only in sim
         console.log('RESULT: ' + chunk);
       }
-      // console.log('BODY: ' + chunk);
     });
   });
 
