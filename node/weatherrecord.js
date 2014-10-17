@@ -214,10 +214,15 @@ var sendDataToServer = function (record) {
   };
 
   var req = http.request(options, function (res) {
+
     // console.log('STATUS: ' + res.statusCode);
     // console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
+      if (simTimer != null) {
+        // Do not spam the log on the weather station, show only in sim
+        console.log('RESULT: ' + chunk);
+      }
       // console.log('BODY: ' + chunk);
     });
   });
@@ -242,8 +247,6 @@ var simTimerDelay = 5000; // Delay in ms
  */
 var startSimTimer = function () {
   if (simTimer == null) {
-    // add a first record
-
     console.info("Simulation timer started");
     simTimer = setInterval(function () {
         addNewRecord(createRandomEvent());
@@ -271,7 +274,17 @@ var createRandomEvent = function () {
   var humidityRnd = Math.random() - 0.5;
   var rainRnd = Math.random();
   var windRnd = Math.random();
-  var currentRecord = measurementList[measurementList.length - 1];
+  var currentRecord;
+  if (measurementList.length > 0) {
+    currentRecord = measurementList[measurementList.length - 1];
+  }
+  else {
+    currentRecord = {
+      temperature: 20.0,
+      humidity   : 90,
+      rain       : 1000
+    };
+  }
   var temp = Math.round((currentRecord.temperature + (temperatureRnd / 3)) * 10) / 10;
   if (temp < -10) {
     temp = -10;

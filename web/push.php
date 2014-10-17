@@ -89,13 +89,17 @@ $sql = sprintf("INSERT INTO $config->mysqlTableWeather
                 $record['rain'],
                 $record['isRaining']);
 
-if (!$mysqli->query($sql)) {
-  $result->status = "error";
-  $result->message = "Query Error:".$mysqli->error;
-  $result->query = $sql;
-  die(json_encode($result));
+if ($record['simulation'] == 'true') {
+  $result->sql = $sql;
 }
-
+else {
+  if (!$mysqli->query($sql)) {
+    $result->status = "error";
+    $result->message = "Query Error:".$mysqli->error;
+    $result->query = $sql;
+    die(json_encode($result));
+  }
+}
 $mysqli->close();
 echo json_encode($result);
 ?>

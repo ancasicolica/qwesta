@@ -92,7 +92,7 @@ app.get('/ajax/humidity.html', function (request, response) {
 });
 
 /**
- * Get every other file (available on the filesystem)
+ * Get every other file (available in the filesystem)
  */
 app.get('*', function (request, response) {
 
@@ -131,9 +131,6 @@ app.get('*', function (request, response) {
 });
 
 http.createServer(app).listen(port);
-
-// Set an initial record
-weather.newRecord('$1;1;;;;;;;;;;;;;;;;;;15,0;0;0,0;0;0;0');
 
 console.log('Weather server is running at http://localhost:' + port + '/\nCTRL + C to shutdown');
 
