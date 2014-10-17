@@ -74,12 +74,14 @@ $sql = sprintf("INSERT INTO $config->mysqlTableWeather
                   humidity,
                   wind,
                   rain,
-                  israining)
+                  israining,
+                  raindifference)
                 VALUES
                 ( '%s',
                   %f,
                   %u,
                   %f,
+                  %u,
                   %u,
                   %u)",
                 $record['timestamp'],
@@ -87,7 +89,8 @@ $sql = sprintf("INSERT INTO $config->mysqlTableWeather
                 $record['humidity'],
                 $record['wind'],
                 $record['rain'],
-                $record['isRaining']);
+                $record['isRaining'],
+                $record['rainDifference']);
 
 if ($record['simulation'] == 'true') {
   $result->sql = $sql;

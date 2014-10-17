@@ -108,7 +108,7 @@ module.exports = {
   }
 };
 
-var measurementList = new Array();  // List with the measurementList
+var measurementList = [];  // List with the measurementList
 var maxNbOfMeasurements = 100;    // Max number of measurementList in the list
 var maxNbOfMeasurementsForCurrent = 10; // max number for current list
 
@@ -124,8 +124,7 @@ var addNewRecord = function (record) {
     var wr = new WeatherRecord(rec);
 
     if (measurementList.length > 0) {
-      wr.rainDifference = 1.0 * (wr.rain - measurementList[measurementList.length - 1].rain);
-      wr.rainDifference = Math.floor((wr.rainDifference * 0.295) * 24 * 10) / 10;
+      wr.rainDifference = (wr.rain - measurementList[measurementList.length - 1].rain);
     }
     else {
       wr.rainDifference = 0;
@@ -163,7 +162,7 @@ var WeatherRecord = function (record) {
   this.wind = parseFloat(elements[21].replace(/[,]/g, '.'));
   this.rain = parseInt(elements[22]);  // 1 tick is approx 295 ml/m2
   this.isRaining = (elements[23] == "1");
-  this.rainDifference = 0; // Difference since the last measurement, l per m2 per h
+  this.rainDifference = 0; // Difference since the last measurement, ticks
 
 }
 /**
