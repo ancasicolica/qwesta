@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  File:    push.php
  Purpose: Saves the weather data in the DB
