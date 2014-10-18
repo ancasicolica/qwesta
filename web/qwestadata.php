@@ -74,13 +74,18 @@ function getDataByDay($params)
     return createError("Invalid parameters");
   }
   $config = Configuration::get();
-
-  $sql = sprintf("SELECT *, AVG(temperature) as temperatureAvg, MAX(temperature) as temperatureMax, MIN(temperature)
-                  as temperatureMin, AVG(humidity) as humidityAfg, AVG(wind) as windAfg, MAX(wind) as windMax,
-                  MIN(wind) as windmin FROM `%s` WHERE DAY(ts) = %u and MONTH(ts) = %u and YEAR(ts) = %u GROUP BY HOUR(ts)",
+  $utcOffset = Configuration::getUtcOffset($params->day, $params->month);
+  $sql = sprintf("SELECT *, CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, AVG(temperature) AS temperatureAvg, MAX(temperature) AS temperatureMax, MIN(temperature)
+                  AS temperatureMin, AVG(humidity) AS humidityAvg, AVG(wind) AS windAvg, MAX(wind) AS windMax,
+                  MIN(wind) AS windmin FROM `%s` WHERE DAY(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND
+                  MONTH(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND YEAR(CONVERT_TZ(ts, '+00:00', '%s')) = %u GROUP BY HOUR(tsLocal)",
+    $utcOffset,
     $config->mysqlTableWeather,
+    $utcOffset,
     $params->day,
+    $utcOffset,
     $params->month,
+    $utcOffset,
     $params->year);
 
   return runSqlQuery($sql);
@@ -119,7 +124,7 @@ function runSqlQuery($sql)
 
   $res = $mysqli->query($sql);
   if (!$res) {
-    return createError("Query Error: " . $mysqli->error);
+    return createError("Query Error: " . $mysqli->error . "<br>Complete SQL String:" . $sql);
   }
 
   $result->success = true;

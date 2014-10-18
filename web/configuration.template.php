@@ -37,25 +37,40 @@
 
  */
 /***********************************************************************************/
+namespace qwesta;
+
 class Configuration {
-    // Gets the configuration object
-    public static function get() {
-        $config = new stdClass();
+  // Gets the configuration object
+  public static function get()
+  {
+    $config = new \stdClass();
 
-    	$config->debug = false; // Enables debug functions when needed
+    $config->debug = false; // Enables debug functions when needed
 
-        // Database settings
-    	$config->mysqlServer              = "your.db.server.com";
-        $config->mysqlUser                = "dbUserName";
-        $config->mysqlPass                = "yourPassword";
-        $config->mysqlDb                  = "theDbTouse";
-        $config->mysqlTableWeather        = "qwesta";
+    // Database settings
+    $config->mysqlServer = "your.db.server.com";
+    $config->mysqlUser = "dbUserName";
+    $config->mysqlPass = "yourPassword";
+    $config->mysqlDb = "theDbTouse";
+    $config->mysqlTableWeather = "qwesta";
 
-        // This is the same hash seed as in the node part. The scripts
-        // on the webserver only accepts data signed with the same seed.
-        $config->communicationHashSeed    =
-        "2b3623d31f0e5b6018124bafec1a5b8cdac854a4";
-        return $config;
-    	}
+    // This is the same hash seed as in the node part. The scripts
+    // on the webserver only accepts data signed with the same seed.
+    $config->communicationHashSeed =
+      "2b3623d31f0e5b6018124bafec1a5b8cdac854a4";
+    return $config;
+  }
+
+  /**
+   * Returns the offset from UTC for a given day
+   * @param $day  integer
+   * @param $month integer
+   * @return string
+   */
+  public static function getUtcOffset($day, $month)
+  {
+    // Todo: Add DST Rule
+    return '+02:00';
+  }
 }
 ?>
