@@ -34,11 +34,12 @@
 
  */
 /***********************************************************************************/
+namespace qwesta;
 require_once("configuration.php");
 // Read params
 extract($_REQUEST);
 $arr = get_defined_vars();
-$params = new stdClass(); // avoids PHP warning
+$params = new \stdClass(); // avoids PHP warning
 if(is_array($arr)) {
   foreach($arr as $pkey => $post) {
     $params->$pkey = $post;
@@ -49,7 +50,7 @@ $config = Configuration::get();
 
 // Verify hash
 $hash = sha1($config->communicationHashSeed.$params->q);
-$result = new stdClass();
+$result = new \stdClass();
 if (strcmp($hash, $params->h) != 0) {
   $result->status = "error";
   $result->message = "Hash error";
@@ -59,7 +60,7 @@ if (strcmp($hash, $params->h) != 0) {
 $record = json_decode(base64_decode($params->q), true);
 $result->status = "ok";
 
-$mysqli = new mysqli($config->mysqlServer, $config->mysqlUser,
+$mysqli = new \mysqli($config->mysqlServer, $config->mysqlUser,
 $config->mysqlPass, $config->mysqlDb);
 
 if ($mysqli->connect_errno) {

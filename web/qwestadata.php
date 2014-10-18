@@ -34,6 +34,7 @@
 
  */
 /***********************************************************************************/
+namespace qwesta;
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -42,7 +43,7 @@ require_once("configuration.php");
 // Read params
 extract($_REQUEST);
 $arr = get_defined_vars();
-$params = new stdClass(); // avoids PHP warning
+$params = new \stdClass(); // avoids PHP warning
 $params->view = "none";
 
 if (is_array($arr)) {
@@ -55,7 +56,7 @@ if ($params->view == "dataByDay") {
   echo json_encode(getDataByDay($params));
 } else {
   // don't know what to do
-  $result = new stdClass();
+  $result = new \stdClass();
   $result->message = "don't know what to do";
   $result->success = false;
   echo json_encode($result);
@@ -92,7 +93,7 @@ function getDataByDay($params)
  */
 function createError($message)
 {
-  $result = new stdClass();
+  $result = new \stdClass();
   $result->success = false;
   $result->message = $message;
   return $result;
@@ -107,9 +108,9 @@ function runSqlQuery($sql)
 {
 
   $config = Configuration::get();
-  $result = new stdClass();
+  $result = new \stdClass();
 
-  $mysqli = new mysqli($config->mysqlServer, $config->mysqlUser,
+  $mysqli = new \mysqli($config->mysqlServer, $config->mysqlUser,
     $config->mysqlPass, $config->mysqlDb);
 
   if ($mysqli->connect_errno) {
