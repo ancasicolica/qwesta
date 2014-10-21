@@ -42,7 +42,7 @@ module.exports = {
    * @param record as read from the serial interface
    * @returns {*}
    */
-  newRecord             : function (record) {
+  newRecord: function (record) {
     return addNewRecord(record);
   },
   /**
@@ -59,7 +59,7 @@ module.exports = {
    * Returns the newest records (maxNbOfMeasurementsForCurrent)
    * @returns {*}
    */
-  getNewestRecords        : function () {
+  getNewestRecords: function () {
     if (measurementList.length > maxNbOfMeasurementsForCurrent) {
       return JSON.stringify(measurementList.slice(measurementList.length - maxNbOfMeasurementsForCurrent));
     }
@@ -80,7 +80,7 @@ module.exports = {
    * Returns the records for the humidity chart
    * @returns {*}
    */
-  getHumidityDataAsJson   : function () {
+  getHumidityDataAsJson: function () {
     var data = [];
     for (var i = 0; i < measurementList.length; i++) {
       data.push({'timestamp': measurementList[i].timestamp, 'humidity': measurementList[i].humidity});
@@ -91,19 +91,19 @@ module.exports = {
    * Returns all records as JSON string
    * @returns {*}
    */
-  getAllRecordsAsJson   : function () {
+  getAllRecordsAsJson: function () {
     return JSON.stringify(measurementList);
   },
   /**
    * Starts the simulator
    */
-  startSimulator        : function () {
+  startSimulator: function () {
     startSimTimer();
   },
   /**
    * Stopps the simulator
    */
-  stopSimulator         : function () {
+  stopSimulator: function () {
     stopSimTimer();
   }
 };
@@ -124,7 +124,13 @@ var addNewRecord = function (record) {
     var wr = new WeatherRecord(rec);
 
     if (measurementList.length > 0) {
-      wr.rainDifference = (wr.rain - measurementList[measurementList.length - 1].rain);
+      if (wr.rain > measurementList[measurementList.length - 1].rain) {
+        wr.rainDifference = (wr.rain - measurementList[measurementList.length - 1].rain);
+      }
+      else {
+        // overflow!
+        wr.rainDifference = 4096 - measurementList[measurementList.length - 1].rain + wr.rain;
+      }
     }
     else {
       wr.rainDifference = 0;
@@ -171,7 +177,7 @@ var WeatherRecord = function (record) {
  */
 WeatherRecord.prototype.toString = function () {
   return this.timestamp + " T:" + this.temperature + " H:" + this.humidity + "% W:"
-    + this.wind + " R:" + this.rain + " iR:" + this.isRaining;
+  + this.wind + " R:" + this.rain + " iR:" + this.isRaining;
 }
 /*
  var d = new WeatherRecord("$1;1;;;;;;;;;;;;;;;;;;21,1;50;0,0;10;0;0");
@@ -207,9 +213,9 @@ var sendDataToServer = function (record) {
 
   var options = {
     hostname: config.webserverHostname,
-    port    : 80,
-    path    : config.webserverUrl + query,
-    method  : 'GET'
+    port: 80,
+    path: config.webserverUrl + query,
+    method: 'GET'
   };
 
   var req = http.request(options, function (res) {
@@ -276,8 +282,8 @@ var createRandomEvent = function () {
   else {
     currentRecord = {
       temperature: 20.0,
-      humidity   : 90,
-      rain       : 1000
+      humidity: 90,
+      rain: 1000
     };
   }
   var temp = Math.round((currentRecord.temperature + (temperatureRnd / 3)) * 10) / 10;
