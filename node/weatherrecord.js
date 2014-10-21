@@ -124,7 +124,7 @@ var addNewRecord = function (record) {
     var wr = new WeatherRecord(rec);
 
     if (measurementList.length > 0) {
-      if (wr.rain > measurementList[measurementList.length - 1].rain) {
+      if (wr.rain >= measurementList[measurementList.length - 1].rain) {
         wr.rainDifference = (wr.rain - measurementList[measurementList.length - 1].rain);
       }
       else {
