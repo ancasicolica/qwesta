@@ -53,7 +53,11 @@ if (is_array($arr)) {
 }
 
 if ($params->view == "dataByDay") {
+  // Get the data of one day
   echo json_encode(getDataByDay($params));
+} else if ($params->view == "current") {
+  // get the current data
+  echo json_encode(getCurrentDataSet());
 } else {
   // don't know what to do
   $result = new \stdClass();
@@ -77,7 +81,7 @@ function getDataByDay($params)
   $utcOffset = Configuration::getUtcOffset($params->day, $params->month);
   $sql = sprintf("SELECT *, CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, AVG(temperature) AS temperatureAvg, MAX(temperature) AS temperatureMax, MIN(temperature)
                   AS temperatureMin, AVG(humidity) AS humidityAvg, AVG(wind) AS windAvg, MAX(wind) AS windMax,
-                  MIN(wind) AS windmin FROM `%s` WHERE DAY(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND
+                  MIN(wind) AS windmin FROM %s WHERE DAY(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND
                   MONTH(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND YEAR(CONVERT_TZ(ts, '+00:00', '%s')) = %u GROUP BY HOUR(tsLocal)",
     $utcOffset,
     $config->mysqlTableWeather,
@@ -91,6 +95,16 @@ function getDataByDay($params)
   return runSqlQuery($sql);
 }
 
+/**
+ * Returns the last data set recorded
+ * @return \object
+ */
+function getCurrentDataSet()
+{
+  $config = Configuration::get();
+  $sql = sprintf("SELECT * FROM %s ORDER BY ts DESC LIMIT 1", $config->mysqlTableWeather);
+  return runSqlQuery($sql);
+}
 /**
  * Creates an error object
  * @message string with the message of the error
