@@ -38,8 +38,8 @@
 
 
 // Configure the comport as required by your system
-var serialComPort = 'COM4';         // Windows
-var serialComPort = '/dev/ttyUSB0'  // Linux
+// var serialComPort = 'COM4';         // Windows
+var serialComPort = '/dev/ttyUSB0';  // Linux
 var simulator = false; // set to true when simulating
 var port = 8888; // set to your port
 var htmlRootPath = '/home/kc/sd/qwesta/html'; // set to the place where your html is
@@ -48,7 +48,7 @@ var htmlRootPath = '/home/kc/sd/qwesta/html'; // set to the place where your htm
 if (process.env.NODE_ENV === 'development') {
   console.info("DEVELOPMENT environment active");
   htmlRootPath = process.cwd() + '/html';
-  var simulator = true;
+  simulator = true;
 }
 
 /***********************************************************************************/
@@ -166,7 +166,5 @@ sp.open(function () {
     if (r != null) {
       console.log('data received: ' + r.toString());
     }
-
   });
-
 });
