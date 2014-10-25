@@ -10,7 +10,7 @@
 #
 ### BEGIN INIT INFO
 # Provides:             qwesta
-# Required-Start:       $syslog $remote_fs
+# Required-Start:       $all
 # Required-Stop:        $syslog $remote_fs
 # Should-Start:         $local_fs
 # Should-Stop:          $local_fs
