@@ -29,9 +29,14 @@
 <body>
 
 <section ng-controller="CurrentDataCtrl as ctrl">
-    Temperature: {{data.temperature}}°C<br>
-    Humidity: {{data.humidity}}%<br>
-    Wind: {{data.wind}} km/h
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4"> Temperature: {{data.temperature}}°C<br>
+                Humidity: {{data.humidity}}%<br>
+                Wind: {{data.wind}} km/h
+            </div>
+        </div>
+    </div>
 </section>
 </body>
 </html>
