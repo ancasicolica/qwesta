@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html ng-app="currentWeatherApp">
+<head lang="de">
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="js/angular.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+    <!-- Qwesta CSS -->
+    <link rel="stylesheet" href="css/qwestaweb.css">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.1.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Angular application for current weather -->
+    <script src="js/currentdatactrl.js?v=1"></script>
+
+    <!-- See http://getbootstrap.com/examples/theme/# -->
+    <meta http-equiv="cache-control" content="no-cache">
+    <title>Qwesta: Current weather</title>
+</head>
+<body>
+
+<section ng-controller="CurrentDataCtrl as ctrl">
+    Temperature: {{data.temperature}}°C<br>
+    Humidity: {{data.humidity}}%<br>
+    Wind: {{data.wind}} km/h
+</section>
+</body>
+</html>

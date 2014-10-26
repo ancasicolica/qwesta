@@ -3,7 +3,7 @@ body {
 }
 
 div.infobox {
-  width    : 550px;
+  width: 600px;
   margin         : 30px auto auto auto;
   border         : 2px solid darkblue;
   padding        : 5px;

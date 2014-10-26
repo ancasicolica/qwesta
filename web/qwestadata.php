@@ -40,6 +40,10 @@ error_reporting(E_ALL);
 
 require_once("configuration.php");
 
+header('Cache-Control: no-cache, must-revalidate');
+header('Expires: Sat, 24 May 1997 23:00:00 GMT');
+header('Content-type: application/json');
+header('Access-Control-Allow-Origin: *');
 // Read params
 extract($_REQUEST);
 $arr = get_defined_vars();
