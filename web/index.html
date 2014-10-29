@@ -1,45 +1,71 @@
-<?
-/*
- File:    index.php
- Purpose: Shows the weather station frontend in the web
- Author:  Christian Kuster, CH-8342 Wernetshausen, www.kusti.ch, 22.9.14
- Github:  https://github.com/ancasicolica/qwesta
-
- ----------------------------------------------------------------------------------
-
- This is free and unencumbered software released into the public domain.
-
- Anyone is free to copy, modify, publish, use, compile, sell, or
- distribute this software, either in source code form or as a compiled
- binary, for any purpose, commercial or non-commercial, and by any
- means.
-
- In jurisdictions that recognize copyright laws, the author or authors
- of this software dedicate any and all copyright interest in the
- software to the public domain. We make this dedication for the benefit
- of the public at large and to the detriment of our heirs and
- successors. We intend this dedication to be an overt act of
- relinquishment in perpetuity of all present and future rights to this
- software under copyright law.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- OTHER DEALINGS IN THE SOFTWARE.
-
- For more information, please refer to <http://unlicense.org/>
-
-*/
-/***********************************************************************************/
-
-?>
 <!DOCTYPE html>
-<html>
+<html ng-app="qwestaApp">
 <head lang="de">
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="js/angular.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+    <!-- Qwesta CSS -->
+    <link rel="stylesheet" href="css/qwestaweb.css">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.1.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Angular application for current weather -->
+    <script src="js/qwestactrl.js?v=1"></script>
+
+    <!-- See http://getbootstrap.com/examples/theme/# -->
+    <meta http-equiv="cache-control" content="no-cache">
+    <title>Wetterstation</title>
 </head>
+<div ng-controller="QwestaCtrl">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12"><h1>Aktuelles Wetter</h1></div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-3 currentdata"><img src="img/icon32/thermometer31.png">
+                    {{data.temperature}}°C
+                </div>
+                <div class="col-xs-12 col-sm-3 currentdata"><img src="img/icon32/humidity.png">{{data.humidity}}%</div>
+                <div class="col-xs-12 col-sm-3 currentdata"><img src="img/icon32/winds4.png"> {{data.wind}} km/h</div>
+                <div class="col-xs-12 col-sm-3 currentdata"><img src="img/icon32/water35.png"> {{data.wind}} l/h</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12"><h1>Verlauf</h1></div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12">
+                    <img class="img-responsive" ng-src="{{test}}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-4 col-sm-1" ng-click="set('01')"><img src="img/icon32/thermometer31.png"><br>Heute
+                </div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('02')"><img src="img/icon32/thermometer31.png"><br>7 Tage
+                </div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('03')"><img src="img/icon32/thermometer31.png"><br>Monat
+                </div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('04')"><img src="img/icon32/humidity.png"><br>Heute</div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('05')"><img src="img/icon32/humidity.png"><br>7 Tage</div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('06')"><img src="img/icon32/humidity.png"><br>Monat</div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('07')"><img src="img/icon32/winds4.png"><br>Heute</div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('08')"><img src="img/icon32/winds4.png"><br>7 Tage</div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('09')"><img src="img/icon32/winds4.png"><br>Monat</div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('10')"><img src="img/icon32/water35.png"><br>Heute</div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('11')"><img src="img/icon32/water35.png"><br>7 Tage</div>
+                <div class="col-xs-4 col-sm-1" ng-click="set('12')"><img src="img/icon32/water35.png"><br>Monat</div>
+            </div>
+        </div>
+    </div>
+</div>
 <body>
 </body>
 </html>
