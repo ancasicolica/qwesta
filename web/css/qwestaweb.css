@@ -1,8 +1,10 @@
 .currentdata {
     background-color: rgba(35, 143, 175, 0.25);
     padding-left: 20px;
-    padding-top: 35px;
-    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    height: 80px;
+    font-size: 36px;
 }
 
 .qwesta-stats {
@@ -11,4 +13,9 @@
 
 .qwesta-stats-selected {
 
+}
+
+#chart {
+    height: 600px;
+    width: 100%;
 }

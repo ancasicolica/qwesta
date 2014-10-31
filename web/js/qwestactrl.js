@@ -39,12 +39,84 @@
 var qwesta = angular.module('qwestaApp', []);
 
 qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
-    $scope.test = "img/webtest/webtest00.jpg";
+  // this is the path to the qwesta directory on your server
+  var qwestaUrl = "http://www.kusti.ch/qwesta/qwestadata.php";
 
-    $scope.set = function (index) {
-      $scope.test = "img/webtest/webtest" + index + ".jpg";
-    }
+  // Current weather data
+  $scope.data = {
+    temperature: 0,
+    humidity: 0,
+    wind: 0.0,
+    rain: 0
   }
-  ]
-);
+
+  /**
+   * Set the chart data to the selected index
+   * @param index
+   */
+  $scope.set = function (index) {
+    var param = "?view=";
+    var now = new Date();
+
+    switch (index) {
+      case 0:
+        param += "dataByDay&day=" + now.getDate() + "&month=" + (now.getMonth() + 1) + "&year=" + now.getFullYear();
+        break;
+
+      default:
+        return;
+    }
+
+    var url = qwestaUrl + param;
+    $scope.getCurrentData(url, function (data) {
+      drawTemperatureChart(data.data);
+    });
+
+  };
+
+  /**
+   * Get the current (latest) values
+   */
+  $scope.getCurrentValues = function () {
+    $scope.getCurrentData(qwestaUrl + "?view=current", function (data) {
+      console.log(data);
+      if (data.success) {
+        $scope.data.temperature = data.data[0].temperature;
+        $scope.data.humidity = data.data[0].humidity;
+        $scope.data.wind = data.data[0].wind;
+        $scope.data.rain = data.data[0].raindifference;
+      }
+      else {
+        $scope.data.temperature = 0;
+        $scope.data.humidity = 0;
+        $scope.data.wind = 0;
+        $scope.data.rain = 0;
+      }
+    });
+  };
+
+  /**
+   * AJAX call to the webserver in order to retrieve the data
+   * @param url
+   * @param callback
+   * @returns {boolean}
+   */
+  $scope.getCurrentData = function (url, callback) {
+    console.log("URL:" + url);
+    var responsePromise = $http.get(url, null);
+    // Success handling
+    responsePromise.success(function (data, status, headers, config) {
+      callback(data);
+    });
+    // Error handling
+    responsePromise.error(function (data, status, headers, config) {
+      //alert("AJAX failed!");
+    });
+    return true;
+  };
+
+  // Initialize
+  $scope.getCurrentValues();
+  $scope.set(0);
+}]);
 

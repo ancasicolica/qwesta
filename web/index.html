@@ -19,7 +19,12 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
+
+    <!-- Charts -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
     <!-- Angular application for current weather -->
+    <script src="js/charts.js?v=2"></script>
     <script src="js/qwestactrl.js?v=1"></script>
 
     <!-- See http://getbootstrap.com/examples/theme/# -->
@@ -42,12 +47,12 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12"><h1>Verlauf</h1></div>
             <div class="row">
-                <div class="col-xs-12 col-sm-12">
-                    <img class="img-responsive" ng-src="{{test}}">
+                <div class="col-xs-12 col-sm-12" id="chart">
+                    <div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-4 col-sm-1 qwesta-stats" ng-click="set('01')"><img
+                <div class="col-xs-4 col-sm-1 qwesta-stats" ng-click="set(0)"><img
                         src="img/icon32/thermometer31.png"><br>Heute
                 </div>
                 <div class="col-xs-4 col-sm-1 qwesta-stats" ng-click="set('02')"><img
