@@ -39,7 +39,7 @@
 var currentWeather = angular.module('currentWeatherApp', []);
 
 currentWeather.controller('CurrentDataCtrl', ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
-  this.hello = "world";
+
   $scope.test = 1;
   $scope.data = {
     temperature: 0

@@ -57,10 +57,17 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   $scope.set = function (index) {
     var param = "?view=";
     var now = new Date();
+    var callback = null;
 
     switch (index) {
       case 0:
         param += "dataByDay&day=" + now.getDate() + "&month=" + (now.getMonth() + 1) + "&year=" + now.getFullYear();
+        callback = drawTemperatureChart;
+        break;
+
+      case 4:
+        param += "dataByDay&day=" + now.getDate() + "&month=" + (now.getMonth() + 1) + "&year=" + now.getFullYear();
+        callback = drawHumidityChart;
         break;
 
       default:
@@ -69,7 +76,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
 
     var url = qwestaUrl + param;
     $scope.getCurrentData(url, function (data) {
-      drawTemperatureChart(data.data);
+      callback(data.data);
     });
 
   };
