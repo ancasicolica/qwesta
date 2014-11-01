@@ -36,11 +36,51 @@
 /***********************************************************************************/
 
 
-var qwesta = angular.module('qwestaApp', []);
+var qwesta = angular.module('qwestaApp', ['ui.bootstrap']);
 
 qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
   // this is the path to the qwesta directory on your server
   var qwestaUrl = "http://www.kusti.ch/qwesta/qwestadata.php";
+
+  $scope.initDate = new Date().toDateString();
+  $scope.currentGraph = 0;
+
+  // Datepicker configuration
+  // http://angular-ui.github.io/bootstrap/#/datepicker
+  $scope.today = function () {
+    $scope.startdate = new Date();
+  };
+  $scope.today();
+
+  $scope.clear = function () {
+    $scope.startdate = null;
+  };
+
+  // Disable weekend selection
+  $scope.disabled = function (date, mode) {
+    return ( mode === 'day' && ( date > new Date()));
+  };
+
+  $scope.toggleMin = function () {
+    $scope.minDate = new Date(2014, 9, 1);
+  };
+  $scope.toggleMin();
+
+  $scope.open = function ($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    $scope.opened = true;
+  };
+
+  $scope.dateOptions = {
+    formatYear: 'yy',
+    startingDay: 1
+  };
+
+  $scope.format = 'dd.MM.yyyy';
+
+
 
   // Current weather data
   $scope.data = {
@@ -48,25 +88,29 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     humidity: 0,
     wind: 0.0,
     rain: 0
-  }
+  };
 
+  $scope.test = function () {
+    console.log($scope.startdate);
+    $scope.set($scope.currentGraph);
+  };
   /**
    * Set the chart data to the selected index
    * @param index
    */
   $scope.set = function (index) {
+    $scope.currentGraph = index;
     var param = "?view=";
-    var now = new Date();
     var callback = null;
 
     switch (index) {
       case 0:
-        param += "dataByDay&day=" + now.getDate() + "&month=" + (now.getMonth() + 1) + "&year=" + now.getFullYear();
+        param += "dataByDay&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
         callback = drawTemperatureChart;
         break;
 
       case 4:
-        param += "dataByDay&day=" + now.getDate() + "&month=" + (now.getMonth() + 1) + "&year=" + now.getFullYear();
+        param += "dataByDay&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
         callback = drawHumidityChart;
         break;
 
