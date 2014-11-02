@@ -32,6 +32,53 @@
  For more information, please refer to <http://unlicense.org/>
 
  */
+
+// Global variable containing charts settings
+var qwestaChartsSettings = {};
+
+var initCharts = function () {
+  var ua = navigator.userAgent.toLowerCase();
+  console.log(ua);
+  if (ua.indexOf('safari') != -1) {
+    if (ua.indexOf('chrome') > -1) {
+      // Google Chrome
+      qwestaChartsSettings.useDateTime = true;
+    } else {
+      // Safari does not handle date time in X axis correctly
+      qwestaChartsSettings.useDateTime = false;
+    }
+  }
+  else {
+    // All other browsers hopefully support this...
+    qwestaChartsSettings.useDateTime = true;
+  }
+};
+/**
+ * Returns the data type for the X axis. Chrome (and others) accept datetime while
+ * the safari can't handle it
+ * @returns {string}
+ */
+var getTimeAxisDataType = function () {
+  if (qwestaChartsSettings.useDateTime) {
+    return 'datetime';
+  }
+  else {
+    return 'string';
+  }
+};
+/**
+ * Return the correct format for the X Axis time
+ * @param date
+ * @returns {*}
+ */
+var getTimeAxisValue = function (date) {
+  if (qwestaChartsSettings.useDateTime) {
+    return new Date(date);
+  }
+  else {
+    return date;
+  }
+};
 /***********************************************************************************/
 /**
  * Draws a temperature chart
@@ -48,20 +95,21 @@ var drawTemperatureChart = function (data) {
       callback: function () {
         var chartData = new google.visualization.DataTable();
         // The colums of the chart
-        chartData.addColumn('datetime', 'Zeit');
+        chartData.addColumn(getTimeAxisDataType(), 'Zeit');
         chartData.addColumn('number', 'Temperatur Min');
         chartData.addColumn('number', 'Temperatur Avg');
         chartData.addColumn('number', 'Temperatur Max');
 
         // transform received data to chart format
         for (var i = 0; i < temperatureData.length; i++) {
-          chartData.addRow([new Date(temperatureData[i].tsLocal), parseFloat(temperatureData[i].temperatureMin), parseFloat(temperatureData[i].temperatureAvg), parseFloat(temperatureData[i].temperatureMax)]);
+          chartData.addRow([getTimeAxisValue(temperatureData[i].tsLocal), parseFloat(temperatureData[i].temperatureMin), parseFloat(temperatureData[i].temperatureAvg), parseFloat(temperatureData[i].temperatureMax)]);
         }
 
         var options = {
           curveType: 'function',
           legend: {position: 'bottom'},
-          backgroundColor: {fill: 'transparent'} // undocumented google feature...
+          title: "Temperatur"
+          //backgroundColor: {fill: 'transparent'} // undocumented google feature...
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart'));
@@ -70,6 +118,11 @@ var drawTemperatureChart = function (data) {
       }
     })
   }
+};
+
+
+var chartTest = function () {
+
 };
 
 /**

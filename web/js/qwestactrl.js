@@ -42,6 +42,9 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   // this is the path to the qwesta directory on your server
   var qwestaUrl = "http://www.kusti.ch/qwesta/qwestadata.php";
 
+  // Init Charts lib
+  initCharts();
+
   $scope.initDate = new Date().toDateString();
   $scope.currentGraph = 0;
 
@@ -90,10 +93,11 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     rain: 0
   };
 
-  $scope.test = function () {
+  $scope.setDate = function () {
     console.log($scope.startdate);
     $scope.set($scope.currentGraph);
   };
+
   /**
    * Set the chart data to the selected index
    * @param index
