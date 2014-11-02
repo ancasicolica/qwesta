@@ -33,50 +33,30 @@
 
  */
 
-// Global variable containing charts settings
-var qwestaChartsSettings = {};
-
+/**
+ * Inits the charts, probably not used
+ */
 var initCharts = function () {
-  var ua = navigator.userAgent.toLowerCase();
-  console.log(ua);
-  if (ua.indexOf('safari') != -1) {
-    if (ua.indexOf('chrome') > -1) {
-      // Google Chrome
-      qwestaChartsSettings.useDateTime = true;
-    } else {
-      // Safari does not handle date time in X axis correctly
-      qwestaChartsSettings.useDateTime = false;
-    }
-  }
-  else {
-    // All other browsers hopefully support this...
-    qwestaChartsSettings.useDateTime = true;
-  }
+
 };
+
 /**
- * Returns the data type for the X axis. Chrome (and others) accept datetime while
- * the safari can't handle it
- * @returns {string}
+ * Converts a MySql Time format to a Date. This is only an issue for the Safari Browser which
+ * follows a very strict implementation
+ * @param date formatted as delivered by MySql: "2014-10-06 03:01:12"
+ * @returns {Date} date object
  */
-var getTimeAxisDataType = function () {
-  if (qwestaChartsSettings.useDateTime) {
-    return 'datetime';
+var convertMySqlTimeToDate = function (date) {
+  try {
+    var a = date.split(' ');
+    var b = a[0].split('-');
+    var c = a[1].split(':');
+
+    return new Date(parseInt(b[0]), parseInt(b[1]), parseInt(b[2]), parseInt(c[0]), parseInt(c[1]), parseInt(c[2]));
   }
-  else {
-    return 'string';
-  }
-};
-/**
- * Return the correct format for the X Axis time
- * @param date
- * @returns {*}
- */
-var getTimeAxisValue = function (date) {
-  if (qwestaChartsSettings.useDateTime) {
-    return new Date(date);
-  }
-  else {
-    return date;
+  catch (e) {
+    console.error("Invalid MySQL Date:" + date);
+    return new Date(2000, 1, 1);
   }
 };
 /***********************************************************************************/
@@ -95,14 +75,14 @@ var drawTemperatureChart = function (data) {
       callback: function () {
         var chartData = new google.visualization.DataTable();
         // The colums of the chart
-        chartData.addColumn(getTimeAxisDataType(), 'Zeit');
+        chartData.addColumn('datetime', 'Zeit');
         chartData.addColumn('number', 'Temperatur Min');
         chartData.addColumn('number', 'Temperatur Avg');
         chartData.addColumn('number', 'Temperatur Max');
 
         // transform received data to chart format
         for (var i = 0; i < temperatureData.length; i++) {
-          chartData.addRow([getTimeAxisValue(temperatureData[i].tsLocal), parseFloat(temperatureData[i].temperatureMin), parseFloat(temperatureData[i].temperatureAvg), parseFloat(temperatureData[i].temperatureMax)]);
+          chartData.addRow([convertMySqlTimeToDate(temperatureData[i].tsLocal), parseFloat(temperatureData[i].temperatureMin), parseFloat(temperatureData[i].temperatureAvg), parseFloat(temperatureData[i].temperatureMax)]);
         }
 
         var options = {
@@ -146,7 +126,7 @@ var drawHumidityChart = function (data) {
 
         // transform received data to chart format
         for (var i = 0; i < meteodata.length; i++) {
-          chartData.addRow([new Date(meteodata[i].tsLocal), parseFloat(meteodata[i].humidityAvg)]);
+          chartData.addRow([convertMySqlTimeToDate(meteodata[i].tsLocal), parseFloat(meteodata[i].humidityAvg)]);
         }
 
         var options = {
