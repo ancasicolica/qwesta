@@ -107,7 +107,7 @@ function getDataByDay($params)
     if (strlen($query) > 0) {
       $query .= ", ";
     }
-    $query .= "israining, rain, raindifference";
+    $query .= "israining, rain, SUM(raindifference) as raindif";
   }
 
   if (strlen($query) == 0) {

@@ -181,3 +181,50 @@ var drawWindChart = function (data) {
   }
 };
 
+
+/**
+ * Draws a Rain chart
+ * @param data temperature data
+ */
+var drawRainChart = function (data) {
+  if (google) {
+    // keep the data in the scope
+    var meteodata = data;
+    var maxValue = 1;
+
+    // load google module asynchronously, otherwise the screen will be blank!
+    google.load('visualization', '1.0', {
+      packages: ['corechart'],
+      callback: function () {
+        var chartData = new google.visualization.DataTable();
+        // The colums of the chart
+        chartData.addColumn('datetime', 'Zeit');
+        chartData.addColumn('number', 'Regen');
+
+        // transform received data to chart format
+        for (var i = 0; i < meteodata.length; i++) {
+          var rainDiff = parseInt(meteodata[i].raindif);
+          chartData.addRow([convertMySqlTimeToDate(meteodata[i].tsLocal),
+            rainDiff]);
+
+          if (rainDiff > maxValue) {
+            maxValue = rainDiff;
+          }
+        }
+
+        var options = {
+          title: 'Regen',
+          curveType: 'function',
+          legend: {position: 'bottom'},
+          backgroundColor: {fill: 'transparent'}, // undocumented google feature...
+          vAxis: {minValue: 0, maxValue: maxValue}
+
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
+
+        chart.draw(chartData, options);
+      }
+    })
+  }
+};

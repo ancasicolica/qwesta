@@ -123,6 +123,11 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
         callback = drawWindChart;
         break;
 
+      case 9:
+        param += "dataByDay&rain&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        callback = drawRainChart;
+        break;
+
       default:
         return;
     }
