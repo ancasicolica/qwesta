@@ -100,13 +100,8 @@ var drawTemperatureChart = function (data) {
   }
 };
 
-
-var chartTest = function () {
-
-};
-
 /**
- * Draws a temperature chart
+ * Draws a Humidity chart
  * @param data temperature data
  */
 var drawHumidityChart = function (data) {
@@ -130,6 +125,7 @@ var drawHumidityChart = function (data) {
         }
 
         var options = {
+          title: 'Luftfeuchtigkeit',
           curveType: 'function',
           legend: {position: 'bottom'},
           backgroundColor: {fill: 'transparent'} // undocumented google feature...
@@ -142,3 +138,46 @@ var drawHumidityChart = function (data) {
     })
   }
 };
+
+
+/**
+ * Draws a Wind chart
+ * @param data temperature data
+ */
+var drawWindChart = function (data) {
+  if (google) {
+    // keep the data in the scope
+    var meteodata = data;
+
+    // load google module asynchronously, otherwise the screen will be blank!
+    google.load('visualization', '1.0', {
+      packages: ['corechart'],
+      callback: function () {
+        var chartData = new google.visualization.DataTable();
+        // The colums of the chart
+        chartData.addColumn('datetime', 'Zeit');
+        chartData.addColumn('number', 'Wind Avg');
+        chartData.addColumn('number', 'Wind Max');
+
+        // transform received data to chart format
+        for (var i = 0; i < meteodata.length; i++) {
+          chartData.addRow([convertMySqlTimeToDate(meteodata[i].tsLocal),
+            parseFloat(meteodata[i].windAvg),
+            parseFloat(meteodata[i].windMax)]);
+        }
+
+        var options = {
+          title: 'Wind',
+          curveType: 'function',
+          legend: {position: 'bottom'},
+          backgroundColor: {fill: 'transparent'} // undocumented google feature...
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
+
+        chart.draw(chartData, options);
+      }
+    })
+  }
+};
+

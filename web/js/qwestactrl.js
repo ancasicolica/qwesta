@@ -118,6 +118,11 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
         callback = drawHumidityChart;
         break;
 
+      case 6:
+        param += "dataByDay&wind&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        callback = drawWindChart;
+        break;
+
       default:
         return;
     }
