@@ -2,8 +2,6 @@
 <html ng-app="qwestaApp">
 <head lang="de">
     <meta charset="UTF-8">
-
-
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <!-- Optional theme -->
@@ -44,14 +42,14 @@
             </div>
             <div class="col-xs-12 col-sm-3 currentdata"><img src="img/icon32/humidity.png">{{data.humidity}}%</div>
             <div class="col-xs-12 col-sm-3 currentdata"><img src="img/icon32/winds4.png"> {{data.wind}} km/h</div>
-            <div class="col-xs-12 col-sm-3 currentdata"><img src="img/icon32/water35.png"> {{data.wind}} l/h</div>
+            <div class="col-xs-12 col-sm-3 currentdata"><img src="img/icon32/water35.png"> {{data.rain}} l/h</div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12"><h1>Verlauf</h1></div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12">
-                <pre>Selected date is: <em>{{startdate | date:'fullDate' }}</em></pre>
+                <pre>Selected date is: <em>{{startdate | date:'fullDate'}}</em></pre>
             </div>
         </div>
 

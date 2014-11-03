@@ -81,11 +81,41 @@ function getDataByDay($params)
   if (!isset($params->day) || !isset($params->month) || !isset($params->year)) {
     return createError("Invalid parameters");
   }
+  $query = "";
+  if (isset($params->temperature)) {
+    $query .= "AVG(temperature) AS temperatureAvg, MAX(temperature) AS temperatureMax, MIN(temperature) AS temperatureMin";
+  }
+  if (isset($params->humidity)) {
+    if (strlen($query) > 0) {
+      $query .= ", ";
+    }
+    $query .= "AVG(humidity) AS humidityAvg";
+  }
+  if (isset($params->wind)) {
+    if (strlen($query) > 0) {
+      $query .= ", ";
+    }
+    $query .= "AVG(wind) AS windAvg, MAX(wind) AS windMax, MIN(wind) AS windmin";
+  }
+  if (isset($params->wind)) {
+    if (strlen($query) > 0) {
+      $query .= ", ";
+    }
+    $query .= "AVG(wind) AS windAvg, MAX(wind) AS windMax, MIN(wind) AS windmin";
+  }
+  if (isset($params->rain)) {
+    if (strlen($query) > 0) {
+      $query .= ", ";
+    }
+    $query .= "israining, rain, raindifference";
+  }
+
+  if (strlen($query) == 0) {
+    $query = "ts";
+  }
   $config = Configuration::get();
   $utcOffset = Configuration::getUtcOffset($params->day, $params->month);
-  $sql = sprintf("SELECT *, CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, AVG(temperature) AS temperatureAvg, MAX(temperature) AS temperatureMax, MIN(temperature)
-                  AS temperatureMin, AVG(humidity) AS humidityAvg, AVG(wind) AS windAvg, MAX(wind) AS windMax,
-                  MIN(wind) AS windmin FROM %s WHERE DAY(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND
+  $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, " . $query . " FROM %s WHERE DAY(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND
                   MONTH(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND YEAR(CONVERT_TZ(ts, '+00:00', '%s')) = %u GROUP BY HOUR(tsLocal)",
     $utcOffset,
     $config->mysqlTableWeather,

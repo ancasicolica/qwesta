@@ -109,12 +109,12 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
 
     switch (index) {
       case 0:
-        param += "dataByDay&day=" + $scope.startdate.getDate() + "&month=" + ($scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        param += "dataByDay&temperature&day=" + $scope.startdate.getDate() + "&month=" + ($scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
         callback = drawTemperatureChart;
         break;
 
       case 4:
-        param += "dataByDay&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        param += "dataByDay&humidity&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
         callback = drawHumidityChart;
         break;
 
