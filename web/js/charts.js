@@ -52,7 +52,8 @@ var convertMySqlTimeToDate = function (date) {
     var b = a[0].split('-');
     var c = a[1].split(':');
 
-    return new Date(parseInt(b[0]), parseInt(b[1]), parseInt(b[2]), parseInt(c[0]), parseInt(c[1]), parseInt(c[2]));
+    var retVal = new Date(parseInt(b[0]), parseInt(b[1]) - 1, parseInt(b[2]), parseInt(c[0]), parseInt(c[1]), parseInt(c[2]));
+    return retVal;
   }
   catch (e) {
     console.error("Invalid MySQL Date:" + date);

@@ -56,9 +56,9 @@ if (is_array($arr)) {
   }
 }
 
-if ($params->view == "dataByDay") {
-  // Get the data of one day
-  echo json_encode(getDataByDay($params));
+if ($params->view == "multi") {
+  // Get the data of a range
+  echo json_encode(getData($params));
 } else if ($params->view == "current") {
   // get the current data
   echo json_encode(getCurrentDataSet());
@@ -71,16 +71,20 @@ if ($params->view == "dataByDay") {
 }
 /***********************************************************************************/
 /**
- * Get the data of a specific day
+ * Get the data of a specific time range
  * PHP parameters needed: day, month and year
  * @param $params
  * @return string
  */
-function getDataByDay($params)
+function getData($params)
 {
   if (!isset($params->day) || !isset($params->month) || !isset($params->year)) {
-    return createError("Invalid parameters");
+    return createError("Invalid parameters (day/month/year)");
   }
+  if (!isset($params->range)) {
+    return createError("No range defined");
+  }
+
   $query = "";
   if (isset($params->temperature)) {
     $query .= "AVG(temperature) AS temperatureAvg, MAX(temperature) AS temperatureMax, MIN(temperature) AS temperatureMin";
@@ -115,16 +119,38 @@ function getDataByDay($params)
   }
   $config = Configuration::get();
   $utcOffset = Configuration::getUtcOffset($params->day, $params->month);
-  $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, " . $query . " FROM %s WHERE DAY(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND
-                  MONTH(CONVERT_TZ(ts, '+00:00', '%s')) = %u AND YEAR(CONVERT_TZ(ts, '+00:00', '%s')) = %u GROUP BY HOUR(tsLocal)",
+
+  $range = "";
+  $group = "";
+
+  if ($params->range == "day") {
+    $range = sprintf("DATE(CONVERT_TZ(ts, '+00:00', '%s')) = '%u-%u-%u'",
+      $utcOffset,
+      $params->year,
+      $params->month,
+      $params->day);
+
+    $group = "GROUP BY HOUR(tslocal)";
+  } else if ($params->range == "week") {
+    $range = sprintf("DATE(CONVERT_TZ(ts, '+00:00', '%s')) >= '%u-%u-%u' AND
+    DATE(CONVERT_TZ(ts, '+00:00', '%s')) < DATE_ADD('%02d-%02d-%02d 00:00:00', INTERVAL 1 WEEK) ",
+      $utcOffset,
+      $params->year,
+      $params->month,
+      $params->day,
+      $utcOffset,
+      $params->year,
+      $params->month,
+      $params->day);
+    $group = "GROUP BY DAY(tslocal), HOUR(tslocal)";
+  }
+  $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, " . $query . " FROM %s WHERE
+                  %s %s ORDER BY ts ASC",
     $utcOffset,
     $config->mysqlTableWeather,
-    $utcOffset,
-    $params->day,
-    $utcOffset,
-    $params->month,
-    $utcOffset,
-    $params->year);
+    $range,
+    $group
+  );
 
   return runSqlQuery($sql);
 }
@@ -182,6 +208,7 @@ function runSqlQuery($sql)
     $result->data[$i] = $row;
     $i++;
   }
+  $result->sql = $sql;
   $mysqli->close();
   return $result;
 }

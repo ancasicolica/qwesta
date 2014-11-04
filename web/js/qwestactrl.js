@@ -107,24 +107,30 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     var param = "?view=";
     var callback = null;
 
+    var date = "&day=" + $scope.startdate.getDate() + "&month=" + ($scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
     switch (index) {
       case 0:
-        param += "dataByDay&temperature&day=" + $scope.startdate.getDate() + "&month=" + ($scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        param += "multi&range=day&temperature" + date;
+        callback = drawTemperatureChart;
+        break;
+
+      case 1:
+        param += "multi&range=week&temperature" + date;
         callback = drawTemperatureChart;
         break;
 
       case 3:
-        param += "dataByDay&humidity&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        param += "multi&range=day&humidity&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
         callback = drawHumidityChart;
         break;
 
       case 6:
-        param += "dataByDay&wind&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        param += "multi&range=day&wind&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
         callback = drawWindChart;
         break;
 
       case 9:
-        param += "dataByDay&rain&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        param += "multi&range=day&rain&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
         callback = drawRainChart;
         break;
 
