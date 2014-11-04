@@ -65,6 +65,9 @@ if ($params->view == "multi") {
 } else if ($params->view == "basics") {
   // Return basics information about qwesta (earliest entry, latest entry, and so on)
   echo json_encode(getBasics());
+} else if ($params->view == "diagnostics") {
+  // Return diagnostic data
+  echo json_encode(getDiagnostics($params));
 } else {
   // don't know what to do
   $result = new \stdClass();
@@ -171,6 +174,23 @@ function getData($params)
 }
 
 /**
+ * Returns some diagnostics data (how many measurements per day)
+ * @param $params
+ * @return \object
+ */
+function getDiagnostics($params)
+{
+  $config = Configuration::get();
+  $utcOffset = Configuration::getUtcOffset(1, $params->month);
+
+  $sql = sprintf("SELECT COUNT(*) AS nbrows, CONVERT_TZ(ts, '+00:00', '%s') AS tsLocal FROM %s
+                  WHERE MONTH(ts) = %u GROUP BY DAY(tslocal)",
+    $utcOffset,
+    $config->mysqlTableWeather,
+    $params->month);
+  return runSqlQuery($sql);
+}
+/**
  * Returns the last data set recorded
  * @return \object
  */
@@ -244,7 +264,7 @@ function runSqlQuery($sql)
     $result->data[$i] = $row;
     $i++;
   }
-  $result->sql = $sql;
+  // $result->sql = $sql;
   $mysqli->close();
   return $result;
 }
