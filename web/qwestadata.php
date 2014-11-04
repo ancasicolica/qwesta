@@ -146,6 +146,18 @@ function getData($params)
       $params->month,
       $params->day);
     $group = "GROUP BY DAY(tslocal), HOUR(tslocal)";
+  } else if ($params->range == "month") {
+    $range = sprintf("DATE(CONVERT_TZ(ts, '+00:00', '%s')) >= '%u-%u-%u' AND
+    DATE(CONVERT_TZ(ts, '+00:00', '%s')) < DATE_ADD('%02d-%02d-%02d 00:00:00', INTERVAL 1 MONTH) ",
+      $utcOffset,
+      $params->year,
+      $params->month,
+      $params->day,
+      $utcOffset,
+      $params->year,
+      $params->month,
+      $params->day);
+    $group = "GROUP BY DAY(tslocal)";
   }
   $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, " . $query . " FROM %s WHERE
                   %s %s ORDER BY ts ASC",
