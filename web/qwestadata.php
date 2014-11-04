@@ -62,6 +62,9 @@ if ($params->view == "multi") {
 } else if ($params->view == "current") {
   // get the current data
   echo json_encode(getCurrentDataSet());
+} else if ($params->view == "basics") {
+  // Return basics information about qwesta (earliest entry, latest entry, and so on)
+  echo json_encode(getBasics());
 } else {
   // don't know what to do
   $result = new \stdClass();
@@ -164,6 +167,27 @@ function getCurrentDataSet()
   $config = Configuration::get();
   $sql = sprintf("SELECT * FROM %s ORDER BY ts DESC LIMIT 1", $config->mysqlTableWeather);
   return runSqlQuery($sql);
+}
+
+/**
+ * Returns the basic information about the weather station
+ * @return \object
+ */
+function getBasics()
+{
+  $config = Configuration::get();
+  $result = new \stdClass();
+  $result->success = true;
+
+  $sql = sprintf("SELECT ts FROM %s ORDER BY ts DESC LIMIT 1", $config->mysqlTableWeather);
+  $latest = runSqlQuery($sql);
+  $result->latest = $latest->data[0]->ts;
+
+  $sql = sprintf("SELECT ts FROM %s ORDER BY ts ASC LIMIT 1", $config->mysqlTableWeather);
+  $oldest = runSqlQuery($sql);
+  $result->oldest = $oldest->data[0]->ts;
+
+  return $result;
 }
 /**
  * Creates an error object

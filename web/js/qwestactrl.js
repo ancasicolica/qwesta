@@ -56,7 +56,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   $scope.today();
 
   $scope.clear = function () {
-    $scope.startdate = null;
+    $scope.startdate = new Date();
   };
 
   // Disable weekend selection
@@ -80,7 +80,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     formatYear: 'yy',
     startingDay: 1
   };
-
+  $scope.maxDate = new Date();
   $scope.format = 'dd.MM.yyyy';
 
 
@@ -97,6 +97,14 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     console.log($scope.startdate);
     $scope.set($scope.currentGraph);
   };
+  /**
+   * Convert the start date to the parameters of the get request
+   * @returns {string}
+   */
+  var setDateParams = function () {
+    var date = "&day=" + $scope.startdate.getDate() + "&month=" + ($scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+    return date;
+  };
 
   /**
    * Set the chart data to the selected index
@@ -107,30 +115,29 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     var param = "?view=";
     var callback = null;
 
-    var date = "&day=" + $scope.startdate.getDate() + "&month=" + ($scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
     switch (index) {
       case 0:
-        param += "multi&range=day&temperature" + date;
+        param += "multi&range=day&temperature" + setDateParams();
         callback = drawTemperatureChart;
         break;
 
       case 1:
-        param += "multi&range=week&temperature" + date;
+        param += "multi&range=week&temperature" + setDateParams();
         callback = drawTemperatureChart;
         break;
 
       case 3:
-        param += "multi&range=day&humidity&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        param += "multi&range=day&humidity&day=" + setDateParams();
         callback = drawHumidityChart;
         break;
 
       case 6:
-        param += "multi&range=day&wind&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        param += "multi&range=day&wind&day=" + setDateParams();
         callback = drawWindChart;
         break;
 
       case 9:
-        param += "multi&range=day&rain&day=" + $scope.startdate.getDate() + "&month=" + ( $scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+        param += "multi&range=day&rain&day=" + setDateParams();
         callback = drawRainChart;
         break;
 
@@ -189,5 +196,12 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   // Initialize
   $scope.getCurrentValues();
   $scope.set(0);
+  $scope.getCurrentData(qwestaUrl + "?view=basics", function (data) {
+    if (data.success) {
+      $scope.minDate = convertMySqlTimeToDate(data.oldest);
+      $scope.maxDate = convertMySqlTimeToDate(data.latest);
+    }
+    console.log(data);
+  });
 }]);
 
