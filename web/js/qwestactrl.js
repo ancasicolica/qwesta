@@ -45,45 +45,16 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   // Init Charts lib
   initCharts();
 
+  // Set current date and graph
   $scope.initDate = new Date().toDateString();
   $scope.currentGraph = 0;
 
   // Datepicker configuration
   // http://angular-ui.github.io/bootstrap/#/datepicker
-  $scope.today = function () {
-    $scope.startdate = new Date();
-  };
-  $scope.today();
-
-  $scope.clear = function () {
-    $scope.startdate = new Date();
-  };
-
-  // Disable weekend selection
-  $scope.disabled = function (date, mode) {
-    return ( mode === 'day' && ( date > new Date()));
-  };
-
-  $scope.toggleMin = function () {
-    $scope.minDate = new Date(2014, 9, 1);
-  };
-  $scope.toggleMin();
-
-  $scope.open = function ($event) {
-    $event.preventDefault();
-    $event.stopPropagation();
-
-    $scope.opened = true;
-  };
-
-  $scope.dateOptions = {
-    formatYear: 'yy',
-    startingDay: 1
-  };
+  $scope.startDate = new Date();
+  $scope.minDate = new Date();
   $scope.maxDate = new Date();
   $scope.format = 'dd.MM.yyyy';
-
-
 
   // Current weather data
   $scope.data = {
@@ -94,7 +65,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   };
 
   $scope.setDate = function () {
-    console.log($scope.startdate);
+    console.log($scope.startDate);
     $scope.set($scope.currentGraph);
   };
   /**
@@ -102,7 +73,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
    * @returns {string}
    */
   var setDateParams = function () {
-    var date = "&day=" + $scope.startdate.getDate() + "&month=" + ($scope.startdate.getMonth() + 1) + "&year=" + $scope.startdate.getFullYear();
+    var date = "&day=" + $scope.startDate.getDate() + "&month=" + ($scope.startDate.getMonth() + 1) + "&year=" + $scope.startDate.getFullYear();
     return date;
   };
 
