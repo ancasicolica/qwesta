@@ -51,63 +51,62 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12">
-                <pre>Gerähltes Datum: <em>{{startDate | date:'fullDate'}}</em></pre>
+                <pre>Gewähltes Datum: <em>{{startDate | date:'fullDate'}}</em></pre>
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6" style="display:inline-block; min-height:290px;">
-                <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
-                            class="well well-sm"
-                            starting-day="1" ng-change="setDate()"></datepicker>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6">
-
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12" id="chart"></div>
         </div>
 
         <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(0)"><img
+            <div class="col-xs-4 col-sm-4 col-md-4 datepicker">
+                <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
+                            class="well well-sm"
+                            starting-day="1" ng-change="setDate()"></datepicker>
+            </div>
+            <div class="col-xs-8 col-sm-8 col-md-8">
+                Here comes the configuration
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph0" ng-click="set(0)"><img
                     src="img/icon32/thermometer31.png"><br>1 Tag
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1  qwesta-stats" ng-click="set(1)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1  qwesta-stats" id="graph1" ng-click="set(1)"><img
                         src="img/icon32/thermometer31.png"><br>7 Tage
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(2)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph2" ng-click="set(2)"><img
                     src="img/icon32/thermometer31.png"><br>Monat
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(3)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph3" ng-click="set(3)"><img
                     src="img/icon32/humidity.png"><br>1 Tag
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(4)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph4" ng-click="set(4)"><img
                     src="img/icon32/humidity.png"><br>7
                 Tage
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(5)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph5" ng-click="set(5)"><img
                     src="img/icon32/humidity.png"><br>Monat
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(6)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph6" ng-click="set(6)"><img
                     src="img/icon32/winds4.png"><br>1 Tag
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(7)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph7" ng-click="set(7)"><img
                     src="img/icon32/winds4.png"><br>7
                 Tage
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(8)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph8" ng-click="set(8)"><img
                     src="img/icon32/winds4.png"><br>Monat
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(9)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph9" ng-click="set(9)"><img
                     src="img/icon32/water35.png"><br>1 Tag
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(10)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph10" ng-click="set(10)"><img
                     src="img/icon32/water35.png"><br>7
                 Tage
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" ng-click="set(11)"><img
+            <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph11" ng-click="set(11)"><img
                     src="img/icon32/water35.png"><br>Monat
             </div>
         </div>

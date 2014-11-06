@@ -99,6 +99,10 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     var param = "?view=";
     var callback = null;
 
+    for (var i = 0; i < 12; i++) {
+      $("#graph" + i).removeClass("qwesta-stats-selected");
+    }
+    $("#graph" + index).addClass("qwesta-stats-selected");
     switch (index) {
       case 0:
         param += "multi&range=day&temperature" + setDateParams();

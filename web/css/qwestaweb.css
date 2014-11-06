@@ -9,13 +9,29 @@
 
 .qwesta-stats {
     text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    border-radius: 25px;
 }
 
 .qwesta-stats-selected {
-
+    background-color: #c4e3f3;
 }
 
+.datepicker {
+    display: inline-block;
+    min-height: 290px;
+}
+
+/* override for the datepicker css */
+.well {
+    background-image: none;
+    background-color: transparent;
+    border: none;
+}
 #chart {
     height: 600px;
 
 }
+
