@@ -136,13 +136,43 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
         callback = drawHumidityChart;
         break;
 
+      case 4:
+        param += "multi&range=week&humidity&day=" + setDateParams();
+        callback = drawHumidityChart;
+        break;
+
+      case 5:
+        param += "multi&range=month&humidity&day=" + setDateParams();
+        callback = drawHumidityChart;
+        break;
+
       case 6:
         param += "multi&range=day&wind&day=" + setDateParams();
         callback = drawWindChart;
         break;
 
+      case 7:
+        param += "multi&range=week&wind&day=" + setDateParams();
+        callback = drawWindChart;
+        break;
+
+      case 8:
+        param += "multi&range=month&wind&day=" + setDateParams();
+        callback = drawWindChart;
+        break;
+
       case 9:
         param += "multi&range=day&rain&day=" + setDateParams();
+        callback = drawRainChart;
+        break;
+
+      case 10:
+        param += "multi&range=week&rain&day=" + setDateParams();
+        callback = drawRainChart;
+        break;
+
+      case 11:
+        param += "multi&range=month&rain&day=" + setDateParams();
         callback = drawRainChart;
         break;
 

@@ -173,7 +173,7 @@ var drawWindChart = function (data) {
           backgroundColor: {fill: 'transparent'} // undocumented google feature...
         };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
+        var chart = new google.visualization.AreaChart(document.getElementById('chart'));
 
         chart.draw(chartData, options);
       }
