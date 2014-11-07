@@ -70,5 +70,4 @@ class Configuration
     return '+02:00';
   }
 }
-
 ?>

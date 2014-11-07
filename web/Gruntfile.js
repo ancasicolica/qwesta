@@ -48,6 +48,7 @@ module.exports = function (grunt) {
           {expand: true, src: ['*.php'], dest: '../web-dist/', filter: 'isFile'},
           {expand: true, src: ['fonts/*'], dest: '../web-dist/', filter: 'isFile'},
           {expand: true, src: ['img/**'], dest: '../web-dist/'},
+          {expand: true, src: ['.htaccess'], dest: '../web-dist/'},
           {expand: true, src: ['js/ui-bootstrap-*.*', 'js/currentdatactrl.js'], dest: '../web-dist', filter: 'isFile'}
         ]
       }

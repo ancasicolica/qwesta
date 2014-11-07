@@ -190,7 +190,6 @@ function getDiagnostics($params)
     $params->month);
   return runSqlQuery($sql);
 }
-
 /**
  * Returns the last data set recorded
  * @return \object
@@ -222,7 +221,6 @@ function getBasics()
 
   return $result;
 }
-
 /**
  * Creates an error object
  * @message string with the message of the error
