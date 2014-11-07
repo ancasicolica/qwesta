@@ -22,7 +22,9 @@ module.exports = function (grunt) {
       },
       js: {
         src: [
-          'js/*'
+          'js/charts.js',
+          'js/date.js',
+          'js/qwestactrl.js'
         ],
         dest: '../web-dist/js/combined.js'
       }
@@ -43,10 +45,10 @@ module.exports = function (grunt) {
     copy: {
       main: {
         files: [
-
+          {expand: true, src: ['*.php'], dest: '../web-dist/', filter: 'isFile'},
           {expand: true, src: ['fonts/*'], dest: '../web-dist/', filter: 'isFile'},
-
           {expand: true, src: ['img/**'], dest: '../web-dist/'},
+          {expand: true, src: ['js/ui-bootstrap-*.*', 'js/currentdatactrl.js'], dest: '../web-dist', filter: 'isFile'}
         ]
       }
     }
