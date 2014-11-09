@@ -39,8 +39,7 @@
 /***********************************************************************************/
 namespace qwesta;
 
-class Configuration
-{
+class Configuration {
   // Gets the configuration object
   public static function get()
   {

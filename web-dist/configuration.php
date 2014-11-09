@@ -38,36 +38,41 @@
  */
 /***********************************************************************************/
 namespace qwesta;
-class Configuration
-{
-  // Gets the configuration object
-  public static function get()
-  {
-    $config = new \stdClass;
+class Configuration {
+    // Gets the configuration object
+    public static function get() {
+      $config = new \stdClass;
 
-    $config->debug = false; // Enables debug functions when needed
+    	$config->debug = false; // Enables debug functions when needed
 
-    // Database settings
-    $config->mysqlServer = "localhost";
-    $config->mysqlUser = "web200";
-    $config->mysqlPass = "bernina72";
-    $config->mysqlDb = "usr_web200_6";
-    $config->mysqlTableWeather = "qwesta";
+        // Database settings
+    	$config->mysqlServer              = "localhost";
+      $config->mysqlUser                = "web200";
+      $config->mysqlPass                = "bernina72";
+      $config->mysqlDb                  = "usr_web200_6";
+      $config->mysqlTableWeather        = "qwesta";
 
-    $config->communicationHashSeed = "c1780606f2ff3d81db60dbea2119c8ebcd3d22de";
-    return $config;
-  }
+      $config->communicationHashSeed    = "c1780606f2ff3d81db60dbea2119c8ebcd3d22de";
+      return $config;
+    	}
 
   /**
    * Returns the offset from UTC for a given day
    * @param $day  integer
+   * @param $year integer
    * @param $month integer
    * @return string
    */
-  public static function getUtcOffset($day, $month)
-  {
-    // Todo: Add DST Rule
-    return '+02:00';
-  }
+    public static function getUtcOffset($year, $month, $day) {
+
+      // This workaround is needed because some MySql server installations do not
+      // support named time zone calculations.
+      $dateTimeZoneUtc = new \DateTimeZone("UTC");
+      $dateTimeZoneQwesta = new  \DateTimeZone("Europe/Zurich");
+      $dateTimeUtc= new \DateTime(sprintf("%d-%02d-%02d" , $year, $month, $day), $dateTimeZoneUtc);
+      $timeOffset = $dateTimeZoneQwesta->getOffset($dateTimeUtc);
+
+      return sprintf("%+02d:00", $timeOffset/60/60);
+    }
 }
 ?>
