@@ -76,9 +76,9 @@ var drawTemperatureChart = function (data) {
         var chartData = new google.visualization.DataTable();
         // The colums of the chart
         chartData.addColumn('datetime', 'Zeit');
-        chartData.addColumn('number', 'Temperatur Min');
-        chartData.addColumn('number', 'Temperatur Avg');
-        chartData.addColumn('number', 'Temperatur Max');
+        chartData.addColumn('number', 'Minimum');
+        chartData.addColumn('number', 'Durchschnitt');
+        chartData.addColumn('number', 'Maximum');
 
         // transform received data to chart format
         for (var i = 0; i < temperatureData.length; i++) {
@@ -91,7 +91,7 @@ var drawTemperatureChart = function (data) {
           title: "Temperatur"
           //backgroundColor: {fill: 'transparent'} // undocumented google feature...
         };
-
+        console.log(screen.width);
         var chart = new google.visualization.LineChart(document.getElementById('chart'));
 
         chart.draw(chartData, options);
@@ -156,8 +156,8 @@ var drawWindChart = function (data) {
         var chartData = new google.visualization.DataTable();
         // The colums of the chart
         chartData.addColumn('datetime', 'Zeit');
-        chartData.addColumn('number', 'Wind Avg');
-        chartData.addColumn('number', 'Wind Max');
+        chartData.addColumn('number', 'Durchschnitt');
+        chartData.addColumn('number', 'Maximum');
 
         // transform received data to chart format
         for (var i = 0; i < meteodata.length; i++) {

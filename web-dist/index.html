@@ -45,24 +45,9 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12"><h1>Verlauf</h1></div>
         </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12">
-                <pre>Gewähltes Datum: <em>{{startDate | date:'fullDate'}}</em></pre>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12" id="chart"></div>
-        </div>
 
         <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-4 datepicker">
-                <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
-                            class="well well-sm"
-                            starting-day="1" ng-change="setDate()"></datepicker>
-            </div>
-            <div class="col-xs-8 col-sm-8 col-md-8">
-                Here comes the configuration
-            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12" id="chart"></div>
         </div>
 
         <div class="row">
@@ -105,6 +90,28 @@
             <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph11" ng-click="set(11)"><img
                     src="img/icon32/water35.png"><br>Monat
             </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 center-block text-center">
+                <img src="img/icon32/information68.png">
+            </div>
+            <div class="col-xs-8 col-sm-6 col-md-4 datepicker center-block text-center">
+                <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
+                            class="well well-sm"
+                            starting-day="1" ng-change="setDate()"></datepicker>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 center-block text-center">
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- Kusti Meteo Ads, remove or change to your ID (unless I can get the revenue...)  -->
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:300px;height:250px"
+                     data-ad-client="ca-pub-3641306691523570"
+                     data-ad-slot="8486365630"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
         </div>
     </div>
 </div>

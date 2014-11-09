@@ -61,11 +61,13 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     temperature: 0,
     humidity: 0,
     wind: 0.0,
-    rain: 0
+    rain: 0,
+    raindifference: 0
   };
-
+  /**
+   * Change method when date is set
+   */
   $scope.setDate = function () {
-    console.log($scope.startDate);
     $scope.set($scope.currentGraph);
   };
   /**
@@ -75,21 +77,15 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   var setDateParams = function () {
     return "&day=" + $scope.startDate.getDate() + "&month=" + ($scope.startDate.getMonth() + 1) + "&year=" + $scope.startDate.getFullYear();
   };
-
+  /**
+   * Sets the latest possible day for the selected range (offset)
+   * @param offset
+   */
   var setLatestDate = function (offset) {
-    console.log("A:" + $scope.startDate.toDateString());
     if (Date.today().addDays(offset).compareTo($scope.startDate) < 0) {
       $scope.startDate = Date.today().addDays(offset);
     }
-    console.log("B:" + $scope.startDate.toDateString());
   };
-
-  var subtractDays = function (date, days) {
-    var result = new Date(date);
-    result.setDate(date.getDate() - days);
-    return result;
-  };
-
   /**
    * Set the chart data to the selected index
    * @param index
@@ -182,7 +178,6 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     });
 
   };
-
   /**
    * Get the current (latest) values
    */
@@ -203,7 +198,6 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
       }
     });
   };
-
   /**
    * AJAX call to the webserver in order to retrieve the data
    * @param url
@@ -234,5 +228,6 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     }
     console.log(data);
   });
+  window.addEventListener("resize", $scope.setDate);
 }]);
 
