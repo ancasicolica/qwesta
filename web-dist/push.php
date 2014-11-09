@@ -40,8 +40,8 @@ require_once("configuration.php");
 extract($_REQUEST);
 $arr = get_defined_vars();
 $params = new \stdClass(); // avoids PHP warning
-if (is_array($arr)) {
-  foreach ($arr as $pkey => $post) {
+if(is_array($arr)) {
+  foreach($arr as $pkey => $post) {
     $params->$pkey = $post;
   }
 }
@@ -49,7 +49,7 @@ if (is_array($arr)) {
 $config = Configuration::get();
 
 // Verify hash
-$hash = sha1($config->communicationHashSeed . $params->q);
+$hash = sha1($config->communicationHashSeed.$params->q);
 $result = new \stdClass();
 if (strcmp($hash, $params->h) != 0) {
   $result->status = "error";
@@ -61,11 +61,11 @@ $record = json_decode(base64_decode($params->q), true);
 $result->status = "ok";
 
 $mysqli = new \mysqli($config->mysqlServer, $config->mysqlUser,
-  $config->mysqlPass, $config->mysqlDb);
+$config->mysqlPass, $config->mysqlDb);
 
 if ($mysqli->connect_errno) {
   $result->status = "error";
-  $result->message = "Connect failed: " . $mysqli->connect_error;
+  $result->message = "Connect failed: ".$mysqli->connect_error;
   die(json_encode($result));
 }
 
@@ -85,20 +85,21 @@ $sql = sprintf("INSERT INTO $config->mysqlTableWeather
                   %u,
                   %u,
                   %u)",
-  $record['timestamp'],
-  $record['temperature'],
-  $record['humidity'],
-  $record['wind'],
-  $record['rain'],
-  $record['isRaining'],
-  $record['rainDifference']);
+                $record['timestamp'],
+                $record['temperature'],
+                $record['humidity'],
+                $record['wind'],
+                $record['rain'],
+                $record['isRaining'],
+                $record['rainDifference']);
 
 if ($record['simulation'] == 'true') {
   $result->sql = $sql;
-} else {
+}
+else {
   if (!$mysqli->query($sql)) {
     $result->status = "error";
-    $result->message = "Query Error:" . $mysqli->error;
+    $result->message = "Query Error:".$mysqli->error;
     $result->query = $sql;
     die(json_encode($result));
   }
