@@ -61,17 +61,24 @@ class Configuration
       "2b3623d31f0e5b6018124bafec1a5b8cdac854a4";
     return $config;
   }
-
   /**
-   * Returns the offset from UTC for a given day
+   * Returns the offset from UTC for a given day. Adapt to your time zone
    * @param $day  integer
+   * @param $year integer
    * @param $month integer
    * @return string
    */
-  public static function getUtcOffset($day, $month)
+  public static function getUtcOffset($year, $month, $day)
   {
-    // Todo: Add DST Rule
-    return '+02:00';
+
+    // This workaround is needed because some MySql server installations do not
+    // support named time zone calculations.
+    $dateTimeZoneUtc = new \DateTimeZone("UTC");
+    $dateTimeZoneQwesta = new  \DateTimeZone("Europe/Zurich");
+    $dateTimeUtc = new \DateTime(sprintf("%d-%02d-%02d", $year, $month, $day), $dateTimeZoneUtc);
+    $timeOffset = $dateTimeZoneQwesta->getOffset($dateTimeUtc);
+
+    return sprintf("%+02d:00", $timeOffset / 60 / 60);
   }
 }
 ?>

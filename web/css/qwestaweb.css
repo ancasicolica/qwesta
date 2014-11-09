@@ -29,6 +29,8 @@
     background-image: none;
     background-color: transparent;
     border: none;
+    width: 285px;
+    border-color: transparent;
 }
 #chart {
     height: 500px;

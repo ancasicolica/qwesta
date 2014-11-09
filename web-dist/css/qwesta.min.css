@@ -27,7 +27,9 @@
 .well {
     background-image: none;
     background-color: transparent;
-    border: 0
+    border: 0;
+    width: 285px;
+    border-color: transparent
 }
 
 #chart {

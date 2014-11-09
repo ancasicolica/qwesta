@@ -124,7 +124,7 @@ function getData($params)
     $query = "ts";
   }
   $config = Configuration::get();
-  $utcOffset = Configuration::getUtcOffset($params->day, $params->month);
+  $utcOffset = Configuration::getUtcOffset($params->year, $params->month, $params->day);
 
   $range = "";
   $group = "";
@@ -181,7 +181,7 @@ function getData($params)
 function getDiagnostics($params)
 {
   $config = Configuration::get();
-  $utcOffset = Configuration::getUtcOffset(1, $params->month);
+  $utcOffset = Configuration::getUtcOffset($params->year, $params->month, 1);
 
   $sql = sprintf("SELECT COUNT(*) AS nbrows, CONVERT_TZ(ts, '+00:00', '%s') AS tsLocal FROM %s
                   WHERE MONTH(ts) = %u GROUP BY DAY(tslocal)",
@@ -264,7 +264,7 @@ function runSqlQuery($sql)
     $result->data[$i] = $row;
     $i++;
   }
-  // $result->sql = $sql;
+  $result->sql = $sql;
   $mysqli->close();
   return $result;
 }
