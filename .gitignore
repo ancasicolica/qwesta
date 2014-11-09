@@ -5,4 +5,3 @@ web/configuration.php
 web/node_modules/
 web-dist/css/combined.css
 web-dist/js/combined.js
-web-dist/configuration.php
