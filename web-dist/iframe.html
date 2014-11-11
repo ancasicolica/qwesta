@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html ng-app="qwestaApp">
+<head lang="de">
+    <!-- This page is designed for includes into other webpages -->
+    <meta charset="UTF-8">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <!-- JQuery -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <!-- Angular.js -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+
+    <!-- Charts, only available online -->
+    <script src="https://www.google.com/jsapi"></script>
+    <!-- Bootstrap UI, only available locally -->
+    <script src="js/ui-bootstrap-tpls-0.11.2.min.js"></script>
+
+    <script src="js/qwesta.min.js"></script>
+
+    <link rel="stylesheet" href="css/qwesta.min.css">
+
+    <!-- See http://getbootstrap.com/examples/theme/# -->
+    <meta http-equiv="cache-control" content="no-cache">
+    <title>Wetterstation</title>
+</head>
+<body>
+
+
+<div ng-controller="QwestaCtrl">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12"><h1>Aktuelles Wetter in Wernetshausen</h1></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3 currentdata-iframe"><img src="img/icon32/thermometer31.png">
+                {{data.temperature}}°C
+            </div>
+            <div class="col-xs-3 currentdata-iframe"><img src="img/icon32/humidity.png">{{data.humidity}}%</div>
+            <div class="col-xs-3 currentdata-iframe"><img src="img/icon32/winds4.png"> {{data.wind}} km/h</div>
+            <div class="col-xs-3 currentdata-iframe"><img src="img/icon32/water35.png"> {{data.rain}} l/h</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12"><h1>Verlauf</h1></div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12" id="chart"></div>
+        </div>
+
+        <div class="row">
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph0" ng-click="set(0)"><img
+                    src="img/icon32/thermometer31.png"><br>1 Tag
+            </div>
+            <div class=" col-xs-1 col-md-1  qwesta-stats" id="graph1" ng-click="set(1)"><img
+                    src="img/icon32/thermometer31.png"><br>7 Tage
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph2" ng-click="set(2)"><img
+                    src="img/icon32/thermometer31.png"><br>Monat
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph3" ng-click="set(3)"><img
+                    src="img/icon32/humidity.png"><br>1 Tag
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph4" ng-click="set(4)"><img
+                    src="img/icon32/humidity.png"><br>7
+                Tage
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph5" ng-click="set(5)"><img
+                    src="img/icon32/humidity.png"><br>Monat
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph6" ng-click="set(6)"><img
+                    src="img/icon32/winds4.png"><br>1 Tag
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph7" ng-click="set(7)"><img
+                    src="img/icon32/winds4.png"><br>7
+                Tage
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph8" ng-click="set(8)"><img
+                    src="img/icon32/winds4.png"><br>Monat
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph9" ng-click="set(9)"><img
+                    src="img/icon32/water35.png"><br>1 Tag
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph10" ng-click="set(10)"><img
+                    src="img/icon32/water35.png"><br>7
+                Tage
+            </div>
+            <div class=" col-xs-1 col-md-1 qwesta-stats" id="graph11" ng-click="set(11)"><img
+                    src="img/icon32/water35.png"><br>Monat
+            </div>
+        </div>
+        <div class="row">
+
+            <div class=" col-xs-6 col-md-6  center-block text-center">
+                <h4>Startdatum wählen</h4>
+                <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
+                            class="well well-sm datepicker"
+                            starting-day="1" ng-change="setDate()"></datepicker>
+            </div>
+            <div class=" col-xs-6 col-md-6 center-block text-center">
+                <h4>Werbung</h4>
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- Kusti Meteo Ads, remove or change to your ID (unless I can get the revenue...)  -->
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:300px;height:250px"
+                     data-ad-client="ca-pub-3641306691523570"
+                     data-ad-slot="8486365630"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+
+        </div>
+
+        <!-- Modal info view -->
+        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content qwesta-modal">
+                    <h1>Wetterstation Wernetshausen</h1>
+
+                    <div>
+                        <div><img src="img/information12.png" class="info-sign"></div>
+                        <div>
+                            <p>Alle Angaben ohne Gewähr, die Messsensorik ist einfache Technik und genügt keiner
+                                professionellen Wetterdatenerfassung.</p>
+
+                            <p>Mehr Informationen zur Wetterstation Wernetshausen auf <a href="http://www.kusti.ch">www.kusti.ch</a>
+                            </p>
+
+                            <p class="credits">Sämtliche auf dieser Seite verwendeten Icons stammen von Catalin Fertu,
+                                <a href="http://www.flaticon.com
+" title="Flaticon">www.flaticon.com</a>, und sind lizenziert unter <a
+                                        href="http://creativecommons.org/licenses/by/3.0/"
+                                        title="Creative Commons BY 3.0">CC BY 3.0</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 center-block text-center">
+                <a data-toggle="modal" data-target=".bs-example-modal-lg" href=""> <img
+                        src="img/icon32/information68.png"> © 2014 Christian Kuster</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

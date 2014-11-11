@@ -9,7 +9,8 @@ module.exports = function (grunt) {
       },
       dist: {
         files: {
-          '../web-dist/index.html': ['index.html']
+          '../web-dist/index.html': ['index.html'],
+          '../web-dist/iframe.html': ['iframe.html']
         }
       }
     },
