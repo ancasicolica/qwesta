@@ -21,7 +21,9 @@
 
 .datepicker {
     display: inline-block;
-    min-height: 290px
+    min-height: 290px;
+    position: relative;
+    horiz-align: center
 }
 
 .well {
@@ -29,9 +31,24 @@
     background-color: transparent;
     border: 0;
     width: 285px;
-    border-color: transparent
+    border-color: transparent;
+    horiz-align: right
 }
 
 #chart {
     height: 500px
+}
+
+.qwesta-modal {
+    padding-left: 20px
+}
+
+p {
+    font-size: 16px
+}
+
+.info-sign {
+    float: left;
+    padding-left: 10px;
+    padding-right: 20px
 }

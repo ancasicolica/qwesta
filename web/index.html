@@ -101,15 +101,15 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-4 center-block text-center">
-                <img src="img/icon32/information68.png">
-            </div>
-            <div class="col-xs-8 col-sm-6 col-md-4 datepicker center-block text-center">
+
+            <div class="col-xs-6 col-sm-6 col-md-6  center-block text-center">
+                <h4>Startdatum wählen</h4>
                 <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
-                            class="well well-sm"
+                            class="well well-sm datepicker"
                             starting-day="1" ng-change="setDate()"></datepicker>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 center-block text-center">
+            <div class="col-xs-6 col-sm-6 col-md-6 center-block text-center">
+                <h4>Werbung</h4>
                 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                 <!-- Kusti Meteo Ads, remove or change to your ID (unless I can get the revenue...)  -->
                 <ins class="adsbygoogle"
@@ -121,6 +121,39 @@
                 </script>
             </div>
 
+        </div>
+
+        <!-- Modal info view -->
+        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content qwesta-modal">
+                    <h1>Wetterstation Wernetshausen</h1>
+
+                    <div>
+                        <div><img src="img/information12.png" class="info-sign"></div>
+                        <div>
+                            <p>Alle Angaben ohne Gewähr, die Messsensorik ist einfache Technik und genügt keiner
+                                professionellen Wetterdatenerfassung.</p>
+
+                            <p>Mehr Informationen zur Wetterstation Wernetshausen auf <a href="http://www.kusti.ch">www.kusti.ch</a>
+                            </p>
+
+                            <p class="credits">Sämtliche auf dieser Seite verwendeten Icons stammen von Catalin Fertu,
+                                <a href="http://www.flaticon.com
+" title="Flaticon">www.flaticon.com</a>, und sind lizenziert unter <a
+                                        href="http://creativecommons.org/licenses/by/3.0/"
+                                        title="Creative Commons BY 3.0">CC BY 3.0</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 center-block text-center">
+                <a data-toggle="modal" data-target=".bs-example-modal-lg" href=""> <img
+                        src="img/icon32/information68.png"> © 2014 Christian Kuster</a>
+            </div>
         </div>
     </div>
 </div>
