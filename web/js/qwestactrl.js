@@ -54,6 +54,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   $scope.startDate = Date.today();
   $scope.minDate = Date.today();
   $scope.maxDate = Date.today();
+  $scope.lastSetDate = $scope.startDate;
   $scope.format = 'dd.MM.yyyy';
 
   // Current weather data
@@ -68,6 +69,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
    * Change method when date is set
    */
   $scope.setDate = function () {
+    $scope.lastSetDate = $scope.startDate;
     $scope.set($scope.currentGraph);
   };
   /**
@@ -83,6 +85,12 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
    */
   var setLatestDate = function (offset) {
     if (Date.today().addDays(offset).compareTo($scope.startDate) < 0) {
+      $scope.startDate = Date.today().addDays(offset);
+    }
+    else if (Date.today().addDays(offset).compareTo($scope.lastSetDate) >= 0) {
+      $scope.startDate = $scope.lastSetDate;
+    }
+    else if (Date.today().addDays(offset).compareTo($scope.startDate) >= 0) {
       $scope.startDate = Date.today().addDays(offset);
     }
   };
@@ -101,6 +109,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     $("#graph" + index).addClass("qwesta-stats-selected");
     switch (index) {
       case 0:
+        setLatestDate(0);
         param += "multi&range=day&temperature" + setDateParams();
         callback = drawTemperatureChart;
         break;
@@ -118,6 +127,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
         break;
 
       case 3:
+        setLatestDate(0);
         param += "multi&range=day&humidity&day=" + setDateParams();
         callback = drawHumidityChart;
         break;
@@ -135,6 +145,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
         break;
 
       case 6:
+        setLatestDate(0);
         param += "multi&range=day&wind&day=" + setDateParams();
         callback = drawWindChart;
         break;
@@ -152,6 +163,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
         break;
 
       case 9:
+        setLatestDate(0);
         param += "multi&range=day&rain&day=" + setDateParams();
         callback = drawRainChart;
         break;
