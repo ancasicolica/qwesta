@@ -17,4 +17,6 @@ All icons used in this project were taken from the website "Flaticon". The desig
 <li><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed under <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a></li>
 </ul>
 
+Further information about implementing your own qwesta based weather station is found in the Wiki.
+
 23.9.14 KC
