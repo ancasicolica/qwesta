@@ -59,7 +59,40 @@ var convertMySqlTimeToDate = function (date) {
     return new Date(2000, 1, 1);
   }
 };
-/***********************************************************************************/
+/**
+ * Create the hAxis options object for the charts
+ * @param meteoData array with the data, only the length is really needed (today at least)
+ * @returns {{gridlines: {count: *}, minorGridlines: {count: *}}}
+ */
+function getHaxis(meteoData) {
+  var hGridlineNb;
+  var hMinorGridlineNb;
+
+  if (meteoData.length < 25) {
+    // day
+    hGridlineNb = 6;
+    hMinorGridlineNb = 3;
+  }
+  else if (meteoData.length < 32) {
+    // month
+    hGridlineNb = 6;
+    hMinorGridlineNb = 6;
+  }
+  else {
+    // week
+    hGridlineNb = 7;
+    hMinorGridlineNb = 0;
+  }
+  var hAxis = {
+    gridlines: {
+      count: hGridlineNb
+    },
+    minorGridlines: {
+      count: hMinorGridlineNb
+    }
+  };
+  return hAxis;
+}
 /**
  * Draws a temperature chart
  * @param data temperature data
@@ -80,16 +113,56 @@ var drawTemperatureChart = function (data) {
         chartData.addColumn('number', 'Durchschnitt');
         chartData.addColumn('number', 'Maximum');
 
+        var maximalMeasuredValue = -100;
+        var minimalMeasuredValue = 100;
+
         // transform received data to chart format
         for (var i = 0; i < temperatureData.length; i++) {
-          chartData.addRow([convertMySqlTimeToDate(temperatureData[i].tsLocal), parseFloat(temperatureData[i].temperatureMin), parseFloat(temperatureData[i].temperatureAvg), parseFloat(temperatureData[i].temperatureMax)]);
+          var tempMin = parseFloat(temperatureData[i].temperatureMin);
+          var tempMax = parseFloat(temperatureData[i].temperatureMax);
+          chartData.addRow([convertMySqlTimeToDate(temperatureData[i].tsLocal), tempMin, parseFloat(temperatureData[i].temperatureAvg), tempMax]);
+          if (minimalMeasuredValue > tempMin) {
+            minimalMeasuredValue = tempMin;
+          }
+          if (maximalMeasuredValue < tempMax) {
+            maximalMeasuredValue = tempMax;
+          }
         }
+
+        // 0 is always shown!!
+        var minAxis;
+        var maxAxis;
+        if (maximalMeasuredValue < 0) {
+          maxAxis = 0;
+        }
+        else {
+          maxAxis = (Math.floor(maximalMeasuredValue / 5) + 1) * 5;
+        }
+        if (minimalMeasuredValue > 0) {
+          minAxis = 0;
+        }
+        else {
+          minAxis = (Math.floor(Math.abs(minimalMeasuredValue) / 5) + 1) * (0 - 5);
+        }
+
+        var gridlineNb = (maxAxis + Math.abs(minAxis)) / 5 + 1;
 
         var options = {
           curveType: 'function',
           legend: {position: 'bottom'},
-          title: "Temperatur"
-          //backgroundColor: {fill: 'transparent'} // undocumented google feature...
+          title: "Temperatur [°C]",
+          vAxis: {
+            minValue: minAxis,
+            maxValue: maxAxis,
+            gridlines: {
+              count: gridlineNb
+            },
+            minorGridlines: {
+              count: 5
+            }
+          },
+          hAxis: getHaxis(temperatureData)
+
         };
         console.log(screen.width);
         var chart = new google.visualization.LineChart(document.getElementById('chart'));
@@ -126,10 +199,20 @@ var drawHumidityChart = function (data) {
         }
 
         var options = {
-          title: 'Luftfeuchtigkeit',
+          title: 'Luftfeuchtigkeit [%]',
           curveType: 'function',
           legend: {position: 'bottom'},
-          backgroundColor: {fill: 'transparent'} // undocumented google feature...
+          vAxis: {
+            minValue: 0,
+            maxValue: 100,
+            gridlines: {
+              count: 6
+            },
+            minorGridlines: {
+              count: 1
+            }
+          },
+          hAxis: getHaxis(meteodata)
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart'));
@@ -169,10 +252,10 @@ var drawWindChart = function (data) {
         }
 
         var options = {
-          title: 'Wind',
+          title: 'Wind [km/h]',
           curveType: 'function',
           legend: {position: 'bottom'},
-          backgroundColor: {fill: 'transparent'} // undocumented google feature...
+          hAxis: getHaxis(meteodata)
         };
 
         var chart = new google.visualization.AreaChart(document.getElementById('chart'));
@@ -207,7 +290,7 @@ var drawRainChart = function (data) {
         var chartData = new google.visualization.DataTable();
         // The colums of the chart
         chartData.addColumn('datetime', 'Zeit');
-        chartData.addColumn('number', 'Regen');
+        chartData.addColumn('number', 'Niederschlag');
 
         // transform received data to chart format
         for (var i = 0; i < meteodata.length; i++) {
@@ -221,11 +304,12 @@ var drawRainChart = function (data) {
         }
 
         var options = {
-          title: 'Regen',
+          title: 'Niederschlag [mm]',
           curveType: 'function',
           legend: {position: 'bottom'},
           backgroundColor: {fill: 'transparent'}, // undocumented google feature...
-          vAxis: {minValue: 0, maxValue: maxValue}
+          vAxis: {minValue: 0, maxValue: maxValue},
+          hAxis: getHaxis(meteodata)
 
         };
 

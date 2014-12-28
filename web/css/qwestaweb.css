@@ -68,6 +68,10 @@ p {
     margin-bottom: 20px;
 }
 
+/* Info on out-of-order page */
 .out-of-order-info {
     font-size: large;
+    text-align : justify;
+
 }
+
