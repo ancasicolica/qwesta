@@ -57,6 +57,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   $scope.lastSetDate = $scope.startDate;
   $scope.format = 'dd.MM.yyyy';
 
+
   // Current weather data
   $scope.data = {
     temperature: 0,

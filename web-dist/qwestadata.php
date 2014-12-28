@@ -181,13 +181,17 @@ function getData($params)
 function getDiagnostics($params)
 {
   $config = Configuration::get();
+  if (!isset($params->year)) {
+    $params->year = 2015;
+  }
   $utcOffset = Configuration::getUtcOffset($params->year, $params->month, 1);
 
   $sql = sprintf("SELECT COUNT(*) AS nbrows, CONVERT_TZ(ts, '+00:00', '%s') AS tsLocal FROM %s
-                  WHERE MONTH(ts) = %u GROUP BY DAY(tslocal)",
+                  WHERE MONTH(ts) = %u && YEAR(ts) = %u GROUP BY DAY(tslocal)",
     $utcOffset,
     $config->mysqlTableWeather,
-    $params->month);
+    $params->month,
+    $params->year);
   return runSqlQuery($sql);
 }
 /**
@@ -198,7 +202,34 @@ function getCurrentDataSet()
 {
   $config = Configuration::get();
   $sql = sprintf("SELECT * FROM %s ORDER BY ts DESC LIMIT 1", $config->mysqlTableWeather);
+  $result =  runSqlQuery($sql);
+
+  return $result;
+
+  // Todo: Continue work in a rainy period...
+  $date = getdate();
+  $config = Configuration::get();
+  $utcOffset = Configuration::getUtcOffset($date['year'], $date['mon'], $date['mday']);
+  $timestamp = time();
+
+  $range = sprintf("DATE(CONVERT_TZ(ts, '+00:00', '%s')) > DATE_SUB('%02d-%02d-%02d %02d:%02d:%02d', INTERVAL 10 HOUR) ",
+    $utcOffset,
+    $date['year'],
+    $date['mon'],
+    $date['mday'],
+    $date['hours'],
+    $date['minutes'],
+    $date['seconds']
+    );
+
+  // For the rain, get the sum of the last few entries
+  $sql = sprintf("SELECT SUM(raindifference) as rd, CONVERT_TZ(ts, '+00:00', '%s') as tsLocal FROM %s
+                  WHERE %s ORDER BY ts DESC LIMIT 10",
+    $utcOffset,
+    $config->mysqlTableWeather,
+    $range);
   return runSqlQuery($sql);
+
 }
 
 /**

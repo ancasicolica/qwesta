@@ -95,6 +95,7 @@ var drawTemperatureChart = function (data) {
         var chart = new google.visualization.LineChart(document.getElementById('chart'));
 
         chart.draw(chartData, options);
+        $('#disclaimer').html('');
       }
     })
   }
@@ -134,6 +135,7 @@ var drawHumidityChart = function (data) {
         var chart = new google.visualization.LineChart(document.getElementById('chart'));
 
         chart.draw(chartData, options);
+        $('#disclaimer').html('');
       }
     })
   }
@@ -176,6 +178,12 @@ var drawWindChart = function (data) {
         var chart = new google.visualization.AreaChart(document.getElementById('chart'));
 
         chart.draw(chartData, options);
+
+        // Add disclaimer if needed
+        var startDate = convertMySqlTimeToDate(meteodata[0].tsLocal);
+        if (startDate.getMonth() < 3 || startDate.getMonth() > 9) {
+          $('#disclaimer').html('Bei Schneefall ist es möglich, dass der Windsensor ausfällt. <a href="out-of-order.html">Mehr Infos hier.</a>')
+        }
       }
     })
   }
@@ -224,6 +232,7 @@ var drawRainChart = function (data) {
         var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
 
         chart.draw(chartData, options);
+        $('#disclaimer').html('Bei Schneefall werden keine Niederschlagsdaten erfasst. <a href="out-of-order.html">Mehr Infos hier.</a>')
       }
     })
   }

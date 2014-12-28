@@ -61,3 +61,13 @@ p {
     padding-left: 10px;
     padding-right: 20px;
 }
+
+#disclaimer {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.out-of-order-info {
+    font-size: large;
+}
