@@ -201,7 +201,7 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
         $scope.data.temperature = data.data[0].temperature;
         $scope.data.humidity = data.data[0].humidity;
         $scope.data.wind = data.data[0].wind;
-        $scope.data.rain = data.data[0].raindifference;
+        $scope.data.rain = data.data[0].raindifference * 3 / 10; // approx .295 is one tick
       }
       else {
         $scope.data.temperature = 0;

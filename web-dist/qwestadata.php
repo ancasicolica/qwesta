@@ -162,6 +162,7 @@ function getData($params)
       $params->day);
     $group = "GROUP BY DAY(tslocal)";
   }
+
   $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, " . $query . " FROM %s WHERE
                   %s %s ORDER BY ts ASC",
     $utcOffset,
@@ -204,9 +205,6 @@ function getCurrentDataSet()
   $sql = sprintf("SELECT * FROM %s ORDER BY ts DESC LIMIT 1", $config->mysqlTableWeather);
   $result =  runSqlQuery($sql);
 
-  return $result;
-
-  // Todo: Continue work in a rainy period...
   $date = getdate();
   $config = Configuration::get();
   $utcOffset = Configuration::getUtcOffset($date['year'], $date['mon'], $date['mday']);
@@ -223,12 +221,14 @@ function getCurrentDataSet()
     );
 
   // For the rain, get the sum of the last few entries
-  $sql = sprintf("SELECT SUM(raindifference) as rd, CONVERT_TZ(ts, '+00:00', '%s') as tsLocal FROM %s
-                  WHERE %s ORDER BY ts DESC LIMIT 10",
-    $utcOffset,
-    $config->mysqlTableWeather,
-    $range);
-  return runSqlQuery($sql);
+  $sql = sprintf("SELECT SUM(raindifference) AS rd FROM %s WHERE TIMESTAMPDIFF(HOUR,ts,NOW()) < 2 ORDER BY ts DESC LIMIT 10",
+    $config->mysqlTableWeather);
+
+  $rain = runSqlQuery($sql);
+
+  $result->data[0]->raindifference = $rain->data[0]->rd;
+
+  return $result;
 
 }
 
