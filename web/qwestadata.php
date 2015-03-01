@@ -99,25 +99,19 @@ function getData($params)
     if (strlen($query) > 0) {
       $query .= ", ";
     }
-    $query .= "AVG(humidity) AS humidityAvg";
+    $query .= "AVG(humidity) AS humidityAvg, MAX(humidity) AS humidityMax, MIN(humidity) AS humidityMin";
   }
   if (isset($params->wind)) {
     if (strlen($query) > 0) {
       $query .= ", ";
     }
-    $query .= "AVG(wind) AS windAvg, MAX(wind) AS windMax, MIN(wind) AS windmin";
-  }
-  if (isset($params->wind)) {
-    if (strlen($query) > 0) {
-      $query .= ", ";
-    }
-    $query .= "AVG(wind) AS windAvg, MAX(wind) AS windMax, MIN(wind) AS windmin";
+    $query .= "AVG(wind) AS windAvg, MAX(wind) AS windMax, MIN(wind) AS windMin";
   }
   if (isset($params->rain)) {
     if (strlen($query) > 0) {
       $query .= ", ";
     }
-    $query .= "israining, rain, SUM(raindifference) as raindif";
+    $query .= "israining, rain, SUM(raindifference) as rainDiff";
   }
 
   if (strlen($query) == 0) {
@@ -163,7 +157,7 @@ function getData($params)
     $group = "GROUP BY DAY(tslocal)";
   }
 
-  $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, " . $query . " FROM %s WHERE
+  $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, COUNT(*) AS nbRows, " . $query . " FROM %s WHERE
                   %s %s ORDER BY ts ASC",
     $utcOffset,
     $config->mysqlTableWeather,

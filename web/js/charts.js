@@ -294,7 +294,7 @@ var drawRainChart = function (data) {
 
         // transform received data to chart format
         for (var i = 0; i < meteodata.length; i++) {
-          var rainDiff = parseInt(meteodata[i].raindif) * 3 / 10; // approx .295 is one tick
+          var rainDiff = parseInt(meteodata[i].rainDiff) * 3 / 10; // approx .295 is one tick
           chartData.addRow([convertMySqlTimeToDate(meteodata[i].tsLocal),
             rainDiff]);
 

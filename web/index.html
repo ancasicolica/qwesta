@@ -22,7 +22,7 @@
     <!-- Datejs Script. This is the DE-CH version, download your fitting one @ http://www.datejs.com/ -->
     <script src="js/date.js"></script>
     <!-- Qwesta Scripts, locally -->
-    <script src="js/charts.js?v=2"></script>
+    <script src="js/charts.js"></script>
     <script src="js/qwestactrl.js?v=1"></script>
     <!-- /build -->
 
@@ -78,11 +78,116 @@
         </div>
 
         <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="center">
+                    <a class="btn btn-default" data-toggle="collapse" href="#collapseExample" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        Messdaten anzeigen / ausblenden
+                    </a>
+                </div>
+            </div>
+        </div>
+        <p></p>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="collapse" id="collapseExample">
+                    <div class="well full-width">
+                        <div ng-show="dataType==='temperature'">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Datum / Zeit erste Messung</th>
+                                    <th>Minimum [°C]</th>
+                                    <th>Durchschnitt [°C]</th>
+                                    <th>Maxmimum [°C]</th>
+                                    <th>Anzahl Messwerte</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="data in rawData">
+                                    <td>{{data.tsLocal}}</td>
+                                    <td>{{data.temperatureMin}}</td>
+                                    <td>{{data.temperatureAvg}}</td>
+                                    <td>{{data.temperatureMax}}</td>
+                                    <td>{{data.nbRows}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-show="dataType==='humidity'">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Datum / Zeit erste Messung</th>
+                                    <th>Minimum [%]</th>
+                                    <th>Durchschnitt [%]</th>
+                                    <th>Maxmimum [%]</th>
+                                    <th>Anzahl Messwerte</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="data in rawData">
+                                    <td>{{data.tsLocal}}</td>
+                                    <td>{{data.humidityMin}}</td>
+                                    <td>{{data.humidityAvg}}</td>
+                                    <td>{{data.humidityMax}}</td>
+                                    <td>{{data.nbRows}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-show="dataType==='wind'">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Datum / Zeit erste Messung</th>
+                                    <th>Minimum [km/h]</th>
+                                    <th>Durchschnitt [km/h]</th>
+                                    <th>Maxmimum [km/h]</th>
+                                    <th>Anzahl Messwerte</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="data in rawData">
+                                    <td>{{data.tsLocal}}</td>
+                                    <td>{{data.windMin}}</td>
+                                    <td>{{data.windAvg}}</td>
+                                    <td>{{data.windMax}}</td>
+                                    <td>{{data.nbRows}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-show="dataType==='rain'">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Datum / Zeit erste Messung</th>
+                                    <th>Niederschlag [l]</th>
+                                    <th>Anzahl Messwerte</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="data in rawData">
+                                    <td>{{data.tsLocal}}</td>
+                                    <td>{{data.rainDiff * 0.295}}</td>
+                                    <td>{{data.nbRows}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph0" ng-click="set(0)"><img
                     src="img/icon32/thermometer31.png"><br>1 Tag
             </div>
             <div class="col-xs-4 col-sm-4 col-md-1  qwesta-stats" id="graph1" ng-click="set(1)"><img
-                        src="img/icon32/thermometer31.png"><br>7 Tage
+                    src="img/icon32/thermometer31.png"><br>7 Tage
             </div>
             <div class="col-xs-4 col-sm-4 col-md-1 qwesta-stats" id="graph2" ng-click="set(2)"><img
                     src="img/icon32/thermometer31.png"><br>Monat
@@ -119,7 +224,6 @@
             </div>
         </div>
         <div class="row">
-
             <div class="col-xs-6 col-sm-6 col-md-6  center-block text-center">
                 <h4>Startdatum wählen</h4>
                 <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
@@ -176,5 +280,22 @@
     </div>
 </div>
 
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-58163984-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
 </body>
 </html>

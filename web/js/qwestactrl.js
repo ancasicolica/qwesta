@@ -57,6 +57,8 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
   $scope.lastSetDate = $scope.startDate;
   $scope.format = 'dd.MM.yyyy';
 
+  $scope.dataType = 'temperature'; // what to show in the data list
+  $scope.rawData = []; // raw data read (of any kind)
 
   // Current weather data
   $scope.data = {
@@ -96,6 +98,42 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     }
   };
   /**
+   * Set the temperature chart
+   * @param data read from qwestadata.php
+   */
+  $scope.setTemperatureChart = function(data) {
+    $scope.dataType = 'temperature';
+    $scope.rawData = data;
+    drawTemperatureChart(data);
+  };
+  /**
+   * Set the temperature chart
+   * @param data read from qwestadata.php
+   */
+  $scope.setHumidityChart = function(data) {
+    $scope.dataType = 'humidity';
+    $scope.rawData = data;
+    drawHumidityChart(data);
+  };
+  /**
+   * Set the wind chart
+   * @param data read from qwestadata.php
+   */
+  $scope.setWindChart = function(data) {
+    $scope.dataType = 'wind';
+    $scope.rawData = data;
+    drawWindChart(data);
+  };
+  /**
+   * Set the Rain chart
+   * @param data read from qwestadata.php
+   */
+  $scope.setRainChart = function(data) {
+    $scope.dataType = 'rain';
+    $scope.rawData = data;
+    drawRainChart(data);
+  };
+  /**
    * Set the chart data to the selected index
    * @param index
    */
@@ -112,73 +150,73 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
       case 0:
         setLatestDate(0);
         param += "multi&range=day&temperature" + setDateParams();
-        callback = drawTemperatureChart;
+        callback = $scope.setTemperatureChart;
         break;
 
       case 1:
         setLatestDate(-6);
         param += "multi&range=week&temperature" + setDateParams();
-        callback = drawTemperatureChart;
+        callback = $scope.setTemperatureChart;
         break;
 
       case 2:
         setLatestDate(-29);
         param += "multi&range=month&temperature" + setDateParams();
-        callback = drawTemperatureChart;
+        callback = $scope.setTemperatureChart;
         break;
 
       case 3:
         setLatestDate(0);
         param += "multi&range=day&humidity&day=" + setDateParams();
-        callback = drawHumidityChart;
+        callback = $scope.setHumidityChart;
         break;
 
       case 4:
         setLatestDate(-6);
         param += "multi&range=week&humidity&day=" + setDateParams();
-        callback = drawHumidityChart;
+        callback = $scope.setHumidityChart;
         break;
 
       case 5:
         setLatestDate(-29);
         param += "multi&range=month&humidity&day=" + setDateParams();
-        callback = drawHumidityChart;
+        callback = $scope.setHumidityChart;
         break;
 
       case 6:
         setLatestDate(0);
         param += "multi&range=day&wind&day=" + setDateParams();
-        callback = drawWindChart;
+        callback = $scope.setWindChart;
         break;
 
       case 7:
         setLatestDate(-6);
         param += "multi&range=week&wind&day=" + setDateParams();
-        callback = drawWindChart;
+        callback = $scope.setWindChart;
         break;
 
       case 8:
         setLatestDate(-29);
         param += "multi&range=month&wind&day=" + setDateParams();
-        callback = drawWindChart;
+        callback = $scope.setWindChart;
         break;
 
       case 9:
         setLatestDate(0);
         param += "multi&range=day&rain&day=" + setDateParams();
-        callback = drawRainChart;
+        callback = $scope.setRainChart;
         break;
 
       case 10:
         setLatestDate(-6);
         param += "multi&range=week&rain&day=" + setDateParams();
-        callback = drawRainChart;
+        callback = $scope.setRainChart;
         break;
 
       case 11:
         setLatestDate(-29);
         param += "multi&range=month&rain&day=" + setDateParams();
-        callback = drawRainChart;
+        callback = $scope.setRainChart;
         break;
 
       default:
