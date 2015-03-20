@@ -145,7 +145,7 @@ function getData($params)
     $group = "GROUP BY DAY(tslocal), HOUR(tslocal)";
   } else if ($params->range == "month") {
     $range = sprintf("DATE(CONVERT_TZ(ts, '+00:00', '%s')) >= '%u-%u-%u' AND
-    DATE(CONVERT_TZ(ts, '+00:00', '%s')) < DATE_ADD('%02d-%02d-%02d 00:00:00', INTERVAL 1 MONTH) ",
+    DATE(CONVERT_TZ(ts, '+00:00', '%s')) < DATE_ADD('%02d-%02d-%02d 00:00:00', INTERVAL 32 DAY) ",
       $utcOffset,
       $params->year,
       $params->month,
