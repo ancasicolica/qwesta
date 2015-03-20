@@ -36,7 +36,12 @@
 /***********************************************************************************/
 
 
-var qwesta = angular.module('qwestaApp', ['ui.bootstrap']);
+var qwesta = angular.module('qwestaApp', ['pickadate']).config(function(pickadateI18nProvider) {
+  pickadateI18nProvider.translations = {
+    prev: '<i class="icon-chevron-left"></i> früher',
+    next: 'später <i class="icon-chevron-right"></i>'
+  }
+});
 
 qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
   // this is the path to the qwesta directory on your server
@@ -51,9 +56,9 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
 
   // Datepicker configuration
   // http://angular-ui.github.io/bootstrap/#/datepicker
-  $scope.startDate = Date.today();
-  $scope.minDate = Date.today();
-  $scope.maxDate = Date.today();
+  $scope.startDate = Date.today().toString('yyyy-MM-dd');
+  $scope.minDate = Date.today().toString('yyyy-MM-dd');
+  $scope.maxDate = Date.today().toString('yyyy-MM-dd');
   $scope.lastSetDate = $scope.startDate;
   $scope.format = 'dd.MM.yyyy';
 
@@ -80,21 +85,25 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
    * @returns {string}
    */
   var setDateParams = function () {
-    return "&day=" + $scope.startDate.getDate() + "&month=" + ($scope.startDate.getMonth() + 1) + "&year=" + $scope.startDate.getFullYear();
+    var start = new Date($scope.startDate);
+    return "&day=" + start.getDate() + "&month=" + (start.getMonth() + 1) + "&year=" + start.getFullYear();
   };
   /**
    * Sets the latest possible day for the selected range (offset)
    * @param offset
    */
   var setLatestDate = function (offset) {
-    if (Date.today().addDays(offset).compareTo($scope.startDate) < 0) {
-      $scope.startDate = Date.today().addDays(offset);
+    if (!$scope.startDate) {
+      return;
     }
-    else if (Date.today().addDays(offset).compareTo($scope.lastSetDate) >= 0) {
+    if (Date.today().addDays(offset).compareTo(new Date($scope.startDate)) < 0) {
+      $scope.startDate = Date.today().addDays(offset).toString('yyyy-MM-dd');
+    }
+    else if (Date.today().addDays(offset).compareTo(new Date($scope.lastSetDate)) >= 0) {
       $scope.startDate = $scope.lastSetDate;
     }
-    else if (Date.today().addDays(offset).compareTo($scope.startDate) >= 0) {
-      $scope.startDate = Date.today().addDays(offset);
+    else if (Date.today().addDays(offset).compareTo(new Date($scope.startDate)) >= 0) {
+      $scope.startDate = Date.today().addDays(offset).toString('yyyy-MM-dd');
     }
   };
   /**

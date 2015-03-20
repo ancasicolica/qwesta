@@ -6,19 +6,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+
     <!-- JQuery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <!-- Angular.js -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <!-- PickaDate -->
 
     <!-- Charts, only available online -->
     <script src="https://www.google.com/jsapi"></script>
-    <!-- Bootstrap UI, only available locally -->
-    <script src="js/ui-bootstrap-tpls-0.11.2.min.js"></script>
-
-    <script src="js/qwesta.min.js"></script>
+    <script src="js/combined.js"></script>
 
     <link rel="stylesheet" href="css/qwesta.min.css">
 
@@ -215,11 +214,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6  center-block text-center">
+            <div class="col-xs-6 col-sm-6 col-md-6  ">
                 <h4>Startdatum wählen</h4>
-                <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
-                            class="well well-sm datepicker"
-                            starting-day="1" ng-change="setDate()"></datepicker>
+
+                <div pickadate ng-model="startDate" ng-change="setDate()" min-date="minDate" max-date="maxDate"></div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 center-block text-center">
                 <h4>Werbung</h4>

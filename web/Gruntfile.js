@@ -23,6 +23,8 @@ module.exports = function (grunt) {
       },
       js: {
         src: [
+          'i18n/angular-locale_de-ch.js',
+          'js/angular-pickadate.js',
           'js/charts.js',
           'js/date.js',
           'js/qwestactrl.js'
@@ -49,8 +51,9 @@ module.exports = function (grunt) {
           {expand: true, src: ['*.php'], dest: '../web-dist/', filter: 'isFile'},
           {expand: true, src: ['fonts/*'], dest: '../web-dist/', filter: 'isFile'},
           {expand: true, src: ['img/**'], dest: '../web-dist/'},
+          {expand: true, src: ['i18n/**'], dest: '../web-dist/'},
           {expand: true, src: ['.htaccess'], dest: '../web-dist/'},
-          {expand: true, src: ['js/ui-bootstrap-*.*', 'js/currentdatactrl.js'], dest: '../web-dist', filter: 'isFile'}
+          {expand: true, src: ['js/angular-pickadate.min.js', 'js/currentdatactrl.js'], dest: '../web-dist', filter: 'isFile'}
         ]
       }
     }

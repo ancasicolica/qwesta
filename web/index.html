@@ -6,19 +6,20 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+
     <!-- JQuery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <!-- Angular.js -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <!-- PickaDate -->
 
     <!-- Charts, only available online -->
     <script src="https://www.google.com/jsapi"></script>
-    <!-- Bootstrap UI, only available locally -->
-    <script src="js/ui-bootstrap-custom-tpls-0.12.1.min.js"></script>
-
-    <!-- build:js js/qwesta.min.js -->
+    <!-- build:js js/combined.js -->
+    <script src="js/angular-pickadate.min.js"></script>
+    <script src="i18n/angular-locale_de-ch.js"></script>
     <!-- Datejs Script. This is the DE-CH version, download your fitting one @ http://www.datejs.com/ -->
     <script src="js/date.js"></script>
     <!-- Qwesta Scripts, locally -->
@@ -29,6 +30,7 @@
     <!-- build:css css/qwesta.min.css -->
     <!-- Qwesta CSS -->
     <link rel="stylesheet" href="css/qwestaweb.css">
+    <link rel="stylesheet" href="css/angular-pickadate.css">
     <!-- /build -->
 
     <!-- See http://getbootstrap.com/examples/theme/# -->
@@ -224,11 +226,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6  center-block text-center">
+            <div class="col-xs-6 col-sm-6 col-md-6  ">
                 <h4>Startdatum wählen</h4>
-                <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
-                            class="well well-sm datepicker"
-                            starting-day="1" ng-change="setDate()"></datepicker>
+
+                <div pickadate ng-model="startDate" ng-change="setDate()" min-date="minDate" max-date="maxDate"></div>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 center-block text-center">
                 <h4>Werbung</h4>
