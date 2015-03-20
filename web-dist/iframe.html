@@ -16,10 +16,8 @@
 
     <!-- Charts, only available online -->
     <script src="https://www.google.com/jsapi"></script>
-    <!-- Bootstrap UI, only available locally -->
-    <script src="js/ui-bootstrap-custom-tpls-0.12.1.min.js"></script>
 
-    <script src="js/qwesta.min.js"></script>
+    <script src="js/combined.js"></script>
 
     <link rel="stylesheet" href="css/qwesta.min.css">
 
@@ -53,6 +51,112 @@
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12" id="disclaimer"></div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="center">
+                    <a class="btn btn-default" data-toggle="collapse" href="#collapseExample" aria-expanded="false"
+                       aria-controls="collapseExample">
+                        Messdaten anzeigen / ausblenden
+                    </a>
+                </div>
+            </div>
+        </div>
+        <p></p>
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="collapse" id="collapseExample">
+                    <div class="well full-width">
+                        <div ng-show="dataType==='temperature'">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Datum / Zeit erste Messung</th>
+                                    <th>Minimum [°C]</th>
+                                    <th>Durchschnitt [°C]</th>
+                                    <th>Maxmimum [°C]</th>
+                                    <th>Anzahl Messwerte</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="data in rawData">
+                                    <td>{{data.tsLocal}}</td>
+                                    <td>{{data.temperatureMin}}</td>
+                                    <td>{{data.temperatureAvg}}</td>
+                                    <td>{{data.temperatureMax}}</td>
+                                    <td>{{data.nbRows}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-show="dataType==='humidity'">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Datum / Zeit erste Messung</th>
+                                    <th>Minimum [%]</th>
+                                    <th>Durchschnitt [%]</th>
+                                    <th>Maxmimum [%]</th>
+                                    <th>Anzahl Messwerte</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="data in rawData">
+                                    <td>{{data.tsLocal}}</td>
+                                    <td>{{data.humidityMin}}</td>
+                                    <td>{{data.humidityAvg}}</td>
+                                    <td>{{data.humidityMax}}</td>
+                                    <td>{{data.nbRows}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-show="dataType==='wind'">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Datum / Zeit erste Messung</th>
+                                    <th>Minimum [km/h]</th>
+                                    <th>Durchschnitt [km/h]</th>
+                                    <th>Maxmimum [km/h]</th>
+                                    <th>Anzahl Messwerte</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="data in rawData">
+                                    <td>{{data.tsLocal}}</td>
+                                    <td>{{data.windMin}}</td>
+                                    <td>{{data.windAvg}}</td>
+                                    <td>{{data.windMax}}</td>
+                                    <td>{{data.nbRows}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div ng-show="dataType==='rain'">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Datum / Zeit erste Messung</th>
+                                    <th>Niederschlag [l]</th>
+                                    <th>Anzahl Messwerte</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="data in rawData">
+                                    <td>{{data.tsLocal}}</td>
+                                    <td>{{data.rainDiff * 0.295}}</td>
+                                    <td>{{data.nbRows}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row">
@@ -98,11 +202,10 @@
         </div>
         <div class="row">
 
-            <div class=" col-xs-6 col-md-6  center-block text-center">
+            <div class=" col-xs-6 col-md-6">
                 <h4>Startdatum wählen</h4>
-                <datepicker ng-model="startDate" min-date="minDate" max-date="maxDate" show-weeks="false"
-                            class="well well-sm datepicker"
-                            starting-day="1" ng-change="setDate()"></datepicker>
+
+                <div pickadate ng-model="startDate" ng-change="setDate()" min-date="minDate" max-date="maxDate"></div>
             </div>
             <div class=" col-xs-6 col-md-6 center-block text-center">
                 <h4>Werbung</h4>
