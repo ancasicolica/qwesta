@@ -39,26 +39,6 @@
 var initCharts = function () {
 
 };
-
-/**
- * Converts a MySql Time format to a Date. This is only an issue for the Safari Browser which
- * follows a very strict implementation
- * @param date formatted as delivered by MySql: "2014-10-06 03:01:12"
- * @returns {Date} date object
- */
-var convertMySqlTimeToDate = function (date) {
-  try {
-    var a = date.split(' ');
-    var b = a[0].split('-');
-    var c = a[1].split(':');
-
-    return new Date(parseInt(b[0]), parseInt(b[1]) - 1, parseInt(b[2]), parseInt(c[0]), parseInt(c[1]), parseInt(c[2]));
-  }
-  catch (e) {
-    console.error("Invalid MySQL Date:" + date);
-    return new Date(2000, 1, 1);
-  }
-};
 /**
  * Create the hAxis options object for the charts
  * @param meteoData array with the data, only the length is really needed (today at least)
@@ -120,7 +100,7 @@ var drawTemperatureChart = function (data) {
         for (var i = 0; i < temperatureData.length; i++) {
           var tempMin = parseFloat(temperatureData[i].temperatureMin);
           var tempMax = parseFloat(temperatureData[i].temperatureMax);
-          chartData.addRow([convertMySqlTimeToDate(temperatureData[i].tsLocal), tempMin, parseFloat(temperatureData[i].temperatureAvg), tempMax]);
+          chartData.addRow([temperatureData[i].tsLocal, tempMin, parseFloat(temperatureData[i].temperatureAvg), tempMax]);
           if (minimalMeasuredValue > tempMin) {
             minimalMeasuredValue = tempMin;
           }
@@ -195,7 +175,7 @@ var drawHumidityChart = function (data) {
 
         // transform received data to chart format
         for (var i = 0; i < meteodata.length; i++) {
-          chartData.addRow([convertMySqlTimeToDate(meteodata[i].tsLocal), parseFloat(meteodata[i].humidityAvg)]);
+          chartData.addRow([meteodata[i].tsLocal, parseFloat(meteodata[i].humidityAvg)]);
         }
 
         var options = {
@@ -246,7 +226,7 @@ var drawWindChart = function (data) {
 
         // transform received data to chart format
         for (var i = 0; i < meteodata.length; i++) {
-          chartData.addRow([convertMySqlTimeToDate(meteodata[i].tsLocal),
+          chartData.addRow([meteodata[i].tsLocal,
             parseFloat(meteodata[i].windAvg),
             parseFloat(meteodata[i].windMax)]);
         }
@@ -263,7 +243,7 @@ var drawWindChart = function (data) {
         chart.draw(chartData, options);
 
         // Add disclaimer if needed
-        var startDate = convertMySqlTimeToDate(meteodata[0].tsLocal);
+        var startDate = meteodata[0].tsLocal;
         if (startDate.getMonth() < 3 || startDate.getMonth() > 9) {
           $('#disclaimer').html('Bei Schneefall ist es möglich, dass der Windsensor ausfällt. <a href="out-of-order.html">Mehr Infos hier.</a>')
         }
@@ -295,7 +275,7 @@ var drawRainChart = function (data) {
         // transform received data to chart format
         for (var i = 0; i < meteodata.length; i++) {
           var rainDiff = parseInt(meteodata[i].rainDiff) * 3 / 10; // approx .295 is one tick
-          chartData.addRow([convertMySqlTimeToDate(meteodata[i].tsLocal),
+          chartData.addRow([meteodata[i].tsLocal,
             rainDiff]);
 
           if (rainDiff > maxValue) {

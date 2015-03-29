@@ -36,7 +36,7 @@
 /***********************************************************************************/
 
 
-var qwesta = angular.module('qwestaApp', ['pickadate']).config(function(pickadateI18nProvider) {
+var qwesta = angular.module('qwestaApp', ['pickadate']).config(function (pickadateI18nProvider) {
   pickadateI18nProvider.translations = {
     prev: '<i class="icon-chevron-left"></i> früher',
     next: 'später <i class="icon-chevron-right"></i>'
@@ -107,39 +107,72 @@ qwesta.controller('QwestaCtrl', ['$scope', '$http', '$interval', function ($scop
     }
   };
   /**
+   * Converts a MySql Time format to a Date. This is only an issue for the Safari Browser which
+   * follows a very strict implementation
+   * @param date formatted as delivered by MySql: "2014-10-06 03:01:12"
+   * @returns {Date} date object
+   */
+  var convertMySqlTimeToDate = function (date) {
+    try {
+
+      var a = date.split(' ');
+      var n = new Date(a[0] + 'T' + a[1] + 'Z'); // 2007-12-24T18:21Z
+      n.set({minute: 0, second: 0});
+      return n;
+    }
+    catch (e) {
+      console.error("Invalid MySQL Date:" + date);
+      return new Date(2000, 1, 1);
+    }
+  };
+  /**
+   * Sets the correct time in the raw Data
+   * @param rawData
+   * @returns {*} rawData with validated times
+   */
+  var validateRawData = function (rawData) {
+    for (var i = 0; i < rawData.length; i++) {
+      if (rawData[i].ts) {
+        rawData[i].tsLocal = convertMySqlTimeToDate(rawData[i].ts);
+        rawData[i].localTime = rawData[i].tsLocal.toString("d.M.yy HH:mm");
+      }
+    }
+    return rawData;
+  };
+  /**
    * Set the temperature chart
    * @param data read from qwestadata.php
    */
-  $scope.setTemperatureChart = function(data) {
+  $scope.setTemperatureChart = function (data) {
     $scope.dataType = 'temperature';
-    $scope.rawData = data;
+    $scope.rawData = validateRawData(data);
     drawTemperatureChart(data);
   };
   /**
    * Set the temperature chart
    * @param data read from qwestadata.php
    */
-  $scope.setHumidityChart = function(data) {
+  $scope.setHumidityChart = function (data) {
     $scope.dataType = 'humidity';
-    $scope.rawData = data;
+    $scope.rawData = validateRawData(data);
     drawHumidityChart(data);
   };
   /**
    * Set the wind chart
    * @param data read from qwestadata.php
    */
-  $scope.setWindChart = function(data) {
+  $scope.setWindChart = function (data) {
     $scope.dataType = 'wind';
-    $scope.rawData = data;
+    $scope.rawData = validateRawData(data);
     drawWindChart(data);
   };
   /**
    * Set the Rain chart
    * @param data read from qwestadata.php
    */
-  $scope.setRainChart = function(data) {
+  $scope.setRainChart = function (data) {
     $scope.dataType = 'rain';
-    $scope.rawData = data;
+    $scope.rawData = validateRawData(data);
     drawRainChart(data);
   };
   /**

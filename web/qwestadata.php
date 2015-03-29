@@ -157,7 +157,7 @@ function getData($params)
     $group = "GROUP BY DAY(tslocal)";
   }
 
-  $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, COUNT(*) AS nbRows, " . $query . " FROM %s WHERE
+  $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, COUNT(*) AS nbRows, ts, " . $query . " FROM %s WHERE
                   %s %s ORDER BY ts ASC",
     $utcOffset,
     $config->mysqlTableWeather,
