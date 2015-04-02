@@ -36,7 +36,9 @@
 /***********************************************************************************/
 
 var settings = require('./settings');
-
+if (settings.simulation) {
+  console.log('QWESTA SIMULATOR ACTIVE');
+}
 var http = require('http');
 var url = require('url');
 var path = require('path');

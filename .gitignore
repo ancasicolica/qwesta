@@ -1,6 +1,7 @@
 .idea/
 node/node_modules/
 node/settings/beaglebone.js
+sim-server/node_modules/
 web/configuration.php
 web/node_modules/
 web-dist/css/combined.css

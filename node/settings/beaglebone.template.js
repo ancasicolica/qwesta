@@ -40,6 +40,7 @@ module.exports = function (settings) {
 
   settings.webserver = {
     hostname: 'www.yourserver.ch',
+    port: 80,
     url: '/qwesta/push.php'
   };
   // This is for the message signing, must be the same value as in the PHP file

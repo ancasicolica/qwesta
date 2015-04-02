@@ -39,6 +39,7 @@ module.exports = function (settings) {
 
   settings.webserver = {
     hostname: 'localhost',
+    port: 2900,
     url: '/push'
   };
   // This is for the message signing, must be the same value as in the PHP file

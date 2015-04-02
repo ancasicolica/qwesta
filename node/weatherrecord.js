@@ -213,7 +213,7 @@ var sendDataToServer = function (record) {
 
   var options = {
     hostname: settings.webserver.hostname,
-    port: 80,
+    port: settings.webserver.port,
     path: settings.webserver.url + query,
     method: 'GET'
   };
