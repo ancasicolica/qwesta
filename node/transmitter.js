@@ -1,8 +1,8 @@
 /***********************************************************************************/
 /*
- File:    local.js
- Purpose: Configuration for local debugging
- Author:  Christian Kuster, CH-8342 Wernetshausen, www.kusti.ch, 2.10.14
+ File:    transmitter.js
+ Purpose: Transmits the weather data to the webserver
+ Author:  Christian Kuster, CH-8342 Wernetshausen, www.kusti.ch, 2.4.15
  Github:  https://github.com/ancasicolica/qwesta
 
  ----------------------------------------------------------------------------------
@@ -35,20 +35,34 @@
  */
 /***********************************************************************************/
 
-module.exports = function (settings) {
+var settings = require('./settings');
+var needle = require('needle');
+var crypto = require('crypto');
+/**
+ * Sends data to your webserver.
+ * A GET request is used as some webservers (like mine...) refuse POST requests
+ * due to security reasons.
+ * @param record
+ */
+var pushRecord = function (record) {
+  var weatherData = new Buffer(JSON.stringify(record)).toString('base64');
 
-  settings.webserver = {
-    protocol: 'http://',
-    hostname: 'localhost',
-    port: 2900,
-    url: '/push'
-  };
-  // This is for the message signing, must be the same value as in the PHP file
-  settings.communicationHashSeed = '11445566eeff44224560db23ee19c8adef3d22de';
+  var shasum = crypto.createHash('sha1');
+  var hashVal = settings.communicationHashSeed + weatherData;
+  shasum.update(hashVal);
+  var signature = shasum.digest('hex');
 
-  settings.serialComPort = '/dev/ttyUSB0';  // Linux
-  settings.simulator = true; // set to true when simulating
-  settings.localServerPort = 8888; // set to your port
-  settings.htmlRootPath = process.cwd() + '/html';
-  return settings;
+  var query = "?q=" + weatherData + "&h=" + signature;
+
+  var url = settings.webserver.protocol + settings.webserver.hostname + ':' + settings.webserver.port + settings.webserver.url + query;
+
+  needle.get(url, function (error, response) {
+    if (!error && response.statusCode == 200)
+      console.log(response.body);
+  });
+
+};
+
+module.exports = {
+  pushRecord: pushRecord
 };

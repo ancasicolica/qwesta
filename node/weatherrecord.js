@@ -35,6 +35,8 @@
  */
 /***********************************************************************************/
 
+var transmitter = require('./transmitter');
+
 // Format: $1;1;;;;;;;;;;;;;;;;;;21,1;50;0,0;10;0;0
 module.exports = {
   /**
@@ -141,14 +143,18 @@ var addNewRecord = function (record) {
     if (measurementList.length > maxNbOfMeasurements) {
       measurementList.shift();
     }
-    sendDataToServer(wr);
+
+    if (simTimer != null) {
+      wr.simulation = true;
+    }
+    transmitter.pushRecord(wr);
     return wr;
   }
   catch (e) {
     console.error("newRecord exception: " + e);
     return null;
   }
-}
+};
 
 
 /***********************************************************************************/
@@ -170,77 +176,21 @@ var WeatherRecord = function (record) {
   this.isRaining = (elements[23] == "1");
   this.rainDifference = 0; // Difference since the last measurement, ticks
 
-}
+};
+
 /**
  * toString override
  * @returns {string}
  */
 WeatherRecord.prototype.toString = function () {
   return this.timestamp + " T:" + this.temperature + " H:" + this.humidity + "% W:"
-  + this.wind + " R:" + this.rain + " iR:" + this.isRaining;
-}
-/*
- var d = new WeatherRecord("$1;1;;;;;;;;;;;;;;;;;;21,1;50;0,0;10;0;0");
- console.log(d.toString());
- */
-
-
-var http = require('http');
-var settings = require('./settings.js');
-var crypto = require('crypto');
-
-/**
- * Sends data to your webserver.
- * A GET request is used as some webservers (like mine...) refuse POST requests
- * due to security reasons.
- * @param record
- */
-var sendDataToServer = function (record) {
-
-  // If the simulation is running, set the sim flag to true
-  if (simTimer != null) {
-    record.simulation = true;
-  }
-
-  var weatherData = new Buffer(JSON.stringify(record)).toString('base64');
-  var shasum = crypto.createHash('sha1');
-  var hashVal = settings.communicationHashSeed + weatherData;
-
-  shasum.update(hashVal);
-  var signature = shasum.digest('hex');
-
-  var query = "?q=" + weatherData + "&h=" + signature;
-
-  var options = {
-    hostname: settings.webserver.hostname,
-    port: settings.webserver.port,
-    path: settings.webserver.url + query,
-    method: 'GET'
-  };
-
-  var req = http.request(options, function (res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      if (simTimer != null) {
-        // Do not spam the log on the weather station, show only in sim
-        console.log('RESULT: ' + chunk);
-      }
-    });
-  });
-
-  req.on('error', function (e) {
-    console.log('problem with request: ' + e.message);
-  });
-
-
-  // Transfer request
-  req.end();
-
+    + this.wind + " R:" + this.rain + " iR:" + this.isRaining;
 };
 
 
 /***********************************************************************************/
 /* Simulation part, not needed for productive system                               */
+// Todo: place simulator into separate module
 var simTimer = null;
 var simTimerDelay = 5000; // Delay in ms
 /**
@@ -303,6 +253,5 @@ var createRandomEvent = function () {
   if (windRnd > 0.7) {
     wind = Math.round(windRnd * 15) / 10;
   }
-  var recString = '$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g, ',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g, ',') + ';' + rain.toString() + ';0;0';
-  return recString;
+  return '$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g, ',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g, ',') + ';' + rain.toString() + ';0;0';
 };

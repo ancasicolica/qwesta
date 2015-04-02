@@ -39,6 +39,7 @@
 module.exports = function (settings) {
 
   settings.webserver = {
+    protocol: 'http://',
     hostname: 'www.yourserver.ch',
     port: 80,
     url: '/qwesta/push.php'

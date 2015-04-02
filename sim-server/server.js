@@ -1,14 +1,7 @@
-/**
- * This is the main file for the sim-server
- *
- * The purpose of the sim server is only local testing of the weather station without real webserver
- *
- * Created by kc on 02.04.15.
- */
 /***********************************************************************************/
 /*
  File:    server.js
- Purpose: Test server for local testing and debugging
+ Purpose: Local testing of qwesta, this is the main file for the sim server
  Author:  Christian Kuster, CH-8342 Wernetshausen, www.kusti.ch, 2.4.15
  Github:  https://github.com/ancasicolica/qwesta
 
@@ -41,9 +34,7 @@
 
  */
 /***********************************************************************************/
-
 'use strict';
-
 
 var http = require('http');
 var url = require('url');
@@ -53,16 +44,24 @@ var express = require('express');
 
 var app = express();
 /**
- * Get the file /ajax/current.html
- * This file contains the current records and is generated
+ * This is the only route which is simulated on the server: pushing the qwesta data on the web (even it is a GET
+ * request).
  */
 app.get('/push', function (request, response) {
   response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end('hello');
-  console.log(request.body);
+  response.end(JSON.stringify({status: 'ok'}));
+
+  try {
+    var dataset = JSON.parse(new Buffer(request.query.q, 'base64').toString('ascii'));
+    console.log('Data received with ts = ' + dataset.timestamp);
+
+  }
+  catch (e) {
+    console.error(e);
+  }
 });
 
 http.createServer(app).listen(settings.testServerPort);
 
-console.log('Weather server is running at http://localhost:' + settings.testServerPort + '/\nCTRL + C to shutdown');
+console.log('Qwuesta simulation web server is running at http://localhost:' + settings.testServerPort + '/\nCTRL + C to shutdown');
 

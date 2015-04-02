@@ -17,11 +17,11 @@
     "type": "git",
     "url": "https://github.com/ancasicolica/qwesta"
   },
-  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "express": "4.x",
-    "serialport": "1.x",
-    "mime": "1.2.x"
+    "mime": "1.2.x",
+    "needle": "^0.9.1",
+    "serialport": "1.x"
   }
 }
