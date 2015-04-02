@@ -53,8 +53,13 @@ app.get('/push', function (request, response) {
 
   try {
     var dataset = JSON.parse(new Buffer(request.query.q, 'base64').toString('ascii'));
-    console.log('Data received with ts = ' + dataset.timestamp);
-
+    var d = dataset.delay || 0;
+    if (dataset.pushError) {
+      console.log('Data received with ts = ' + dataset.timestamp + ' E ' + d);
+    }
+    else {
+      console.log('Data received with ts = ' + dataset.timestamp + '   ' + d);
+    }
   }
   catch (e) {
     console.error(e);

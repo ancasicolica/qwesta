@@ -41,6 +41,7 @@ var crypto = require('crypto');
 var _ = require('lodash');
 var records = [];
 var retryInterval;
+var requestPending = false;
 /**
  * Callback after pushing a record to the webserver
  * @param err if not null, data was not pushed
@@ -48,40 +49,34 @@ var retryInterval;
  */
 var pushRecordCallback = function (err, rec) {
   if (err) {
-    if(!_.includes(records, rec)) {
-      console.log('+1');
-      records.push(rec);
-    }
-
-    if (!retryInterval) {
-      console.log('Start retry timer');
-      retryInterval = setInterval(function () {
-        if (records.length > 0) {
-          pushRecord(records[0], pushRecordCallback);
-        }
-      }, 2000);
-    }
-    console.log('Transmit error');
+    rec.pushError = true;
+    console.log('Transmit error: ' + err.message + ' ' + rec.timestamp);
     return;
   }
-  console.log('-1');
+  console.log('-1: ' + rec.timestamp);
   _.pull(records, rec);
   console.log('Records length: ' + records.length);
-  if (retryInterval && records.length === 0) {
-    // There is no need for a timer anymore
-    console.log('Killing retry timer');
-    clearInterval(retryInterval);
-    retryInterval = null;
-  }
 };
 
 /**
- * Adds a record to the transmit queue (immediate try to push, if it fails, it goes to the queue)
- * @param record
+ * Adds a record to the transmit queue
+ * @param rec
  */
-var addToQueue = function (record) {
-  // Try to send it right now
-  pushRecord(record, pushRecordCallback);
+var addToQueue = function (rec) {
+  if (records.length > 0) {
+    rec.delay = records.length;
+  }
+  records.push(rec);
+
+  if (!retryInterval) {
+    console.log('Start retry timer');
+    retryInterval = setInterval(function () {
+      if (records.length > 0) {
+        pushRecord(records[0], pushRecordCallback);
+      }
+    }, 1000);
+  }
+
 };
 /**
  * Sends data to your webserver.
@@ -91,23 +86,31 @@ var addToQueue = function (record) {
  * @param callback
  */
 var pushRecord = function (record, callback) {
+
+  if (requestPending) {
+    // Request is pending, don't send another one
+    return callback(new Error('req pending'), record);
+  }
+
   var weatherData = new Buffer(JSON.stringify(record)).toString('base64');
   var shasum = crypto.createHash('sha1');
   var hashVal = settings.communicationHashSeed + weatherData;
   shasum.update(hashVal);
   var signature = shasum.digest('hex');
-
   var query = "?q=" + weatherData + "&h=" + signature;
-
   var url = settings.webserver.protocol + settings.webserver.hostname + ':' + settings.webserver.port + settings.webserver.url + query;
 
+  console.log('-> ' + record.timestamp);
+  requestPending = true;
   needle.get(url, function (error, response) {
     if (!error && response.statusCode !== 200) {
-      return callback(new Error('Invalid status code: ' + respnse.statusCode));
+      callback(new Error('Invalid status code: ' + respnse.statusCode));
     }
-    return callback(error, record);
+    else {
+      callback(error, record);
+    }
+    requestPending = false;
   });
-
 };
 
 module.exports = {
