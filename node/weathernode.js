@@ -35,24 +35,7 @@
  */
 /***********************************************************************************/
 
-
-
-// Configure the comport as required by your system
-// var serialComPort = 'COM4';         // Windows
-var serialComPort = '/dev/ttyUSB0';  // Linux
-var simulator = false; // set to true when simulating
-var port = 8888; // set to your port
-var htmlRootPath = '/home/kc/sd/qwesta/html'; // set to the place where your html is
-
-// Set NODE_ENV environment variable to development when playing around
-if (process.env.NODE_ENV === 'development') {
-  console.info("DEVELOPMENT environment active");
-  htmlRootPath = process.cwd() + '/html';
-  simulator = true;
-}
-
-/***********************************************************************************/
-
+var settings = require('./settings');
 
 var http = require('http');
 var url = require('url');
@@ -97,7 +80,7 @@ app.get('/ajax/humidity.html', function (request, response) {
 app.get('*', function (request, response) {
 
   var uri = url.parse(request.url).pathname;
-  var filename = path.join(htmlRootPath, uri);
+  var filename = path.join(settings.htmlRootPath, uri);
 
   fs.exists(filename, function (exists) {
     if (!exists) {
@@ -130,18 +113,18 @@ app.get('*', function (request, response) {
   });
 });
 
-http.createServer(app).listen(port);
+http.createServer(app).listen(settings.localServerPort);
 
-console.log('Weather server is running at http://localhost:' + port + '/\nCTRL + C to shutdown');
+console.log('Weather server is running at http://localhost:' + settings.localServerPort + '/\nCTRL + C to shutdown');
 
 
 /***********************************************************************************/
 // Serial port handling
 /***********************************************************************************/
-var serialport = require('./node_modules/serialport/serialport.js');
-var SerialPort = serialport.SerialPort; // localize object constructor
+var serialport = require('serialport');
+var SerialPort = serialport.SerialPort;
 
-if (simulator) {
+if (settings.simulator) {
   weather.startSimulator();
 }
 
@@ -149,7 +132,7 @@ if (simulator) {
  * Serialport object for the USB-WDE1-2
  * @type {SerialPort} Baudrate is 9600 bps, line parser is essential!
  */
-var sp = new SerialPort(serialComPort, {
+var sp = new SerialPort(settings.serialComPort, {
   baudrate: 9600,
   parser  : serialport.parsers.readline('\n')
 }, false); // this is the openImmediately flag [default is true]

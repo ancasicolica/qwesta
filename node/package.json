@@ -1,11 +1,23 @@
 {
+  "name": "qwesta",
+  "version": "0.1.0",
+  "description": "Kustis Weatherstation application",
   "author": {
     "name": "Christian Kuster",
+    "email": "christian@kusti.ch",
     "url": "http://www.kusti.ch"
   },
-  "name": "qwesta",
-  "description": "Kustis Weatherstation application",
-  "version": "0.0.1",
+  "keywords": [
+    "weather station",
+    "beaglebone",
+    "qwesta"
+  ],
+  "homepage": "http://www.ferropoly.ch/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ancasicolica/qwesta"
+  },
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "express": "4.x",

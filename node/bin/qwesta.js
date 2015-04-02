@@ -1,9 +1,9 @@
-/***********************************************************************************/
-/*
- File:    configuration.js
- Purpose: Contains the parts of the configuration of qwesta which should not be in
- GIT
- Author:  Christian Kuster, CH-8342 Wernetshausen, www.kusti.ch, 2.10.14
+#!/usr/bin/env node
+/**
+ * Executable file for qwesta
+ File:    beaglebone.template.js
+ Purpose: This is the qwesta file to run
+ Author:  Christian Kuster, CH-8342 Wernetshausen, www.kusti.ch, 2.4.15
  Github:  https://github.com/ancasicolica/qwesta
 
  ----------------------------------------------------------------------------------
@@ -36,9 +36,5 @@
  */
 /***********************************************************************************/
 
-module.exports = {
-  webserverHostname    : 'www.yourserver.ch',
-  webserverUrl         : '/qwesta/push.php',
-  // This is for the message signing, must be the same value as in the PHP file
-  communicationHashSeed: '11445566eeff44224560db23ee19c8adef3d22de'
-};
+'use strict';
+require('../weathernode.js');

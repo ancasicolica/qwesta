@@ -1,6 +1,6 @@
 .idea/
 node/node_modules/
-node/configuration.js
+node/settings/beaglebone.js
 web/configuration.php
 web/node_modules/
 web-dist/css/combined.css

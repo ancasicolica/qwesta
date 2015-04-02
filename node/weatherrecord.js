@@ -186,7 +186,7 @@ WeatherRecord.prototype.toString = function () {
 
 
 var http = require('http');
-var config = require('./configuration.js');
+var settings = require('./settings.js');
 var crypto = require('crypto');
 
 /**
@@ -204,7 +204,7 @@ var sendDataToServer = function (record) {
 
   var weatherData = new Buffer(JSON.stringify(record)).toString('base64');
   var shasum = crypto.createHash('sha1');
-  var hashVal = config.communicationHashSeed + weatherData;
+  var hashVal = settings.communicationHashSeed + weatherData;
 
   shasum.update(hashVal);
   var signature = shasum.digest('hex');
@@ -212,9 +212,9 @@ var sendDataToServer = function (record) {
   var query = "?q=" + weatherData + "&h=" + signature;
 
   var options = {
-    hostname: config.webserverHostname,
+    hostname: settings.webserver.hostname,
     port: 80,
-    path: config.webserverUrl + query,
+    path: settings.webserver.url + query,
     method: 'GET'
   };
 
