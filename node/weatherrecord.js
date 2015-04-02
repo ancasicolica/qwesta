@@ -147,7 +147,7 @@ var addNewRecord = function (record) {
     if (simTimer != null) {
       wr.simulation = true;
     }
-    transmitter.pushRecord(wr);
+    transmitter.addToQueue(wr);
     return wr;
   }
   catch (e) {

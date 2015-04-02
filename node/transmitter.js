@@ -38,15 +38,60 @@
 var settings = require('./settings');
 var needle = require('needle');
 var crypto = require('crypto');
+var _ = require('lodash');
+var records = [];
+var retryInterval;
+/**
+ * Callback after pushing a record to the webserver
+ * @param err if not null, data was not pushed
+ * @param rec record
+ */
+var pushRecordCallback = function (err, rec) {
+  if (err) {
+    if(!_.includes(records, rec)) {
+      console.log('+1');
+      records.push(rec);
+    }
+
+    if (!retryInterval) {
+      console.log('Start retry timer');
+      retryInterval = setInterval(function () {
+        if (records.length > 0) {
+          pushRecord(records[0], pushRecordCallback);
+        }
+      }, 2000);
+    }
+    console.log('Transmit error');
+    return;
+  }
+  console.log('-1');
+  _.pull(records, rec);
+  console.log('Records length: ' + records.length);
+  if (retryInterval && records.length === 0) {
+    // There is no need for a timer anymore
+    console.log('Killing retry timer');
+    clearInterval(retryInterval);
+    retryInterval = null;
+  }
+};
+
+/**
+ * Adds a record to the transmit queue (immediate try to push, if it fails, it goes to the queue)
+ * @param record
+ */
+var addToQueue = function (record) {
+  // Try to send it right now
+  pushRecord(record, pushRecordCallback);
+};
 /**
  * Sends data to your webserver.
  * A GET request is used as some webservers (like mine...) refuse POST requests
  * due to security reasons.
  * @param record
+ * @param callback
  */
-var pushRecord = function (record) {
+var pushRecord = function (record, callback) {
   var weatherData = new Buffer(JSON.stringify(record)).toString('base64');
-
   var shasum = crypto.createHash('sha1');
   var hashVal = settings.communicationHashSeed + weatherData;
   shasum.update(hashVal);
@@ -57,12 +102,15 @@ var pushRecord = function (record) {
   var url = settings.webserver.protocol + settings.webserver.hostname + ':' + settings.webserver.port + settings.webserver.url + query;
 
   needle.get(url, function (error, response) {
-    if (!error && response.statusCode == 200)
-      console.log(response.body);
+    if (!error && response.statusCode !== 200) {
+      return callback(new Error('Invalid status code: ' + respnse.statusCode));
+    }
+    return callback(error, record);
   });
 
 };
 
 module.exports = {
-  pushRecord: pushRecord
+  addToQueue: addToQueue,
+
 };
