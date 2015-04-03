@@ -50,5 +50,8 @@ module.exports = function (settings) {
   settings.simulator = true; // set to true when simulating
   settings.localServerPort = 8888; // set to your port
   settings.htmlRootPath = process.cwd() + '/html';
+
+  settings.transmissionPollTime = 1000; // This is the time for polling the queue
+
   return settings;
 };

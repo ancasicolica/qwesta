@@ -74,7 +74,7 @@ var addToQueue = function (rec) {
       if (records.length > 0) {
         pushRecord(records[0], pushRecordCallback);
       }
-    }, 1000);
+    }, settings.transmissionPollTime);
   }
 
 };

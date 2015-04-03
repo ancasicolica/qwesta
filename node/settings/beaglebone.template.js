@@ -52,5 +52,7 @@ module.exports = function (settings) {
   settings.localServerPort = 8888; // set to your port
   settings.htmlRootPath = '/home/kc/sd/qwesta/html'; // set to the place where your html is
 
+  settings.transmissionPollTime = 15000; // This is the time for polling the queue
+
   return settings;
 };
