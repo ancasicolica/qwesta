@@ -11,6 +11,8 @@ var settings     = require('./settings');
 var bodyParser   = require('body-parser');
 var compression  = require('compression');
 var path         = require('path');
+var weather      = require('./lib/weatherrecord.js');
+var simulator    = require('./lib/simulator');
 
 var app = express();
 app.use(require('./lib/expressLogger'));
@@ -23,8 +25,16 @@ app.use('/', require('./routes/index'));
 app.use('/measurements', require('./routes/measurements'));
 
 usbConnector.on('data', data => {
-  logger.info(data);
+  var r = weather.newRecord(data);
+  if (r != null) {
+    logger.info('data received: ' + r.toString());
+  }
 });
 
-app.listen(settings.localServerPort)
+app.listen(settings.localServerPort);
 logger.info('Qwesta started up on port ' + settings.localServerPort);
+
+if (settings.simulator) {
+  logger.info('Simulator is ACTIVE');
+  simulator.start();
+}

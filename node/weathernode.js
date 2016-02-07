@@ -43,7 +43,7 @@ var http = require('http');
 var url = require('url');
 var path = require('path');
 var fs = require('fs');
-var weather = require('./weatherrecord.js');
+var weather = require('./lib/weatherrecord.js');
 
 var express = require('express');
 var mime = require('mime');

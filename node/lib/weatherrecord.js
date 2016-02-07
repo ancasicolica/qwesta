@@ -36,6 +36,7 @@
 /***********************************************************************************/
 
 var transmitter = require('./transmitter');
+var _           = require('lodash');
 
 // Format: $1;1;;;;;;;;;;;;;;;;;;21,1;50;0,0;10;0;0
 module.exports = {
@@ -47,11 +48,26 @@ module.exports = {
   newRecord: function (record) {
     return addNewRecord(record);
   },
+
+  /**
+   * Get the last record
+   * @returns {*}
+   */
+  getLastRecord           : function () {
+    if (measurementList.length === 0) {
+      return {
+        temperature: 20.0,
+        humidity   : 90,
+        rain       : 1000
+      };
+    }
+    return _.last(measurementList);
+  },
   /**
    * Returns the most recent record as JSON string
    * @returns {*}
    */
-  getCurrentRecordAsJson: function () {
+  getCurrentRecordAsJson  : function () {
     if (measurementList.length > 0) {
       return JSON.stringify(measurementList[measurementList.length - 1]);
     }
@@ -61,7 +77,7 @@ module.exports = {
    * Returns the newest records (maxNbOfMeasurementsForCurrent)
    * @returns {*}
    */
-  getNewestRecords: function () {
+  getNewestRecords        : function () {
     if (measurementList.length > maxNbOfMeasurementsForCurrent) {
       return JSON.stringify(measurementList.slice(measurementList.length - maxNbOfMeasurementsForCurrent));
     }
@@ -82,7 +98,7 @@ module.exports = {
    * Returns the records for the humidity chart
    * @returns {*}
    */
-  getHumidityDataAsJson: function () {
+  getHumidityDataAsJson   : function () {
     var data = [];
     for (var i = 0; i < measurementList.length; i++) {
       data.push({'timestamp': measurementList[i].timestamp, 'humidity': measurementList[i].humidity});
@@ -93,19 +109,19 @@ module.exports = {
    * Returns all records as JSON string
    * @returns {*}
    */
-  getAllRecordsAsJson: function () {
+  getAllRecordsAsJson     : function () {
     return JSON.stringify(measurementList);
   },
   /**
    * Starts the simulator
    */
-  startSimulator: function () {
+  startSimulator          : function () {
     startSimTimer();
   },
   /**
    * Stopps the simulator
    */
-  stopSimulator: function () {
+  stopSimulator           : function () {
     stopSimTimer();
   }
 };
@@ -123,7 +139,7 @@ var maxNbOfMeasurementsForCurrent = 10; // max number for current list
 var addNewRecord = function (record) {
   try {
     var rec = record.toString();
-    var wr = new WeatherRecord(rec);
+    var wr  = new WeatherRecord(rec);
 
     if (measurementList.length > 0) {
       if (wr.rain >= measurementList[measurementList.length - 1].rain) {
@@ -168,12 +184,12 @@ var WeatherRecord = function (record) {
   if ((elements[0] != "$1") || (elements.length != 25)) {
     throw "Malformed record:" + record;
   }
-  this.timestamp = new Date();
+  this.timestamp   = new Date();
   this.temperature = parseFloat(elements[19].replace(/[,]/g, '.'));
-  this.humidity = parseInt(elements[20]);
-  this.wind = parseFloat(elements[21].replace(/[,]/g, '.'));
-  this.rain = parseInt(elements[22]);  // 1 tick is approx 295 ml/m2
-  this.isRaining = (elements[23] == "1");
+  this.humidity    = parseInt(elements[20]);
+  this.wind        = parseFloat(elements[21].replace(/[,]/g, '.'));
+  this.rain        = parseInt(elements[22]);  // 1 tick is approx 295 ml/m2
+  this.isRaining      = (elements[23] == "1");
   this.rainDifference = 0; // Difference since the last measurement, ticks
 
 };
@@ -191,12 +207,12 @@ WeatherRecord.prototype.toString = function () {
 /***********************************************************************************/
 /* Simulation part, not needed for productive system                               */
 // Todo: place simulator into separate module
-var simTimer = null;
+var simTimer      = null;
 var simTimerDelay = 5000; // Delay in ms
 /**
  * Starts the simulation timer. Every interval, a new random record is added
  */
-var startSimTimer = function () {
+var startSimTimer     = function () {
   if (simTimer == null) {
     console.info("Simulation timer started");
     simTimer = setInterval(function () {
@@ -208,7 +224,7 @@ var startSimTimer = function () {
 /**
  * Stops the simulation timer
  */
-var stopSimTimer = function () {
+var stopSimTimer      = function () {
   if (simTimer != null) {
     console.info("Simulation timer stopped");
     clearInterval(simTimer);
@@ -222,9 +238,9 @@ var stopSimTimer = function () {
 var createRandomEvent = function () {
 // Create (quite) random event
   var temperatureRnd = Math.random() - 0.5;
-  var humidityRnd = Math.random() - 0.5;
-  var rainRnd = Math.random();
-  var windRnd = Math.random();
+  var humidityRnd    = Math.random() - 0.5;
+  var rainRnd        = Math.random();
+  var windRnd        = Math.random();
   var currentRecord;
   if (measurementList.length > 0) {
     currentRecord = measurementList[measurementList.length - 1];
@@ -232,8 +248,8 @@ var createRandomEvent = function () {
   else {
     currentRecord = {
       temperature: 20.0,
-      humidity: 90,
-      rain: 1000
+      humidity   : 90,
+      rain       : 1000
     };
   }
   var temp = Math.round((currentRecord.temperature + (temperatureRnd / 3)) * 10) / 10;

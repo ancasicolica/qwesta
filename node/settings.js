@@ -33,6 +33,8 @@ settings.logger = {
     level: 'debug'
 };
 
+settings.simulator = process.env.SIMULATOR || false;
+
 if (process.env.DEPLOY_TYPE && fs.existsSync(path.join(__dirname, 'settings/' + process.env.DEPLOY_TYPE + '.js'))) {
     module.exports = require('./settings/' + process.env.DEPLOY_TYPE + '.js')(settings);
 } else {

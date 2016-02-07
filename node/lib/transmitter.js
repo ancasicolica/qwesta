@@ -35,13 +35,13 @@
  */
 /***********************************************************************************/
 
-var settings = require('./settings');
-var needle = require('needle');
-var crypto = require('crypto');
-var _ = require('lodash');
-var records = [];
+var settings           = require('./../settings');
+var needle             = require('needle');
+var crypto             = require('crypto');
+var _                  = require('lodash');
+var records            = [];
 var retryInterval;
-var requestPending = false;
+var requestPending     = false;
 /**
  * Callback after pushing a record to the webserver
  * @param err if not null, data was not pushed
@@ -93,12 +93,12 @@ var pushRecord = function (record, callback) {
   }
 
   var weatherData = new Buffer(JSON.stringify(record)).toString('base64');
-  var shasum = crypto.createHash('sha1');
-  var hashVal = settings.communicationHashSeed + weatherData;
+  var shasum      = crypto.createHash('sha1');
+  var hashVal     = settings.communicationHashSeed + weatherData;
   shasum.update(hashVal);
   var signature = shasum.digest('hex');
-  var query = "?q=" + weatherData + "&h=" + signature;
-  var url = settings.webserver.protocol + settings.webserver.hostname + ':' + settings.webserver.port + settings.webserver.url + query;
+  var query     = "?q=" + weatherData + "&h=" + signature;
+  var url       = settings.webserver.protocol + settings.webserver.hostname + ':' + settings.webserver.port + settings.webserver.url + query;
 
   console.log('-> ' + record.timestamp);
   requestPending = true;
@@ -114,6 +114,5 @@ var pushRecord = function (record, callback) {
 };
 
 module.exports = {
-  addToQueue: addToQueue,
-
+  addToQueue: addToQueue
 };

@@ -1,4 +1,64 @@
-//
-   Created by kc on 07.02.16.
-
-h1 hello
+doctype html
+html(ng-app='weatherApp')
+  head(lang='de')
+    meta(charset='UTF-8')
+    script(type='text/javascript', src='/modules/angular/angular.min.js')
+    // Latest compiled and minified CSS
+    link(rel='stylesheet', href='/modules/bootstrap/dist/css/bootstrap.min.css')
+    // Optional theme
+    link(rel='stylesheet', href='/modules/bootstrap/dist/css/bootstrap-theme.min.css')
+    // Qwesta CSS
+    link(rel='stylesheet', href='/css/qwesta.css')
+    // jQuery (necessary for Bootstrap's JavaScript plugins)
+    script(src='/modules/jquery/dist/jquery.min.js')
+    // Latest compiled and minified JavaScript
+    script(src='/bootstrap/dist/js/bootstrap.min.js')
+    // Weather control
+    script(src='js/weathercontrol.js?v=1')
+    // See http://getbootstrap.com/examples/theme/#
+    meta(http-equiv='cache-control', content='no-cache')
+    title Wetterstation
+  body
+    section(ng-controller='WeatherCtrl as ctrl')
+      .infobox
+        .stationname {{ctrl.stationName}}
+        .column1
+          table
+            tr
+              td.icon
+                a(ng-click='ctrl.loadTemperatureChart()')
+                  img(src='/img/icon32/thermometer31.png')
+              td
+                .temperature {{ctrl.currentRecord.temperature}}°
+              td
+                img(ng-src='{{ctrl.temperatureTrendImage}}')
+            tr
+              td.icon
+                a(ng-click='ctrl.loadHumidityChart()')
+                  img(src='/img/icon32/humidity.png')
+              td
+                .humidity {{ctrl.currentRecord.humidity}}%
+              td
+                img(ng-src='{{ctrl.humidityTrendImage}}')
+            tr
+              td.icon
+                img(src='/img/icon32/winds4.png')
+              td
+                .humidity {{ctrl.currentRecord.wind}} km/h
+              td
+            tr
+              td.icon
+                img(src='/img/icon32/water35.png')
+              td
+                .humidity {{ctrl.currentRecord.rainDifference}} l/m2/h
+              td
+            tr
+              td(colspan='3') {{ctrl.getCurrentRecordTime()}}
+        #chart.column2
+    p.credits
+      | Icons made by Catalin Fertu from
+      a(href='http://www.flaticon.com\
+      ', title='Flaticon') www.flaticon.com
+      |  is licensed by
+      a(href='http://creativecommons.org/licenses/by/3.0/', title='Creative Commons BY 3.0') CC BY 3.0
+    p.credits Powered by node.js Weatherstation qwesta
