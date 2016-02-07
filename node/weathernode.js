@@ -140,17 +140,29 @@ var sp = new SerialPort(settings.serialComPort, {
   parser  : serialport.parsers.readline('\n')
 }, false); // this is the openImmediately flag [default is true]
 
+sp.on('close', function () {
+  console.log('SERIALPORT CLOSED!');
+});
+
+sp.on('error', function (err) {
+  console.error('SERIALPORT ERROR!', err);
+});
+
+sp.on('open', function () {
+  console.log('SERIALPORT (RE)OPENED');
+});
+
+// handles the incoming data, creates a new weather record
+sp.on('data', function (data) {
+  var r = weather.newRecord(data);
+  if (r != null) {
+    console.log('data received: ' + r.toString());
+  }
+});
+
 /**
  * Open the serial port
  */
 sp.open(function () {
-  console.log('Serialport opened');
-
-  // handles the incoming data, creates a new weather record
-  sp.on('data', function (data) {
-    var r = weather.newRecord(data);
-    if (r != null) {
-      console.log('data received: ' + r.toString());
-    }
-  });
+  console.log('Serialport opened: ' + settings.serialComPort);
 });
