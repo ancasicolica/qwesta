@@ -27,7 +27,7 @@ settings.webserver = {
 };
 
 settings.localServerPort = process.env.QWESTA_LOCAL_PORT || 8080;
-settings.htmlRootPath = process.env.QWESTA_HTML_ROOT_PATH || path.join(__dirname, '..', 'html');
+settings.htmlRootPath = process.env.QWESTA_HTML_ROOT_PATH || path.join(__dirname, 'html');
 settings.serialComPort = process.env.QWESTA_SERIALPORT || '/dev/ttyUSB0';
 
 
