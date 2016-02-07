@@ -53,5 +53,6 @@ module.exports = function (settings) {
 
   settings.transmissionPollTime = 1000; // This is the time for polling the queue
 
+
   return settings;
 };

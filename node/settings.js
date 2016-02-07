@@ -2,7 +2,6 @@
  * Settings file, reads the settings from the specific folder. Thanks Adriano for this file :-)
  * Created by kc on 02.04.15.
  */
-'use strict';
 
 var pkg = require('./package.json');
 var fs = require('fs');
@@ -30,6 +29,9 @@ settings.localServerPort = process.env.QWESTA_LOCAL_PORT || 8080;
 settings.htmlRootPath = process.env.QWESTA_HTML_ROOT_PATH || path.join(__dirname, 'html');
 settings.serialComPort = process.env.QWESTA_SERIALPORT || '/dev/ttyUSB0';
 
+settings.logger = {
+    level: 'debug'
+};
 
 if (process.env.DEPLOY_TYPE && fs.existsSync(path.join(__dirname, 'settings/' + process.env.DEPLOY_TYPE + '.js'))) {
     module.exports = require('./settings/' + process.env.DEPLOY_TYPE + '.js')(settings);
