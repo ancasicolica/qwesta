@@ -28,7 +28,7 @@ settings.webserver = {
 
 settings.localServerPort = process.env.QWESTA_LOCAL_PORT || 8080;
 settings.htmlRootPath = process.env.QWESTA_HTML_ROOT_PATH || path.join(__dirname, '..', 'html');
-settings.serialPort = process.env.QWESTA_SERIALPORT || '/dev/ttyUSB0';
+settings.serialComPort = process.env.QWESTA_SERIALPORT || '/dev/ttyUSB0';
 
 
 if (process.env.DEPLOY_TYPE && fs.existsSync(path.join(__dirname, 'settings/' + process.env.DEPLOY_TYPE + '.js'))) {
