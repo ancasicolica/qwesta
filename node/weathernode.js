@@ -88,7 +88,8 @@ app.get('*', function (request, response) {
     if (!exists) {
       // File does not exist. Generated files were handled before.
       response.writeHead(404, {'Content-Type': 'text/plain'});
-      response.write("Server root: " + process.cwd() + "\n");
+      response.write("Server root: " + settings.htmlRootPath + "\n");
+      response.write("Requested file: " + filename + "\n");
       response.write("404 Not Found\n");
       response.end();
       return;
