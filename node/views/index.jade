@@ -9,14 +9,16 @@ html(ng-app='weatherApp')
     link(rel='stylesheet', href='/modules/bootstrap/dist/css/bootstrap-theme.min.css')
     // Qwesta CSS
     link(rel='stylesheet', href='/css/qwesta.css')
+    script(src='/socket.io/socket.io.js')
     // jQuery (necessary for Bootstrap's JavaScript plugins)
     script(src='/modules/jquery/dist/jquery.min.js')
     // Latest compiled and minified JavaScript
-    script(src='/bootstrap/dist/js/bootstrap.min.js')
+    script(src='/modules/bootstrap/dist/js/bootstrap.min.js')
     // Weather control
     script(src='js/weathercontrol.js?v=1')
     // See http://getbootstrap.com/examples/theme/#
     meta(http-equiv='cache-control', content='no-cache')
+
     title Wetterstation
   body
     section(ng-controller='WeatherCtrl as ctrl')

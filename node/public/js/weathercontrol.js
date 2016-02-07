@@ -38,17 +38,31 @@
 
 var weatherApp = angular.module('weatherApp', []);
 
-weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($scope, $http, $interval) {
+weatherApp.controller('WeatherCtrl', ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
+
+  $(document).ready(function () {
+    console.log('document ready');
+
+    $scope.socket = io.connect();
+
+    $scope.socket.on('connect', function() {
+      console.log('Socket connected');
+    });
+
+    $scope.socket.on('weatherdata', function(data) {
+      console.log(data);
+    });
+  });
 
   this.stationName = "Wetterstation";
-  this.iconFolder = "./img/icon32/";
+  this.iconFolder  = "./img/icon32/";
   // This entry contains the current record
   this.currentRecord = {
-    humidity: 0,
-    isRaining: false,
-    rain: 0,
-    temperature: 0.0,
-    timestamp: "2000-01-01T00:00:00.000Z",
+    humidity      : 0,
+    isRaining     : false,
+    rain          : 0,
+    temperature   : 0.0,
+    timestamp     : "2000-01-01T00:00:00.000Z",
     wind          : 0.0,
     rainDifference: 0.0
   };
@@ -56,18 +70,18 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
   this.records;
 
   this.temperatureTrendImage = this.iconFolder + "arrow456.png";
-  this.humidityTrendImage = this.iconFolder + "arrow456.png";
+  this.humidityTrendImage    = this.iconFolder + "arrow456.png";
 
-  this.getCurrentRecordTime = function() {
+  this.getCurrentRecordTime = function () {
     var d = new Date(this.currentRecord.timestamp);
     var s = d.toLocaleTimeString();
     return s;
-  }
+  };
   /**
    * The interval timer retrieving the data
    */
-  var timer = $interval(function() {
-    $scope.data.getCurrentData('ajax/current.html', $scope.currentDataCallback);
+  var timer                 = $interval(function () {
+    $scope.data.getCurrentData('measurements/current', $scope.currentDataCallback);
   }, 10000);
 
 
@@ -75,9 +89,9 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
    * Sets the data read from the ajax call
    * @param data
    */
-  this.setData = function(data) {
-    $scope.parent.records = data;
-    var cr = data[data.length - 1]
+  this.setData = function (data) {
+    $scope.parent.records       = data;
+    var cr                      = data[data.length - 1];
     $scope.parent.currentRecord = cr;
 
     // Analysis
@@ -85,9 +99,9 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
       // Evaluate average of temperature and humidity while removing the highest
       // and lowest value
       var temperatureAvg = 0.0;
-      var humidityAvg = 0.0;
-      var humidityMax = 0.0;
-      var humidityMin = 99.9;
+      var humidityAvg    = 0.0;
+      var humidityMax    = 0.0;
+      var humidityMin    = 99.9;
       var temperatureMax = -50.0;
       var temperatureMin = 99.0;
 
@@ -109,7 +123,7 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
 
       }
       temperatureAvg = (temperatureAvg - temperatureMax - temperatureMin) / (data.length - 2);
-      humidityAvg = (humidityAvg - humidityMax - humidityMin) / (data.length - 2);
+      humidityAvg    = (humidityAvg - humidityMax - humidityMin) / (data.length - 2);
 
       // TODO: better algorithm, is to exact now
       console.log("avg temp: " + temperatureAvg);
@@ -139,7 +153,7 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
    * Start the ajax call to load the temperature data
    */
   this.loadTemperatureChart = function () {
-    $scope.data.getCurrentData('ajax/temperature.html', $scope.temperatureDataCallback);
+    $scope.data.getCurrentData('measurements/temperatures', $scope.temperatureDataCallback);
   };
   /**
    * Draw the temperature chart
@@ -153,7 +167,7 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
    * Start the ajax call to load the humidity data
    */
   this.loadHumidityChart = function () {
-    $scope.data.getCurrentData('ajax/humidity.html', $scope.humidityDataCallback);
+    $scope.data.getCurrentData('measurements/humidity', $scope.humidityDataCallback);
   };
   /**
    * Draw the humidity chart
@@ -163,11 +177,11 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
     console.log(data);
     drawHumidityChart(data);
   };
-  $scope.currentDataCallback = this.setData;
+  $scope.currentDataCallback     = this.setData;
   $scope.temperatureDataCallback = this.drawTemperatureChart;
-  $scope.humidityDataCallback = this.drawHumidityChart;
-  $scope.parent = this;
-  $scope.data = {};
+  $scope.humidityDataCallback    = this.drawHumidityChart;
+  $scope.parent                  = this;
+  $scope.data                    = {};
   /**
    * Gets the current data from the webserver over an ajax call
    * @param url the url to retrieve
@@ -176,18 +190,18 @@ weatherApp.controller('WeatherCtrl',['$scope', '$http', '$interval', function($s
    */
   $scope.data.getCurrentData = function (url, callback) {
 
-    var responsePromise = $http.get(url, null);
-    // Success handling
-    responsePromise.success(function(data, status, headers, config) {
-      $scope.data.fromServer = "Text: " + data + "<br>status:" + status;
-      callback(data);
-    });
-    // Error handling
-    responsePromise.error(function(data, status, headers, config) {
-      //alert("AJAX failed!");
-    });
-    return true;
+    $http({method: 'GET', url: url}).then(
+      function (resp) {
+        // OK
+        $scope.data.fromServer = "Text: " + resp.data + "<br>status:" + resp.status;
+        callback(resp.data);
+      },
+      function (resp) {
+        // Error
+        console.error(resp);
+      }
+    );
   };
   // immediately request current data
-  $scope.data.getCurrentData('ajax/current.html', $scope.currentDataCallback);
+  $scope.data.getCurrentData('measurements/current', $scope.currentDataCallback);
 }]);

@@ -3,10 +3,10 @@
  * Created by kc on 07.02.16.
  */
 
-var _               = require('lodash');
-var weather         = require('./weatherrecord');
-var simulatorActive = false;
-
+var _                 = require('lodash');
+var weather           = require('./weatherrecord');
+var simulatorActive   = false;
+var socket            = require('./socket');
 /**
  * Create a random Event
  * @returns {string} Random Event
@@ -37,6 +37,11 @@ var createRandomEvent = function () {
     wind = Math.round(windRnd * 15) / 10;
   }
   weather.newRecord('$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g, ',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g, ',') + ';' + rain.toString() + ';0;0');
+  var s = socket.get();
+  if (s) {
+    s.emit('weatherdata', weather.getLastRecord());
+  }
+
   if (simulatorActive) {
     _.delay(createRandomEvent, 5000);
   }
