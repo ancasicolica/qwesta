@@ -22,8 +22,8 @@ html(ng-app='weatherApp')
     title Wetterstation
   body
     section(ng-controller='WeatherCtrl as ctrl')
-      .infobox
-        .stationname {{ctrl.stationName}}
+      .infobox(ng-cloak)
+        .stationname {{stationName}}
         .column1
           table
             tr
@@ -31,31 +31,31 @@ html(ng-app='weatherApp')
                 a(ng-click='ctrl.loadTemperatureChart()')
                   img(src='/img/icon32/thermometer31.png')
               td
-                .temperature {{ctrl.currentRecord.temperature}}°
+                .temperature {{currentRecord.temperature}}°
               td
-                img(ng-src='{{ctrl.temperatureTrendImage}}')
+                img(ng-src='{{temperatureTrendImage}}')
             tr
               td.icon
                 a(ng-click='ctrl.loadHumidityChart()')
                   img(src='/img/icon32/humidity.png')
               td
-                .humidity {{ctrl.currentRecord.humidity}}%
+                .humidity {{currentRecord.humidity}}%
               td
-                img(ng-src='{{ctrl.humidityTrendImage}}')
+                img(ng-src='{{humidityTrendImage}}')
             tr
               td.icon
                 img(src='/img/icon32/winds4.png')
               td
-                .humidity {{ctrl.currentRecord.wind}} km/h
+                .humidity {{currentRecord.wind}} km/h
               td
             tr
               td.icon
                 img(src='/img/icon32/water35.png')
               td
-                .humidity {{ctrl.currentRecord.rainDifference}} l/m2/h
+                .humidity {{currentRecord.rainDifference}} l/m2/h
               td
             tr
-              td(colspan='3') {{ctrl.getCurrentRecordTime()}}
+              td(colspan='3') {{getCurrentRecordTime()}}
         #chart.column2
     p.credits
       | Icons made by Catalin Fertu from

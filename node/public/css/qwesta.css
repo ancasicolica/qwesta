@@ -1,53 +1,57 @@
 body {
-  background : #224372;
+    background : #224372;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display : none !important;
 }
 
 div.infobox {
-  width: 600px;
-  margin         : 30px auto auto auto;
-  border         : 2px solid darkblue;
-  padding        : 5px;
-  vertical-align : middle;
+    width          : 600px;
+    margin         : 30px auto auto auto;
+    border         : 2px solid darkblue;
+    padding        : 5px;
+    vertical-align : middle;
 
-  background     : rgb(254, 255, 255); /* Old browsers */
-  background     : -moz-linear-gradient(top, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* FF3.6+ */
-  background     : -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(254, 255, 255, 1)), color-stop(35%, rgba(221, 241, 249, 1)), color-stop(100%, rgba(160, 216, 239, 1))); /* Chrome,Safari4+ */
-  background     : -webkit-linear-gradient(top, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* Chrome10+,Safari5.1+ */
-  background     : -o-linear-gradient(top, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* Opera 11.10+ */
-  background     : -ms-linear-gradient(top, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* IE10+ */
-  background     : linear-gradient(to bottom, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* W3C */
-  filter         : progid:DXImageTransform.Microsoft.gradient(startColorstr='#feffff', endColorstr='#a0d8ef', GradientType=0); /* IE6-9 */
-  margin-bottom  : 30px;
+    background     : rgb(254, 255, 255); /* Old browsers */
+    background     : -moz-linear-gradient(top, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* FF3.6+ */
+    background     : -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(254, 255, 255, 1)), color-stop(35%, rgba(221, 241, 249, 1)), color-stop(100%, rgba(160, 216, 239, 1))); /* Chrome,Safari4+ */
+    background     : -webkit-linear-gradient(top, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* Chrome10+,Safari5.1+ */
+    background     : -o-linear-gradient(top, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* Opera 11.10+ */
+    background     : -ms-linear-gradient(top, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* IE10+ */
+    background     : linear-gradient(to bottom, rgba(254, 255, 255, 1) 0%, rgba(221, 241, 249, 1) 35%, rgba(160, 216, 239, 1) 100%); /* W3C */
+    filter         : progid:DXImageTransform.Microsoft.gradient(startColorstr='#feffff', endColorstr='#a0d8ef', GradientType=0); /* IE6-9 */
+    margin-bottom  : 30px;
 
-  overflow : auto;
+    overflow       : auto;
 }
 
 div.stationname {
-  font-size : 24px;
+    font-size : 24px;
 }
 
 div.temperature {
-  font-size : 36px;
+    font-size : 36px;
 }
 
 div.humidity {
-  font-size : 36px;
+    font-size : 36px;
 }
 
 p.credits {
-  font-size  : 8px;
-  color      : ghostwhite;
-  text-align : center;
+    font-size  : 8px;
+    color      : ghostwhite;
+    text-align : center;
 
 }
 
 td.icon {
-  padding-right : 10px;
-  padding-left  : 10px;
+    padding-right : 10px;
+    padding-left  : 10px;
 }
 
 .column1, .column2 {
-  width  : 250px;
-  float  : left;
-  margin: 10px;
+    width  : 250px;
+    float  : left;
+    margin : 10px;
 }

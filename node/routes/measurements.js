@@ -13,7 +13,7 @@ var weather = require('../lib/weatherrecord');
  */
 router.get('/current', function (request, response) {
   response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end(weather.getNewestRecords());
+  response.end(weather.getCurrentRecordAsJson());
 });
 
 /**
