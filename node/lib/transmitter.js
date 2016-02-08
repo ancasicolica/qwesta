@@ -36,6 +36,7 @@
 /***********************************************************************************/
 
 var settings           = require('./../settings');
+var logger             = require('./logger').getLogger('lib:transmitter');
 var needle             = require('needle');
 var crypto             = require('crypto');
 var _                  = require('lodash');
@@ -50,12 +51,14 @@ var requestPending     = false;
 var pushRecordCallback = function (err, rec) {
   if (err) {
     rec.pushError = true;
-    console.log('Transmit error: ' + err.message + ' ' + rec.timestamp);
+    logger.info('Transmit error: ' + err.message + ' ' + rec.timestamp);
     return;
   }
-  console.log('-1: ' + rec.timestamp);
+
   _.pull(records, rec);
-  console.log('Records length: ' + records.length);
+  if (records.length > 0) {
+    logger.info('Records length: ' + records.length);
+  }
 };
 
 /**
@@ -69,7 +72,7 @@ var addToQueue = function (rec) {
   records.push(rec);
 
   if (!retryInterval) {
-    console.log('Start retry timer');
+    logger.info('Start retry timer');
     retryInterval = setInterval(function () {
       if (records.length > 0) {
         pushRecord(records[0], pushRecordCallback);
@@ -100,7 +103,7 @@ var pushRecord = function (record, callback) {
   var query     = "?q=" + weatherData + "&h=" + signature;
   var url       = settings.webserver.protocol + settings.webserver.hostname + ':' + settings.webserver.port + settings.webserver.url + query;
 
-  console.log('-> ' + record.timestamp);
+  logger.info('-> ' + record.timestamp);
   requestPending = true;
   needle.get(url, function (error, response) {
     if (!error && response.statusCode !== 200) {

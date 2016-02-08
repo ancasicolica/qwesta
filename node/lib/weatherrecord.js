@@ -37,6 +37,9 @@
 
 var transmitter = require('./transmitter');
 var _           = require('lodash');
+var logger      = require('./logger').getLogger('lib:weatherrecord');
+
+var storageEnabled = true;
 
 // Format: $1;1;;;;;;;;;;;;;;;;;;21,1;50;0,0;10;0;0
 module.exports = {
@@ -113,16 +116,11 @@ module.exports = {
     return JSON.stringify(measurementList);
   },
   /**
-   * Starts the simulator
+   * Enable / Disable storage in the webserver
+   * @param enabled
    */
-  startSimulator          : function () {
-    startSimTimer();
-  },
-  /**
-   * Stopps the simulator
-   */
-  stopSimulator           : function () {
-    stopSimTimer();
+  enableStorage : function(enabled) {
+    storageEnabled = enabled;
   }
 };
 
@@ -140,6 +138,12 @@ var addNewRecord = function (record) {
   try {
     var rec = record.toString();
     var wr  = new WeatherRecord(rec);
+
+    // Validate -  from time to time the weather station sends invalid records
+    if (wr.humidity === 0 && wr.temperature === 0 && wr.wind === 0) {
+      logger.info('Invalid record detected, dumping it');
+      return null;
+    }
 
     if (measurementList.length > 0) {
       if (wr.rain >= measurementList[measurementList.length - 1].rain) {
@@ -160,14 +164,15 @@ var addNewRecord = function (record) {
       measurementList.shift();
     }
 
-    if (simTimer != null) {
+    if (!storageEnabled) {
       wr.simulation = true;
+      logger.info('Simulation only!!');
     }
     transmitter.addToQueue(wr);
     return wr;
   }
   catch (e) {
-    console.error("newRecord exception: " + e);
+    logger.error("newRecord exception: " + e);
     return null;
   }
 };
@@ -201,73 +206,4 @@ var WeatherRecord = function (record) {
 WeatherRecord.prototype.toString = function () {
   return this.timestamp + " T:" + this.temperature + " H:" + this.humidity + "% W:"
     + this.wind + " R:" + this.rain + " iR:" + this.isRaining;
-};
-
-
-/***********************************************************************************/
-/* Simulation part, not needed for productive system                               */
-// Todo: place simulator into separate module
-var simTimer      = null;
-var simTimerDelay = 5000; // Delay in ms
-/**
- * Starts the simulation timer. Every interval, a new random record is added
- */
-var startSimTimer     = function () {
-  if (simTimer == null) {
-    console.info("Simulation timer started");
-    simTimer = setInterval(function () {
-        addNewRecord(createRandomEvent());
-      },
-      simTimerDelay);
-  }
-};
-/**
- * Stops the simulation timer
- */
-var stopSimTimer      = function () {
-  if (simTimer != null) {
-    console.info("Simulation timer stopped");
-    clearInterval(simTimer);
-  }
-  simTimer = null;
-};
-/**
- * Create a random Event
- * @returns {string} Random Event
- */
-var createRandomEvent = function () {
-// Create (quite) random event
-  var temperatureRnd = Math.random() - 0.5;
-  var humidityRnd    = Math.random() - 0.5;
-  var rainRnd        = Math.random();
-  var windRnd        = Math.random();
-  var currentRecord;
-  if (measurementList.length > 0) {
-    currentRecord = measurementList[measurementList.length - 1];
-  }
-  else {
-    currentRecord = {
-      temperature: 20.0,
-      humidity   : 90,
-      rain       : 1000
-    };
-  }
-  var temp = Math.round((currentRecord.temperature + (temperatureRnd / 3)) * 10) / 10;
-  if (temp < -10) {
-    temp = -10;
-  } else if (temp > 45) {
-    temp = 45;
-  }
-  var humidity = Math.round(currentRecord.humidity + (humidityRnd * 2));
-  if (humidity < 30) {
-    humidity = 30;
-  } else if (humidity > 99) {
-    humidity = 99;
-  }
-  var rain = currentRecord.rain + Math.round(rainRnd * .8);
-  var wind = 0.0;
-  if (windRnd > 0.7) {
-    wind = Math.round(windRnd * 15) / 10;
-  }
-  return '$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g, ',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g, ',') + ';' + rain.toString() + ';0;0';
 };

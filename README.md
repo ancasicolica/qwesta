@@ -3,7 +3,7 @@ qwesta
 
 Weatherstation using node.js
 
-The data read from an ELV weather station by a beaglebone is sent afterwards to a webserver and made public.
+The data read from an ELV weather station by a Raspberry-Pi is sent afterwards to a webserver and made public.
 
 The data is read using an USB module called "USB-WDE1-2", sold from ELV.
 

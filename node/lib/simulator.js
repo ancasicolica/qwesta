@@ -1,5 +1,5 @@
 /**
- *
+ * Simulator for the weather station. Quite simple, just providing fast data.
  * Created by kc on 07.02.16.
  */
 
@@ -52,8 +52,10 @@ module.exports = {
   start: function () {
     simulatorActive = true;
     _.delay(createRandomEvent, 1000);
+    weather.enableStorage(false);
   },
   stop : function () {
     simulatorActive = false;
+    weather.enableStorage(true);
   }
 };

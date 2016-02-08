@@ -1,6 +1,6 @@
 /**
  * Connects to the USB Module of the weather station
- * Created by kc on 23.06.15.
+ * Created by kc on 7.2.16
  */
 
 var util          = require('util');
@@ -10,7 +10,6 @@ var usbDetect     = require('usb-detection');
 var EventEmitter  = require('events').EventEmitter;
 var _             = require('lodash');
 var logger        = require('./logger').getLogger('lib:usbConnector');
-var settings      = require('../settings');
 
 /**
  * Constructor
