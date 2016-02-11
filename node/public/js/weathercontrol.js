@@ -84,12 +84,12 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
         $scope.tempMax = data.temperature > $scope.tempMax ? data.temperature : $scope.tempMax;
         $scope.records.push(data);
         $scope.chart.load({
-          json: $scope.records,
-          keys: {
+          json : $scope.records,
+          keys : {
             x    : 'timestamp',
             value: ['temperature', 'wind']
           },
-          y   : {
+          y    : {
             max    : Math.ceil($scope.tempMax / 5) * 5,
             min    : Math.floor($scope.tempMin / 10) * 10,
             tick   : {
@@ -99,8 +99,8 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
             },
             padding: {top: 0, bottom: 0}
           },
-          type  : 'spline',
-          types : {
+          type : 'spline',
+          types: {
             'wind': 'area-spline'
           }
         });
@@ -125,11 +125,19 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
           json: $scope.records,
           keys: {
             x    : 'timestamp',
-            value: ['temperature', 'wind']
+            value: ['wind', 'temperature']
           },
           axes: {
             'temperature': 'y',
             'wind'       : 'y2'
+          },
+          names: {
+            'temperature': 'Temperatur',
+            'wind'       : 'Wind'
+          },
+          colors: {
+            'temperature': 'blue',
+            'wind': 'orange'
           }
         },
         axis  : {
@@ -148,10 +156,10 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
               }
             },
             padding: {top: 0, bottom: 0},
-            label: '°C'
+            label  : '°C'
           },
           y2: {
-            show: true,
+            show : true,
             label: 'km/h'
           }
         },
