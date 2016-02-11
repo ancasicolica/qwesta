@@ -21,7 +21,7 @@ function UsbConnector() {
 
   usbDetect.on('add:4292:60000', device => {
     logger.debug('ELV receiver found in UsbConnector', device);
-    _.delay(self.connectToDevice.bind(self), 700);
+    _.delay(self.connectToDevice.bind(self), 2000);
     self.emit('usbConnected');
   });
 
@@ -51,8 +51,7 @@ UsbConnector.prototype.scanPorts = function (callback) {
 
     ports.forEach(function (port) {
       logger.debug('Port scan', port);
-      // Found both (second one on Raspi only so far)
-      if ((port.productId === '0xea60' && port.vendorId === '0x10c4') || (port.productId === 60000 && port.vendorId === 4292)) {
+      if (port.productId === '0xea60' && port.vendorId === '0x10c4') {
         // This is for modern systems like Mac or Linux
         logger.debug('ELV receiver found @ ' + port.comName);
         usbPort = port;
