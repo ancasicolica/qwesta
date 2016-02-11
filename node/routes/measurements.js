@@ -16,6 +16,13 @@ router.get('/current', function (request, response) {
   response.end(weather.getCurrentRecordAsJson());
 });
 
+
+router.get('/all', function (request, response) {
+  response.writeHead(200, {"Content-Type": "text/plain"});
+  response.end(weather.getAllRecordsAsJson());
+});
+
+
 /**
  * Get the file /ajax/temperature.html
  * This file contains the available temperature data and is generated

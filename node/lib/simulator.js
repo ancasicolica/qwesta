@@ -13,29 +13,13 @@ var socket            = require('./socket');
  */
 var createRandomEvent = function () {
 // Create (quite) random event
-  var temperatureRnd = Math.random() - 0.5;
-  var humidityRnd    = Math.random() - 0.5;
-  var rainRnd        = Math.random();
-  var windRnd        = Math.random();
+
   var currentRecord  = weather.getLastRecord();
 
-  var temp = Math.round((currentRecord.temperature + (temperatureRnd / 3)) * 10) / 10;
-  if (temp < -10) {
-    temp = -10;
-  } else if (temp > 45) {
-    temp = 45;
-  }
-  var humidity = Math.round(currentRecord.humidity + (humidityRnd * 2));
-  if (humidity < 30) {
-    humidity = 30;
-  } else if (humidity > 99) {
-    humidity = 99;
-  }
-  var rain = currentRecord.rain + Math.round(rainRnd * .8);
-  var wind = 0.0;
-  if (windRnd > 0.7) {
-    wind = Math.round(windRnd * 15) / 10;
-  }
+  var temp = Math.round(_.random(currentRecord.temperature - 0.3, currentRecord.temperature + 0.3) * 10) / 10;
+  var humidity = _.random(Math.max(currentRecord.humidity - 2, 30), Math.min(currentRecord.humidity + 2, 100));
+  var rain = currentRecord.rain + _.random(0,2, false);
+  var wind = _.random(0,30, false);
   weather.newRecord('$1;1;;;;;;;;;;;;;;;;;;' + temp.toString().replace(/[.]/g, ',') + ';' + humidity.toString() + ';' + wind.toString().replace(/[.]/g, ',') + ';' + rain.toString() + ';0;0');
   var s = socket.get();
   if (s) {

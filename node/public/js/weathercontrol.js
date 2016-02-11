@@ -43,12 +43,14 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
   $scope.iconFolder  = "./img/icon32/";
 
   $scope.records = [];
+  $scope.tempMin = 100;
+  $scope.tempMax = -100;
 
   $scope.temperatureTrendImage   = $scope.iconFolder + "arrow456.png";
   $scope.humidityTrendImage      = $scope.iconFolder + "arrow456.png";
   $scope.temperatureDataCallback = $scope.drawTemperatureChart;
   $scope.humidityDataCallback    = $scope.drawHumidityChart;
-  $scope.data                    = {};
+
 
   // This entry contains the current record
   $scope.currentRecord = {
@@ -64,7 +66,7 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
   // Init data when document is ready
   $(document).ready(function () {
     console.log('document ready');
-    $scope.data.getCurrentData('measurements/current', setData);
+    $scope.getCurrentData('measurements/current', setData);
 
 
     $scope.socket = io.connect();
@@ -76,8 +78,93 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
     $scope.socket.on('weatherdata', function (data) {
       console.log(data);
       setData(data);
+      if ($scope.chart) {
+        data.timestamp = new Date(data.timestamp);
+        $scope.tempMin = data.temperature < $scope.tempMin ? data.temperature : $scope.tempMin;
+        $scope.tempMax = data.temperature > $scope.tempMax ? data.temperature : $scope.tempMax;
+        $scope.records.push(data);
+        $scope.chart.load({
+          json: $scope.records,
+          keys: {
+            x    : 'timestamp',
+            value: ['temperature', 'wind']
+          },
+          y   : {
+            max    : Math.ceil($scope.tempMax / 5) * 5,
+            min    : Math.floor($scope.tempMin / 10) * 10,
+            tick   : {
+              format: function (d) {
+                return d + ' °C';
+              }
+            },
+            padding: {top: 0, bottom: 0}
+          },
+          type  : 'spline',
+          types : {
+            'wind': 'area-spline'
+          }
+        });
+      }
       $scope.$apply();
     });
+
+    $scope.getCurrentData('measurements/all', function (data) {
+      console.log(data);
+      $scope.records = data;
+
+      // c3 can't handle iso date string
+      for (var i = 0; i < data.length; i++) {
+        data[i].timestamp = new Date(data[i].timestamp);
+        $scope.tempMin    = data[i].temperature < $scope.tempMin ? data[i].temperature : $scope.tempMin;
+        $scope.tempMax    = data[i].temperature > $scope.tempMax ? data[i].temperature : $scope.tempMax;
+      }
+
+      $scope.chart = c3.generate({
+        bindto: '#chart',
+        data  : {
+          json: $scope.records,
+          keys: {
+            x    : 'timestamp',
+            value: ['temperature', 'wind']
+          },
+          axes: {
+            'temperature': 'y',
+            'wind'       : 'y2'
+          }
+        },
+        axis  : {
+          x : {
+            type: 'timeseries',
+            tick: {
+              format: '%H:%M'
+            }
+          },
+          y : {
+            max    : Math.ceil($scope.tempMax / 5) * 5,
+            min    : Math.floor($scope.tempMin / 10) * 10,
+            tick   : {
+              format: function (d) {
+                return d + ' °C';
+              }
+            },
+            padding: {top: 0, bottom: 0},
+            label: '°C'
+          },
+          y2: {
+            show: true,
+            label: 'km/h'
+          }
+        },
+        point : {
+          show: false
+        },
+        type  : 'spline',
+        types : {
+          'wind': 'area-spline'
+        }
+      });
+    });
+
   });
 
 
@@ -158,7 +245,7 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
    * Start the ajax call to load the temperature data
    */
   $scope.loadTemperatureChart = function () {
-    $scope.data.getCurrentData('measurements/temperatures', $scope.temperatureDataCallback);
+    $scope.getCurrentData('measurements/temperatures', $scope.temperatureDataCallback);
   };
 
 
@@ -176,7 +263,7 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
    * Start the ajax call to load the humidity data
    */
   $scope.loadHumidityChart = function () {
-    $scope.data.getCurrentData('measurements/humidity', $scope.humidityDataCallback);
+    $scope.getCurrentData('measurements/humidity', $scope.humidityDataCallback);
   };
 
 
@@ -196,12 +283,11 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
    * @param callback will be called afterwards
    * @returns {boolean}
    */
-  $scope.data.getCurrentData = function (url, callback) {
+  $scope.getCurrentData = function (url, callback) {
 
     $http({method: 'GET', url: url}).then(
       function (resp) {
         // OK
-        $scope.data.fromServer = "Text: " + resp.data + "<br>status:" + resp.status;
         callback(resp.data);
       },
       function (resp) {
@@ -211,5 +297,5 @@ weatherApp.controller('WeatherCtrl', ['$scope', '$http', function ($scope, $http
     );
   };
   // immediately request current data
-  $scope.data.getCurrentData('measurements/current', setData);
+  $scope.getCurrentData('measurements/current', setData);
 }]);
