@@ -20,7 +20,7 @@ function UsbConnector() {
   var self = this;
 
   usbDetect.on('add:4292:60000',  device => {
-    logger.debug('ELV receiver found', device);
+    logger.debug('ELV receiver found in UsbConnector', device);
     _.delay(self.connectToDevice.bind(self), 700);
     self.emit('usbConnected');
   });
