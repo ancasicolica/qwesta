@@ -50,7 +50,7 @@ UsbConnector.prototype.scanPorts = function (callback) {
     }
 
     ports.forEach(function (port) {
-      logger.log('Port scan', port);
+      logger.debug('Port scan', port);
       if (port.productId === '0xea60' && port.vendorId === '0x10c4') {
         // This is for modern systems like Mac or Linux
         logger.debug('ELV receiver found @ ' + port.comName);
