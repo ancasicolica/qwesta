@@ -9,7 +9,4 @@ web-dist/js/combined.js
 web-dist/configuration.php
 
 node/public/modules
-
-node/views/index.html
-
 node/views/*.html

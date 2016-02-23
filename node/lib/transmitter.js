@@ -107,7 +107,7 @@ var pushRecord = function (record, callback) {
   requestPending = true;
   needle.get(url, function (error, response) {
     if (!error && response.statusCode !== 200) {
-      callback(new Error('Invalid status code: ' + respnse.statusCode));
+      callback(new Error('Invalid status code: ' + response.statusCode));
     }
     else {
       callback(error, record);
