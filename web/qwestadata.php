@@ -68,6 +68,9 @@ if ($params->view == "multi") {
 } else if ($params->view == "diagnostics") {
   // Return diagnostic data
   echo json_encode(getDiagnostics($params));
+} else if ($params->view == "extreme") {
+  // Return extreme data
+  echo json_encode(getExtremeValues());
 } else {
   // don't know what to do
   $result = new \stdClass();
@@ -206,6 +209,55 @@ function getDiagnostics($params)
 }
 
 /**
+ * Returns the extreme values
+ */
+function getExtremeValues()
+{
+  $config = Configuration::get();
+  $info = new \stdClass();
+  $sql = sprintf("SELECT MAX(temperature) AS tMax,  MIN(temperature) AS tMin, MAX(humidity) AS hMax,  MIN(humidity) AS hMin, MAX(wind) AS wMax, MAX(raindifference) AS rMax FROM %s WHERE 1",
+    $config->mysqlTableWeather);
+  $info->values = runSqlQuery($sql);
+
+  $sql = sprintf("SELECT *, SUM(raindifference) as rDiffTotal FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY rDiffTotal DESC LIMIT 5",
+    $config->mysqlTableWeather);
+  $info->rMax = runSqlQuery($sql);
+
+
+  $sql = sprintf("SELECT ts, MAX(temperature) as maxTemp FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxTemp DESC LIMIT 5",
+    $config->mysqlTableWeather);
+  $info->tMax = runSqlQuery($sql);
+
+  $sql = sprintf("SELECT ts, AVG(temperature) as maxTemp FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxTemp DESC LIMIT 5",
+    $config->mysqlTableWeather);
+  $info->tAvgMax = runSqlQuery($sql);
+
+  $sql = sprintf("SELECT ts, MIN(temperature) as minTemp FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY minTemp ASC LIMIT 5",
+    $config->mysqlTableWeather);
+  $info->tMin = runSqlQuery($sql);
+
+  $sql = sprintf("SELECT ts, AVG(temperature) as minTemp FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY minTemp ASC LIMIT 5",
+    $config->mysqlTableWeather);
+  $info->tAvgMin = runSqlQuery($sql);
+
+  $sql = sprintf("SELECT * FROM %s WHERE humidity=%f GROUP BY DAY(ts)",
+    $config->mysqlTableWeather,
+    $info->values->data[0]->hMax);
+  $info->hMax = runSqlQuery($sql);
+
+  $sql = sprintf("SELECT * FROM %s WHERE humidity=%f GROUP BY DAY(ts)",
+    $config->mysqlTableWeather,
+    $info->values->data[0]->hMin);
+  $info->hMin = runSqlQuery($sql);
+
+  $sql = sprintf("SELECT ts, MAX(wind) as maxWind FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxWind DESC LIMIT 5",
+    $config->mysqlTableWeather);
+  $info->wMax = runSqlQuery($sql);
+
+  return $info;
+}
+
+/**
  * Returns the last data set recorded
  * @return \object
  */
@@ -229,6 +281,7 @@ function getCurrentDataSet()
     $date['minutes'],
     $date['seconds']
   );
+
 
   // For the rain, get the sum of the last few entries
   $sql = sprintf("SELECT SUM(raindifference) AS rd FROM %s WHERE TIMESTAMPDIFF(HOUR,ts,NOW()) < 2 ORDER BY ts DESC LIMIT 10",
