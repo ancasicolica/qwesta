@@ -130,7 +130,7 @@ function getData($params)
       $params->month,
       $params->day);
 
-    $group = "GROUP BY HOUR(tslocal)";
+    $group = "GROUP BY HOUR(tsLocal)";
   } else if ($params->range == "week") {
     $range = sprintf("DATE(CONVERT_TZ(ts, '+00:00', '%s')) >= '%u-%u-%u' AND
     DATE(CONVERT_TZ(ts, '+00:00', '%s')) < DATE_ADD('%02d-%02d-%02d 00:00:00', INTERVAL 1 WEEK) ",
@@ -142,7 +142,7 @@ function getData($params)
       $params->year,
       $params->month,
       $params->day);
-    $group = "GROUP BY DAY(tslocal), HOUR(tslocal)";
+    $group = "GROUP BY DAY(tsLocal), HOUR(tsLocal)";
   } else if ($params->range == "month") {
     $range = sprintf("DATE(CONVERT_TZ(ts, '+00:00', '%s')) >= '%u-%u-%u' AND
     DATE(CONVERT_TZ(ts, '+00:00', '%s')) < DATE_ADD('%02d-%02d-%02d 00:00:00', INTERVAL 32 DAY) ",
@@ -154,7 +154,22 @@ function getData($params)
       $params->year,
       $params->month,
       $params->day);
-    $group = "GROUP BY DAY(tslocal)";
+    $group = "GROUP BY DAY(tsLocal)";
+  } else if ($params->range == "year") {
+    $range = sprintf("DATE(CONVERT_TZ(ts, '+00:00', '%s')) >= '%u-%u-%u' AND
+    DATE(CONVERT_TZ(ts, '+00:00', '%s')) < DATE_ADD('%02d-%02d-%02d 00:00:00', INTERVAL 1 YEAR) ",
+      $utcOffset,
+      $params->year,
+      $params->month,
+      $params->day,
+      $utcOffset,
+      $params->year,
+      $params->month,
+      $params->day);
+    $group = "GROUP BY WEEKOFYEAR(tsLocal)";
+  } else {
+    $range = 'noRange';
+    $group = 'noGroup';
   }
 
   $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, COUNT(*) AS nbRows, ts, " . $query . " FROM %s WHERE
@@ -189,6 +204,7 @@ function getDiagnostics($params)
     $params->year);
   return runSqlQuery($sql);
 }
+
 /**
  * Returns the last data set recorded
  * @return \object
@@ -197,7 +213,7 @@ function getCurrentDataSet()
 {
   $config = Configuration::get();
   $sql = sprintf("SELECT * FROM %s ORDER BY ts DESC LIMIT 1", $config->mysqlTableWeather);
-  $result =  runSqlQuery($sql);
+  $result = runSqlQuery($sql);
 
   $date = getdate();
   $config = Configuration::get();
@@ -212,7 +228,7 @@ function getCurrentDataSet()
     $date['hours'],
     $date['minutes'],
     $date['seconds']
-    );
+  );
 
   // For the rain, get the sum of the last few entries
   $sql = sprintf("SELECT SUM(raindifference) AS rd FROM %s WHERE TIMESTAMPDIFF(HOUR,ts,NOW()) < 2 ORDER BY ts DESC LIMIT 10",
@@ -246,6 +262,7 @@ function getBasics()
 
   return $result;
 }
+
 /**
  * Creates an error object
  * @message string with the message of the error
