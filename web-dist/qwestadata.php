@@ -215,14 +215,13 @@ function getExtremeValues()
 {
   $config = Configuration::get();
   $info = new \stdClass();
-  $sql = sprintf("SELECT MAX(temperature) AS tMax,  MIN(temperature) AS tMin, MAX(humidity) AS hMax,  MIN(humidity) AS hMin, MAX(wind) AS wMax, MAX(raindifference) AS rMax FROM %s WHERE 1",
+  $sql = sprintf("SELECT COUNT(*) AS entryNb,  MIN(ts) AS oldestEntryTs, MAX(ts) AS newestEntryTs FROM %s WHERE 1",
     $config->mysqlTableWeather);
-  $info->values = runSqlQuery($sql);
+  $info->info = runSqlQuery($sql);
 
   $sql = sprintf("SELECT *, SUM(raindifference) as rDiffTotal FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY rDiffTotal DESC LIMIT 5",
     $config->mysqlTableWeather);
   $info->rMax = runSqlQuery($sql);
-
 
   $sql = sprintf("SELECT ts, MAX(temperature) as maxTemp FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxTemp DESC LIMIT 5",
     $config->mysqlTableWeather);
@@ -240,14 +239,12 @@ function getExtremeValues()
     $config->mysqlTableWeather);
   $info->tAvgMin = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT * FROM %s WHERE humidity=%f GROUP BY DAY(ts)",
-    $config->mysqlTableWeather,
-    $info->values->data[0]->hMax);
+  $sql = sprintf("SELECT *, MAX(humidity) as maxHumidity FROM %s WHERE 1 GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxHumidity DESC LIMIT 5",
+    $config->mysqlTableWeather);
   $info->hMax = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT * FROM %s WHERE humidity=%f GROUP BY DAY(ts)",
-    $config->mysqlTableWeather,
-    $info->values->data[0]->hMin);
+  $sql = sprintf("SELECT *, MIN(humidity) as minHumidity FROM %s WHERE 1 GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY minHumidity ASC LIMIT 5",
+    $config->mysqlTableWeather);
   $info->hMin = runSqlQuery($sql);
 
   $sql = sprintf("SELECT ts, MAX(wind) as maxWind FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxWind DESC LIMIT 5",
@@ -359,7 +356,7 @@ function runSqlQuery($sql)
     $result->data[$i] = $row;
     $i++;
   }
-  $result->sql = $sql;
+  // DEBUG ONLY: $result->sql = $sql;
   $mysqli->close();
   return $result;
 }
