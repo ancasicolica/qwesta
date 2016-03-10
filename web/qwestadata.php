@@ -219,37 +219,45 @@ function getExtremeValues()
     $config->mysqlTableWeather);
   $info->info = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT *, SUM(raindifference) as rDiffTotal FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY rDiffTotal DESC LIMIT 5",
+  $sql = sprintf("SELECT ts, SUM(raindifference) AS val FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val DESC LIMIT 5",
     $config->mysqlTableWeather);
   $info->rMax = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT ts, MAX(temperature) as maxTemp FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxTemp DESC LIMIT 5",
+  $sql = sprintf("SELECT ts, MAX(temperature) AS val FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val DESC LIMIT 5",
     $config->mysqlTableWeather);
   $info->tMax = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT ts, AVG(temperature) as maxTemp FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxTemp DESC LIMIT 5",
+  $sql = sprintf("SELECT ts, AVG(temperature) AS val FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val DESC LIMIT 5",
     $config->mysqlTableWeather);
   $info->tAvgMax = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT ts, MIN(temperature) as minTemp FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY minTemp ASC LIMIT 5",
+  $sql = sprintf("SELECT ts, MIN(temperature) AS val FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val ASC LIMIT 5",
     $config->mysqlTableWeather);
   $info->tMin = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT ts, AVG(temperature) as minTemp FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY minTemp ASC LIMIT 5",
+  $sql = sprintf("SELECT ts, AVG(temperature) AS val FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val ASC LIMIT 5",
     $config->mysqlTableWeather);
   $info->tAvgMin = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT *, MAX(humidity) as maxHumidity FROM %s WHERE 1 GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxHumidity DESC LIMIT 5",
+  $sql = sprintf("SELECT ts, temperature, MAX(humidity) AS val FROM %s WHERE 1 GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val DESC LIMIT 5",
     $config->mysqlTableWeather);
   $info->hMax = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT *, MIN(humidity) as minHumidity FROM %s WHERE 1 GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY minHumidity ASC LIMIT 5",
+  $sql = sprintf("SELECT ts, temperature, MIN(humidity) AS val FROM %s WHERE 1 GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val ASC LIMIT 5",
     $config->mysqlTableWeather);
   $info->hMin = runSqlQuery($sql);
 
-  $sql = sprintf("SELECT ts, MAX(wind) as maxWind FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY maxWind DESC LIMIT 5",
+  $sql = sprintf("SELECT ts, MAX(wind) AS val FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val DESC LIMIT 5",
     $config->mysqlTableWeather);
   $info->wMax = runSqlQuery($sql);
+
+  $sql = sprintf("SELECT ts, (MAX(temperature) *SIGN(MAX(temperature)) - MIN(temperature) * SIGN(MIN(temperature))) AS val FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val DESC LIMIT 5",
+    $config->mysqlTableWeather);
+  $info->tDiffMax = runSqlQuery($sql);
+
+  $sql = sprintf("SELECT ts, (MAX(temperature) *SIGN(MAX(temperature)) - MIN(temperature) * SIGN(MIN(temperature))) AS val FROM %s WHERE 1  GROUP BY YEAR(ts), MONTH(ts), DAY(ts) ORDER BY val ASC LIMIT 5",
+    $config->mysqlTableWeather);
+  $info->tDiffMin = runSqlQuery($sql);
 
   return $info;
 }
