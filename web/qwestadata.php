@@ -71,6 +71,9 @@ if ($params->view == "multi") {
 } else if ($params->view == "extreme") {
   // Return extreme data
   echo json_encode(getExtremeValues());
+} else if ($params->view == "24h") {
+  // Return last 24 hours
+  echo json_encode(getLastHours(24));
 } else {
   // don't know what to do
   $result = new \stdClass();
@@ -262,6 +265,22 @@ function getExtremeValues()
   return $info;
 }
 
+/**
+ * Get the results of the last n hours
+ * @param $hours
+ * @return \result
+ */
+function getLastHours($hours) {
+  $config = Configuration::get();
+  $utcOffset = Configuration::getUtcOffset(date('Y'), date('m'), date('G'));
+
+  $sql = sprintf("SELECT CONVERT_TZ(ts, '+00:00', '%s') as tsLocal, COUNT(*) AS nbRows, ts, AVG(temperature) AS temperatureAvg, MAX(temperature) AS temperatureMax, MIN(temperature) AS temperatureMin FROM %s WHERE ts > DATE_SUB(NOW(), INTERVAL %d HOUR) GROUP BY DAY(ts), HOUR(ts) ORDER BY ts ASC",
+    $utcOffset,
+    $config->mysqlTableWeather,
+    $hours
+    );
+  return runSqlQuery($sql);
+}
 /**
  * Returns the last data set recorded
  * @return \object
