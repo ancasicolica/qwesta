@@ -119,7 +119,7 @@ module.exports = {
    * Enable / Disable storage in the webserver
    * @param enabled
    */
-  enableStorage : function(enabled) {
+  enableStorage           : function (enabled) {
     storageEnabled = enabled;
   }
 };
@@ -142,6 +142,10 @@ var addNewRecord = function (record) {
     // Validate -  from time to time the weather station sends invalid records
     if (wr.humidity === 0 && wr.temperature === 0 && wr.wind === 0) {
       logger.info('Invalid record detected, dumping it');
+      return null;
+    }
+    if (_.isNaN(wr.humidity) || _.isNaN(wr.temperature) || _.isNaN(wr.wind)) {
+      logger.info('Invalid record detected (NaN), dumping it');
       return null;
     }
 
