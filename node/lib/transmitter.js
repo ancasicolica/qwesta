@@ -50,8 +50,7 @@ var requestPending     = false;
  */
 var pushRecordCallback = function (err, rec) {
   if (err) {
-    rec.pushError = true;
-    logger.info('Transmit error: ' + err.message + ' ' + rec.timestamp);
+    logger.warn('Transmit error', err);
     return;
   }
 
