@@ -300,8 +300,8 @@ function getCurrentDataSet()
     $utcOffset,
     $date['year'],
     $date['mon'],
-    $date['mday'],
-    $date['hours'],
+      $date['mday'],
+      $date['hours'],
     $date['minutes'],
     $date['seconds']
   );
