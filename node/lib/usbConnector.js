@@ -5,7 +5,7 @@
 
 var util          = require('util');
 var serialPortLib = require('serialport');
-var SerialPort    = require('serialport').SerialPort;
+var SerialPort    = require('serialport');
 var usbDetect     = require('usb-detection');
 var EventEmitter  = require('events').EventEmitter;
 var _             = require('lodash');
