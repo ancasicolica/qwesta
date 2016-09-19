@@ -270,7 +270,8 @@ function getExtremeValues()
  * @param $hours
  * @return \result
  */
-function getLastHours($hours) {
+function getLastHours($hours)
+{
   $config = Configuration::get();
   $utcOffset = Configuration::getUtcOffset(date('Y'), date('m'), date('G'));
 
@@ -278,9 +279,10 @@ function getLastHours($hours) {
     $utcOffset,
     $config->mysqlTableWeather,
     $hours
-    );
+  );
   return runSqlQuery($sql);
 }
+
 /**
  * Returns the last data set recorded
  * @return \object
@@ -300,20 +302,22 @@ function getCurrentDataSet()
     $utcOffset,
     $date['year'],
     $date['mon'],
-      $date['mday'],
-      $date['hours'],
+    $date['mday'],
+    $date['hours'],
     $date['minutes'],
     $date['seconds']
   );
 
 
   // For the rain, get the sum of the last few entries
-  $sql = sprintf("SELECT SUM(raindifference) AS rd FROM %s WHERE TIMESTAMPDIFF(HOUR,ts,NOW()) < 2 ORDER BY ts DESC LIMIT 10",
-    $config->mysqlTableWeather);
+  $sql = sprintf("SELECT SUM(raindifference) AS rd FROM %s WHERE TIMESTAMPDIFF(HOUR,CONVERT_TZ(ts, '+00:00', '%s'),NOW()) < 2 ORDER BY ts DESC LIMIT 10",
+    $config->mysqlTableWeather,
+    $utcOffset);
 
   $rain = runSqlQuery($sql);
 
   $result->data[0]->raindifference = $rain->data[0]->rd;
+
 
   return $result;
 
